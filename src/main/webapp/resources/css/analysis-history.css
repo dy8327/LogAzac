@@ -1,0 +1,169 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #11161b;
+    color: #e9edf1;
+    font-family: Arial, sans-serif;
+}
+
+.page-wrap {
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 0;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #ffd43b;
+}
+
+.page-header p {
+    margin: 0;
+    color: #8e9aa5;
+}
+
+.analysis-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 7px;
+    background: #ffd43b;
+    color: #11161b;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.history-box {
+    background: #181e24;
+    border: 1px solid #303942;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.history-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #303942;
+}
+
+.history-title h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.count {
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: #2c3238;
+    color: #ffd43b;
+    font-size: 12px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 16px 14px;
+    text-align: left;
+    border-bottom: 1px solid #2a3239;
+    font-size: 14px;
+}
+
+th {
+    background: #151a1f;
+    color: #9da9b4;
+    font-size: 12px;
+}
+
+tbody tr:hover {
+    background: #1d252c;
+}
+
+.file-name {
+    max-width: 260px;
+    word-break: break-all;
+}
+
+.source-type {
+    color: #66c7d4;
+}
+
+.abnormal-count {
+    color: #ff7777;
+    font-weight: bold;
+}
+
+.status {
+    display: inline-block;
+    min-width: 50px;
+    padding: 5px 9px;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.completed {
+    color: #7ee787;
+    background: rgba(126, 231, 135, 0.12);
+}
+
+.status.failed {
+    color: #ff7777;
+    background: rgba(255, 119, 119, 0.12);
+}
+
+.status.processing {
+    color: #ffd43b;
+    background: rgba(255, 212, 59, 0.12);
+}
+
+.detail-btn {
+    color: #ffd43b;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.detail-btn:hover {
+    text-decoration: underline;
+}
+
+.empty-message {
+    padding: 60px;
+    text-align: center;
+    color: #77838e;
+}
+
+@media (max-width: 900px) {
+
+    .page-header {
+        align-items: flex-start;
+        gap: 20px;
+        flex-direction: column;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+}
