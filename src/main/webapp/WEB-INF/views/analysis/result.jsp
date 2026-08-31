@@ -260,15 +260,12 @@ document.querySelectorAll(".log-content").forEach(function(container) {
     if (detectedValue.includes("->")) {
         const values = detectedValue.split("->");
 
-        values.forEach(function(value) {
-            value = value.trim();
+        const errorValue = values[0].trim();
 
-            if (value) {
-                highlightValues.push(value);
-            }
-        });
-
-    } else {
+        if (errorValue) {
+            highlightValues.push(errorValue);
+        }
+} else {
         // 일반 탐지 값
         highlightValues.push(detectedValue);
     }
