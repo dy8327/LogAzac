@@ -1,5 +1,8 @@
 package com.logazac.dto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class InspectionDTO {
 
     private int insNo;
@@ -10,6 +13,7 @@ public class InspectionDTO {
     private String fileName;
     private String sourceType;
     private int abnormalLogCount;
+    private LocalDateTime startDate;
 
     public int getInsNo() {
         return insNo;
@@ -73,5 +77,23 @@ public class InspectionDTO {
 
     public void setAbnormalLogCount(int abnormalLogCount) {
         this.abnormalLogCount = abnormalLogCount;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getFormattedStartDate() {
+        if (startDate == null) {
+            return "";
+        }
+
+        return startDate.format(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        );
     }
 }

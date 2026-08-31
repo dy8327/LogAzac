@@ -126,4 +126,8 @@ public class AnalysisService {
     ) {
         return analysisMapper.findTopDetectionRules(insNo);
     }
+
+    public List<InspectionDTO> getInspectionHistory(int userNo) {
+        return analysisMapper.findInspectionHistory(userNo);
+    }
 }

@@ -30,19 +30,13 @@ public interface AnalysisMapper {
     );
 
     // 검사 실패
-    int failInspection(
-        @Param("insNo") int insNo
-    );
+    int failInspection(@Param("insNo") int insNo);
 
-    InspectionDTO findInspection(
-        @Param("insNo") int insNo
-    );
+    InspectionDTO findInspection(@Param("insNo") int insNo);
 
-    List<AnalysisResultDTO> findDetectionResults(
-        @Param("insNo") int insNo
-    );
+    List<AnalysisResultDTO> findDetectionResults(@Param("insNo") int insNo);
 
-    List<RuleSummaryDTO> findTopDetectionRules(
-        @Param("insNo") int insNo
-    );
+    List<RuleSummaryDTO> findTopDetectionRules(@Param("insNo") int insNo);
+
+    List<InspectionDTO> findInspectionHistory(@Param("userNo") int userNo);
 }

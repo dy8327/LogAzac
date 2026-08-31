@@ -135,4 +135,18 @@ public class LogAnalysisController {
 
         return "analysis/result";
     }
+
+    @GetMapping("/analysis/history")
+    public String history(Model model) {
+
+        // 로그인 구현 전 임시 사용자
+        int userNo = 1;
+
+        List<InspectionDTO> inspections =
+            analysisService.getInspectionHistory(userNo);
+
+        model.addAttribute("inspections", inspections);
+
+        return "analysis/history";
+    }
 }
