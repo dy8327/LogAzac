@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.logazac.mapper.AnalysisMapper">
+
+    <!-- 로그 파일 저장 -->
+    <insert id="insertLogFile"
+            parameterType="com.logazac.dto.LogFileDTO">
+
+        <selectKey keyProperty="fileNo"
+                   resultType="int"
+                   order="BEFORE">
+            SELECT SEQ_LOG_FILES.NEXTVAL
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO LOG_FILES (
+            FILE_NO,
+            FILE_NAME,
+            FILE_SIZE,
+            USER_NO,
+            SOURCE_TYPE,
+            FILE_PATH
+        ) VALUES (
+            #{fileNo},
+            #{fileName},
+            #{fileSize},
+            #{userNo},
+            #{sourceType},
+            #{filePath}
+        )
+
+    </insert>
+
+
+    <!-- 검사 생성 -->
+    <insert id="insertInspection"
+            parameterType="com.logazac.dto.InspectionDTO">
+
+        <selectKey keyProperty="insNo"
+                   resultType="int"
+                   order="BEFORE">
+            SELECT SEQ_INSPECTIONS.NEXTVAL
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO INSPECTIONS (
+            INS_NO,
+            FILE_NO,
+            INS_STATUS,
+            START_DATE,
+            TOTAL_LINES,
+            ERROR_COUNT
+        ) VALUES (
+            #{insNo},
+            #{fileNo},
+            'PROCESSING',
+            SYSDATE,
+            0,
+            0
+        )
+
+    </insert>
+
+
+    <!-- 이상 탐지 결과 저장 -->
+    <insert id="insertDetectionResult"
+            parameterType="com.logazac.dto.DetectionSaveDTO">
+
+        <selectKey keyProperty="resultNo"
+                   resultType="int"
+                   order="BEFORE">
+            SELECT SEQ_DETECTION_RESULTS.NEXTVAL
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO DETECTION_RESULTS (
+            RESULT_NO,
+            INS_NO,
+            DET_NO,
+            LINE_NO,
+            LOG_CONTENT,
+            DETECTED_VALUE
+        ) VALUES (
+            #{resultNo},
+            #{insNo},
+            #{detNo},
+            #{lineNo},
+            #{logContent},
+            #{detectedValue}
+        )
+
+    </insert>
+
+
+    <!-- 검사 완료 -->
+    <update id="completeInspection">
+
+        UPDATE INSPECTIONS
+        SET INS_STATUS = 'COMPLETED',
+            END_DATE = SYSDATE,
+            TOTAL_LINES = #{totalLines},
+            ERROR_COUNT = #{errorCount}
+        WHERE INS_NO = #{insNo}
+
+    </update>
+
+
+    <!-- 검사 실패 -->
+    <update id="failInspection">
+
+        UPDATE INSPECTIONS
+        SET INS_STATUS = 'FAILED',
+            END_DATE = SYSDATE
+        WHERE INS_NO = #{insNo}
+
+    </update>
+
+    <!-- 검사 기본 정보 -->
+    <select id="findInspection"
+            resultType="com.logazac.dto.InspectionDTO">
+
+        SELECT
+            I.INS_NO,
+            I.FILE_NO,
+            I.INS_STATUS,
+            I.TOTAL_LINES,
+            I.ERROR_COUNT,
+            F.FILE_NAME,
+            F.SOURCE_TYPE
+
+        FROM INSPECTIONS I
+
+        JOIN LOG_FILES F
+        ON I.FILE_NO = F.FILE_NO
+
+        WHERE I.INS_NO = #{insNo}
+
+    </select>
+
+
+    <!-- 이상 탐지 결과 -->
+    <select id="findDetectionResults"
+            resultType="com.logazac.dto.AnalysisResultDTO">
+
+        SELECT
+            R.RESULT_NO,
+            R.INS_NO,
+            R.LINE_NO,
+            D.DET_RULE_TYPE AS RULE_TYPE,
+            D.DET_DESCRIPTION AS RULE_DESCRIPTION,
+            R.DETECTED_VALUE,
+            R.LOG_CONTENT
+
+        FROM DETECTION_RESULTS R
+
+        JOIN DETECTION_RULES D
+        ON R.DET_NO = D.DET_NO
+
+        WHERE R.INS_NO = #{insNo}
+
+        ORDER BY R.LINE_NO,
+                R.RESULT_NO
+
+    </select>
+
+</mapper>
