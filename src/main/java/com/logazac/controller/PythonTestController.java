@@ -1,6 +1,7 @@
 package com.logazac.controller;
 
 import java.util.Map;
+import java.nio.file.Path;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,8 +51,10 @@ public class PythonTestController {
         String filePath =
             "D:/doyoung/LogAzac/02021070138상품명및금액변경건.txt";
 
-        int insNo = analysisService.analyzeAndSave(
+        int insNo = analysisService 
+            .analyzeAndSave(
             filePath,
+            Path.of(filePath).getFileName().toString(),
             1,
             "VENDING"
         );
