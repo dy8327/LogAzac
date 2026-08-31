@@ -24,41 +24,57 @@ TOYG_PATTERN = re.compile(
 def read_records(file_path):
     records = []
 
+    encodings = ["utf-8", "cp949", "euc-kr"]
+    lines = None
+
+    # 파일 인코딩 자동 시도
+    for encoding in encodings:
+        try:
+            with open(file_path, "r", encoding=encoding) as file:
+                lines = file.readlines()
+
+            break
+
+        except UnicodeDecodeError:
+            continue
+
+    if lines is None:
+        raise ValueError("지원하지 않는 파일 인코딩입니다.")
+
     current_record = ""
     current_line_no = None
 
-    with open(file_path, "r", encoding="utf-8", errors="replace") as file:
-        for line_no, line in enumerate(file, start=1):
-            line = line.strip()
+    for line_no, line in enumerate(lines, start=1):
+        line = line.strip()
 
-            if not line:
+        if not line:
+            continue
+
+        # 새로운 로그 시작
+        if RECORD_START.match(line):
+            if current_record:
+                records.append({
+                    "line_no": current_line_no,
+                    "content": current_record
+                })
+
+            current_record = line
+            current_line_no = line_no
+
+        # 이전 로그의 이어지는 내용
+        elif current_record:
+            # 실제 로그 이후의 설명/메일 내용 제외
+            if line.startswith("그리고") or line.startswith("혹시"):
+                records.append({
+                    "line_no": current_line_no,
+                    "content": current_record
+                })
+
+                current_record = ""
+                current_line_no = None
                 continue
 
-            # 새로운 로그 시작
-            if RECORD_START.match(line):
-                if current_record:
-                    records.append({
-                        "line_no": current_line_no,
-                        "content": current_record
-                    })
-
-                current_record = line
-                current_line_no = line_no
-
-            # 이전 로그의 이어지는 내용
-            elif current_record:
-                # 실제 로그 이후의 설명/메일 내용 제외
-                if line.startswith("그리고") or line.startswith("혹시"):
-                    records.append({
-                        "line_no": current_line_no,
-                        "content": current_record
-                    })
-
-                    current_record = ""
-                    current_line_no = None
-                    continue
-
-                current_record += " " + line
+            current_record += " " + line
 
     if current_record:
         records.append({
@@ -136,9 +152,6 @@ def main():
             continue
 
         parsed["line_no"] = record["line_no"]
-
-        if parsed is None:
-            continue
 
         print("로그번호 :", parsed["log_no"])
         print("장비번호 :", parsed["device_id"])
