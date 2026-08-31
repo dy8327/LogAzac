@@ -130,7 +130,12 @@
             I.TOTAL_LINES,
             I.ERROR_COUNT,
             F.FILE_NAME,
-            F.SOURCE_TYPE
+            F.SOURCE_TYPE,
+            (
+                SELECT COUNT(DISTINCT R.LINE_NO)
+                FROM DETECTION_RESULTS R
+                WHERE R.INS_NO = I.INS_NO
+            ) AS "abnormalLogCount"
 
         FROM INSPECTIONS I
 
@@ -164,6 +169,30 @@
 
         ORDER BY R.LINE_NO,
                 R.RESULT_NO
+
+    </select>
+
+    <select id="findTopDetectionRules"
+            resultType="com.logazac.dto.RuleSummaryDTO">
+
+        SELECT *
+        FROM (
+            SELECT
+                D.DET_RULE_TYPE AS "ruleType",
+                COUNT(*) AS "count"
+            FROM DETECTION_RESULTS R
+
+            JOIN DETECTION_RULES D
+            ON R.DET_NO = D.DET_NO
+
+            WHERE R.INS_NO = #{insNo}
+
+            GROUP BY D.DET_RULE_TYPE
+
+            ORDER BY COUNT(*) DESC
+        )
+
+        WHERE ROWNUM <![CDATA[ <= ]]> 5
 
     </select>
 

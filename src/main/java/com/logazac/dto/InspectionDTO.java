@@ -9,6 +9,7 @@ public class InspectionDTO {
     private int errorCount;
     private String fileName;
     private String sourceType;
+    private int abnormalLogCount;
 
     public int getInsNo() {
         return insNo;
@@ -64,5 +65,13 @@ public class InspectionDTO {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public int getAbnormalLogCount() {
+        return abnormalLogCount;
+    }
+
+    public void setAbnormalLogCount(int abnormalLogCount) {
+        this.abnormalLogCount = abnormalLogCount;
     }
 }
