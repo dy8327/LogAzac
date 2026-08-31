@@ -254,22 +254,19 @@ document.querySelectorAll(".log-content").forEach(function(container) {
 
     let highlightValues = [];
 
-    // 예: 기존: ABC → 변경: DEF
-    const changeMatch = detectedValue.match(
-        /^기존:\s*(.*?)\s*→\s*변경:\s*(.*)$/
-    );
+    // PRICE_CHANGED / PRODUCT_NAME_CHANGED
+    // 예: 2500 -> 3000
+    // 예: 포켓몬볼 -> 피카츄
+    if (detectedValue.includes("->")) {
+        const values = detectedValue.split("->");
 
-    if (changeMatch) {
-        const oldValue = changeMatch[1].trim();
-        const newValue = changeMatch[2].trim();
+        values.forEach(function(value) {
+            value = value.trim();
 
-        if (oldValue) {
-            highlightValues.push(oldValue);
-        }
-
-        if (newValue) {
-            highlightValues.push(newValue);
-        }
+            if (value) {
+                highlightValues.push(value);
+            }
+        });
 
     } else {
         // 일반 탐지 값
@@ -284,15 +281,9 @@ document.querySelectorAll(".log-content").forEach(function(container) {
         return;
     }
 
-    // 긴 문자열부터 처리
     highlightValues.sort(function(a, b) {
         return b.length - a.length;
     });
-
-    const fragment = document.createDocumentFragment();
-
-    let remaining = logContent;
-    let currentIndex = 0;
 
     const matches = [];
 
@@ -329,6 +320,10 @@ document.querySelectorAll(".log-content").forEach(function(container) {
             filteredMatches.push(match);
         }
     });
+
+    const fragment = document.createDocumentFragment();
+
+    let currentIndex = 0;
 
     filteredMatches.forEach(function(match) {
         if (match.start > currentIndex) {

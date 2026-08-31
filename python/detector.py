@@ -110,7 +110,9 @@ def compare_with_previous(current, previous):
                 "slot_code": slot_code,
                 "detected_value": (
                     f'{old["price"]} -> {new["price"]}'
-                )
+                ),
+                "line_no": previous["line_no"],
+                "raw_log": previous["raw_log"]
             })
 
         if (
@@ -124,7 +126,9 @@ def compare_with_previous(current, previous):
                 "detected_value": (
                     f'{old["product_name"]} -> '
                     f'{new["product_name"]}'
-                )
+                ),
+                "line_no": previous["line_no"],
+                "raw_log": previous["raw_log"]
             })
 
     return errors
@@ -174,12 +178,12 @@ def analyze_file(file_path):
         for error in errors:
             results.append({
                 "log_no": parsed["log_no"],
-                "line_no": parsed["line_no"],
+                "line_no": error.get("line_no", parsed["line_no"]),
                 "device_id": parsed["device_id"],
                 "rule_type": error["rule_type"],
                 "slot_code": error["slot_code"],
                 "detected_value": error["detected_value"],
-                "raw_log": parsed["raw_log"]
+                "raw_log": error.get("raw_log", parsed["raw_log"])
             })
 
         # 현재 로그를 다음 로그의 비교 기준으로 저장
