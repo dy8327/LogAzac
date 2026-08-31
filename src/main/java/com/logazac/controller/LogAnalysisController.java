@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.logazac.service.AnalysisService;
 import com.logazac.dto.AnalysisResultDTO;
 import com.logazac.dto.InspectionDTO;
+import com.logazac.dto.RuleSummaryDTO;
 
 @Controller
 public class LogAnalysisController {
@@ -57,8 +58,7 @@ public class LogAnalysisController {
 
         /* 로그 종류 확인 */
         if (
-            !"VENDING".equals(sourceType)
-            && !"PAYMENT".equals(sourceType)
+            !"VENDING".equals(sourceType) && !"PAYMENT".equals(sourceType)
         ) {
             throw new IllegalArgumentException("지원하지 않는 로그 종류입니다.");
         }
@@ -108,6 +108,7 @@ public class LogAnalysisController {
          */
         int insNo = analysisService.analyzeAndSave(
                 savedPath.toString(),
+                originalFileName,
                 userNo,
                 sourceType
             );
@@ -124,21 +125,13 @@ public class LogAnalysisController {
         Model model
     ) {
 
-        InspectionDTO inspection =
-            analysisService.getInspection(insNo);
+        InspectionDTO inspection = analysisService.getInspection(insNo);
+        List<AnalysisResultDTO> results = analysisService.getDetectionResults(insNo);
+        List<RuleSummaryDTO> topRules = analysisService.getTopDetectionRules(insNo);
 
-        List<AnalysisResultDTO> results =
-            analysisService.getDetectionResults(insNo);
-
-        model.addAttribute(
-            "inspection",
-            inspection
-        );
-
-        model.addAttribute(
-            "results",
-            results
-        );
+        model.addAttribute("inspection", inspection);
+        model.addAttribute("results", results);
+        model.addAttribute("topRules", topRules);
 
         return "analysis/result";
     }
