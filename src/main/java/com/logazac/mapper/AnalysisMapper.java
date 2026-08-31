@@ -8,6 +8,7 @@ import com.logazac.dto.DetectionSaveDTO;
 import com.logazac.dto.InspectionDTO;
 import com.logazac.dto.LogFileDTO;
 import com.logazac.dto.AnalysisResultDTO;
+import com.logazac.dto.RuleSummaryDTO;
 
 @Mapper
 public interface AnalysisMapper {
@@ -38,6 +39,10 @@ public interface AnalysisMapper {
     );
 
     List<AnalysisResultDTO> findDetectionResults(
+        @Param("insNo") int insNo
+    );
+
+    List<RuleSummaryDTO> findTopDetectionRules(
         @Param("insNo") int insNo
     );
 }
