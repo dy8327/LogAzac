@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import com.logazac.service.AnalysisService;
 import com.logazac.dto.AnalysisResultDTO;
 import com.logazac.dto.InspectionDTO;
 import com.logazac.dto.RuleSummaryDTO;
+import com.logazac.dto.UserDTO;
 
 @Controller
 public class LogAnalysisController {
@@ -48,74 +51,44 @@ public class LogAnalysisController {
     @PostMapping("/analysis/upload")
     public String uploadAndAnalyze(
         @RequestParam("logFile") MultipartFile logFile,
-        @RequestParam("sourceType") String sourceType
+        @RequestParam("sourceType") String sourceType,
+        HttpSession session
     ) throws Exception {
 
-        /* 파일 확인 */
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
         if (logFile.isEmpty()) {
             throw new IllegalArgumentException("업로드할 로그 파일이 없습니다.");
         }
 
-        /* 로그 종류 확인 */
-        if (
-            !"VENDING".equals(sourceType) && !"PAYMENT".equals(sourceType)
-        ) {
+        if (!"VENDING".equals(sourceType) && !"PAYMENT".equals(sourceType)) {
             throw new IllegalArgumentException("지원하지 않는 로그 종류입니다.");
         }
 
-        /*
-         * 원본 파일명
-         *
-         * 디렉터리 경로가 포함되어 들어오는 것을 방지하기 위해
-         * getFileName()으로 파일명만 추출
-         */
         String originalFileName =
             Paths.get(logFile.getOriginalFilename())
-            .getFileName()
-            .toString();
+                .getFileName()
+                .toString();
 
-        /*
-         * 같은 이름의 파일 덮어쓰기 방지
-         */
         String savedFileName = UUID.randomUUID() + "_" + originalFileName;
 
-        /*
-         * 업로드 폴더 생성
-         */
         Path uploadPath = Paths.get(uploadDir);
         Files.createDirectories(uploadPath);
 
-        /*
-         * 실제 저장 경로
-         */
         Path savedPath = uploadPath.resolve(savedFileName);
-
-        /*
-         * 파일 저장
-         */
         logFile.transferTo(savedPath);
 
-        /*
-         * 현재는 로그인 기능 연결 전이므로
-         * 테스트 회원 USER_NO = 1 사용
-         */
-        int userNo = 1;
-
-        /*
-         * Python 분석 + DB 저장
-         *
-         * 반환값 = INSPECTIONS.INS_NO
-         */
         int insNo = analysisService.analyzeAndSave(
-                savedPath.toString(),
-                originalFileName,
-                userNo,
-                sourceType
-            );
+            savedPath.toString(),
+            originalFileName,
+            loginUser.getUserNo(),
+            sourceType
+        );
 
-        /*
-         * 분석 결과 상세 페이지로 이동
-         */
         return "redirect:/analysis/result/" + insNo;
     }
 
@@ -137,13 +110,15 @@ public class LogAnalysisController {
     }
 
     @GetMapping("/analysis/history")
-    public String history(Model model) {
+    public String history(HttpSession session, Model model) {
 
-        // 로그인 구현 전 임시 사용자
-        int userNo = 1;
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
-        List<InspectionDTO> inspections =
-            analysisService.getInspectionHistory(userNo);
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        List<InspectionDTO> inspections = analysisService.getInspectionHistory(loginUser.getUserNo());
 
         model.addAttribute("inspections", inspections);
 
