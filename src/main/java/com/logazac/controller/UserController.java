@@ -118,4 +118,18 @@ public class UserController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/user/mypage")
+    public String mypage(HttpSession session, Model model) {
+
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        model.addAttribute("user", loginUser);
+
+        return "user/mypage";
+    }
 }

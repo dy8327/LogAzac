@@ -39,4 +39,6 @@ public interface AnalysisMapper {
     List<RuleSummaryDTO> findTopDetectionRules(@Param("insNo") int insNo);
 
     List<InspectionDTO> findInspectionHistory(@Param("userNo") int userNo);
+    //업로드 파일 조회
+    List<LogFileDTO> findUserLogFiles(@Param("userNo") int userNo);
 }

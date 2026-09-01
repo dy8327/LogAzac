@@ -204,4 +204,19 @@
 
     </select>
 
+    <select id="findUserLogFiles" resultType="com.logazac.dto.LogFileDTO">
+
+        SELECT
+            FILE_NO,
+            FILE_NAME,
+            FILE_SIZE,
+            USER_NO,
+            SOURCE_TYPE,
+            FILE_PATH
+        FROM LOG_FILES
+        WHERE USER_NO = #{userNo}
+        ORDER BY FILE_NO DESC
+
+    </select>
+
 </mapper>

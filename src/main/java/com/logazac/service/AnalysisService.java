@@ -127,4 +127,8 @@ public class AnalysisService {
     public List<InspectionDTO> getInspectionHistory(int userNo) {
         return analysisMapper.findInspectionHistory(userNo);
     }
+
+    public List<LogFileDTO> getUserLogFiles(int userNo) {
+        return analysisMapper.findUserLogFiles(userNo);
+    }
 }
