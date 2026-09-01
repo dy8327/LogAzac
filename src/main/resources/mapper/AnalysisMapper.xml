@@ -215,8 +215,19 @@
             FILE_PATH
         FROM LOG_FILES
         WHERE USER_NO = #{userNo}
+        AND DELETED_YN = 'N'
         ORDER BY FILE_NO DESC
 
     </select>
+
+    <update id="markLogFileDeleted">
+
+        UPDATE LOG_FILES
+        SET DELETED_YN = 'Y'
+        WHERE FILE_NO = #{fileNo}
+        AND USER_NO = #{userNo}
+        AND DELETED_YN = 'N'
+
+    </update>
 
 </mapper>

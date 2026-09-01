@@ -1,6 +1,7 @@
 package com.logazac.controller;
 
 import java.util.Map;
+import java.util.List;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -9,17 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.logazac.dto.UserDTO;
+import com.logazac.service.AnalysisService;
 import com.logazac.service.UserService;
+import com.logazac.dto.LogFileDTO;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final AnalysisService analysisService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AnalysisService analysisService) {
         this.userService = userService;
+        this.analysisService = analysisService;
     }
 
     @GetMapping("/user/join")
@@ -128,8 +134,43 @@ public class UserController {
             return "redirect:/user/login";
         }
 
+        List<LogFileDTO> logFiles =
+            analysisService.getUserLogFiles(loginUser.getUserNo());
+
         model.addAttribute("user", loginUser);
+        model.addAttribute("logFiles", logFiles);
 
         return "user/mypage";
+    }
+
+    @PostMapping("/user/mypage/delete-file")
+    public String deleteLogFile(
+        @RequestParam("fileNo") int fileNo,
+        HttpSession session,
+        RedirectAttributes redirectAttributes
+    ) {
+
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        try {
+
+            analysisService.deleteUserLogFile(fileNo, loginUser.getUserNo());
+
+            redirectAttributes.addFlashAttribute("successMessage", "파일이 삭제되었습니다.");
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute("errorMessage", "파일 삭제 중 오류가 발생했습니다.");
+        }
+
+        return "redirect:/user/mypage";
     }
 }

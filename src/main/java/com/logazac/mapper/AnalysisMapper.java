@@ -41,4 +41,8 @@ public interface AnalysisMapper {
     List<InspectionDTO> findInspectionHistory(@Param("userNo") int userNo);
     //업로드 파일 조회
     List<LogFileDTO> findUserLogFiles(@Param("userNo") int userNo);
+
+    LogFileDTO findUserLogFiles(@Param("fileNo") int fileNo, @Param("userNo") int userNo);
+
+    int markLogFileDeleted(@Param("fileNo") int fileNo, @Param("userNo") int userNo);
 }

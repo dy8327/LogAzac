@@ -131,4 +131,23 @@ public class AnalysisService {
     public List<LogFileDTO> getUserLogFiles(int userNo) {
         return analysisMapper.findUserLogFiles(userNo);
     }
+
+    public void deleteUserLogFile(int fileNo, int userNo) throws Exception {
+
+        LogFileDTO logFile = analysisMapper.findUserLogFiles(fileNo, userNo);
+
+        if (logFile == null) {
+            throw new IllegalArgumentException("삭제할 파일을 찾을 수 없습니다.");
+        }
+
+        Path filePath = Path.of(logFile.getFilePath());
+
+        Files.deleteIfExists(filePath);
+
+        int result = analysisMapper.markLogFileDeleted(fileNo, userNo);
+
+        if (result == 0) {
+            throw new IllegalStateException("파일 삭제 처리에 실패했습니다.");
+        }
+    }
 }
