@@ -7,12 +7,9 @@
 <mapper namespace="com.logazac.mapper.AnalysisMapper">
 
     <!-- 로그 파일 저장 -->
-    <insert id="insertLogFile"
-            parameterType="com.logazac.dto.LogFileDTO">
+    <insert id="insertLogFile" parameterType="com.logazac.dto.LogFileDTO">
 
-        <selectKey keyProperty="fileNo"
-                   resultType="int"
-                   order="BEFORE">
+        <selectKey keyProperty="fileNo" resultType="int" order="BEFORE">
             SELECT SEQ_LOG_FILES.NEXTVAL
             FROM DUAL
         </selectKey>
@@ -35,14 +32,10 @@
 
     </insert>
 
-
     <!-- 검사 생성 -->
-    <insert id="insertInspection"
-            parameterType="com.logazac.dto.InspectionDTO">
+    <insert id="insertInspection" parameterType="com.logazac.dto.InspectionDTO">
 
-        <selectKey keyProperty="insNo"
-                   resultType="int"
-                   order="BEFORE">
+        <selectKey keyProperty="insNo" resultType="int" order="BEFORE">
             SELECT SEQ_INSPECTIONS.NEXTVAL
             FROM DUAL
         </selectKey>
@@ -65,14 +58,10 @@
 
     </insert>
 
-
     <!-- 이상 탐지 결과 저장 -->
-    <insert id="insertDetectionResult"
-            parameterType="com.logazac.dto.DetectionSaveDTO">
+    <insert id="insertDetectionResult" parameterType="com.logazac.dto.DetectionSaveDTO">
 
-        <selectKey keyProperty="resultNo"
-                   resultType="int"
-                   order="BEFORE">
+        <selectKey keyProperty="resultNo" resultType="int" order="BEFORE">
             SELECT SEQ_DETECTION_RESULTS.NEXTVAL
             FROM DUAL
         </selectKey>
@@ -95,7 +84,6 @@
 
     </insert>
 
-
     <!-- 검사 완료 -->
     <update id="completeInspection">
 
@@ -108,7 +96,6 @@
 
     </update>
 
-
     <!-- 검사 실패 -->
     <update id="failInspection">
 
@@ -120,8 +107,7 @@
     </update>
 
     <!-- 검사 기본 정보 -->
-    <select id="findInspection"
-            resultType="com.logazac.dto.InspectionDTO">
+    <select id="findInspection" resultType="com.logazac.dto.InspectionDTO">
 
         SELECT
             I.INS_NO,
@@ -146,10 +132,8 @@
 
     </select>
 
-
     <!-- 이상 탐지 결과 -->
-    <select id="findDetectionResults"
-            resultType="com.logazac.dto.AnalysisResultDTO">
+    <select id="findDetectionResults" resultType="com.logazac.dto.AnalysisResultDTO">
 
         SELECT
             R.RESULT_NO,
@@ -172,8 +156,7 @@
 
     </select>
 
-    <select id="findTopDetectionRules"
-            resultType="com.logazac.dto.RuleSummaryDTO">
+    <select id="findTopDetectionRules" resultType="com.logazac.dto.RuleSummaryDTO">
 
         SELECT *
         FROM (
@@ -196,8 +179,7 @@
 
     </select>
 
-    <select id="findInspectionHistory"
-            resultType="com.logazac.dto.InspectionDTO">
+    <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
 
         SELECT
             I.INS_NO,

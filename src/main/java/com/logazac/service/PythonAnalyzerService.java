@@ -43,16 +43,8 @@ public class PythonAnalyzerService {
         );
 
         // Python 출력 인코딩 UTF-8 고정
-        processBuilder.environment().put(
-            "PYTHONIOENCODING",
-            "UTF-8"
-        );
-
-        processBuilder.environment().put(
-            "PYTHONUTF8",
-            "1"
-        );
-
+        processBuilder.environment().put("PYTHONIOENCODING", "UTF-8");
+        processBuilder.environment().put("PYTHONUTF8", "1");
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
@@ -61,10 +53,7 @@ public class PythonAnalyzerService {
 
         try (
             BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                    process.getInputStream(),
-                    StandardCharsets.UTF_8
-                )
+                new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8)
             )
         ) {
             String line;
@@ -77,17 +66,10 @@ public class PythonAnalyzerService {
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
-            throw new RuntimeException(
-                "Python 분석 실패. exitCode="
-                    + exitCode
-                    + ", output="
-                    + output
-            );
+            throw new RuntimeException("Python 분석 실패. exitCode="
+                    + exitCode + ", output=" + output);
         }
 
-        return jsonMapper.readValue(
-            output.toString(),
-            PythonAnalysisResponse.class
-        );
+        return jsonMapper.readValue(output.toString(),PythonAnalysisResponse.class);
     }
 }

@@ -66,8 +66,7 @@ public class AnalysisService {
             PythonAnalysisResponse response = pythonAnalyzerService.analyze(filePath);
 
             if (!response.isSuccess()) {
-                throw new RuntimeException("Python 분석 실패: " + response.getMessage()
-                );
+                throw new RuntimeException("Python 분석 실패: " + response.getMessage());
             }
 
             /* 4. 탐지 결과 저장 */
@@ -75,9 +74,7 @@ public class AnalysisService {
                 DetectionResultDTO result : response.getResults()
             ) {
 
-                Integer detNo = detectionRuleMapper.findDetNoByRuleType(
-                            result.getRuleType()
-                        );
+                Integer detNo = detectionRuleMapper.findDetNoByRuleType(result.getRuleType());
 
                 if (detNo == null) {
                     throw new RuntimeException("등록되지 않은 탐지 규칙: " + result.getRuleType());

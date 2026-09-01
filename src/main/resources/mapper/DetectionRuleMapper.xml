@@ -6,8 +6,7 @@
 
 <mapper namespace="com.logazac.mapper.DetectionRuleMapper">
 
-    <select id="findDetNoByRuleType"
-            resultType="java.lang.Integer">
+    <select id="findDetNoByRuleType" resultType="java.lang.Integer">
 
         SELECT DET_NO
         FROM DETECTION_RULES
