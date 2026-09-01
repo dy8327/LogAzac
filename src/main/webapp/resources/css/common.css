@@ -9,14 +9,14 @@ body {
 }
 
 body {
-    background: #11161b;
+    background: #0a1420;
     color: #e9edf1;
     font-family: Arial, sans-serif;
 }
 
 .site-header {
     height: 64px;
-    background: #0d1115;
+    background: #081019;
     border-bottom: 1px solid #343b42;
 }
 
@@ -62,7 +62,7 @@ body {
 
 .site-footer {
     margin-top: 70px;
-    background: #0d1115;
+    background: #081019;
     border-top: 1px solid #343b42;
 }
 
