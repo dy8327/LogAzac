@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.logazac.mapper.UserMapper">
+
+    <!-- 회원가입 -->
+    <insert id="insertUser" parameterType="com.logazac.dto.UserDTO">
+
+        INSERT INTO USERS (
+            USER_NO,
+            USER_ID,
+            USER_PW,
+            USER_EMAIL
+        )
+        VALUES (
+            SEQ_USERS.NEXTVAL,
+            #{userId},
+            #{userPw},
+            #{userEmail}
+        )
+
+    </insert>
+
+    <!-- 아이디 중복 확인 -->
+    <select id="countByUserId" resultType="int">
+
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_ID = #{userId}
+
+    </select>
+
+    <!-- 이메일 중복 확인 -->
+    <select id="countByUserEmail" resultType="int">
+
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_EMAIL = #{userEmail}
+
+    </select>
+
+    <!-- 로그인용 회원 조회 -->
+    <select id="findByUserId" resultType="com.logazac.dto.UserDTO">
+
+        SELECT
+            USER_NO,
+            USER_ID,
+            USER_PW,
+            USER_EMAIL,
+            ROLE,
+            REG_DATE,
+            BLOCK_YN
+        FROM USERS
+        WHERE USER_ID = #{userId}
+
+    </select>
+
+    <!-- 회원번호 조회 -->
+    <select id="findByUserNo" resultType="com.logazac.dto.UserDTO">
+
+        SELECT
+            USER_NO,
+            USER_ID,
+            USER_PW,
+            USER_EMAIL,
+            ROLE,
+            REG_DATE,
+            BLOCK_YN
+        FROM USERS
+        WHERE USER_NO = #{userNo}
+
+    </select>
+
+</mapper>
