@@ -1,0 +1,263 @@
+.mypage-main {
+    width: 92%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 50px 0;
+}
+
+.mypage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.mypage-header h1 {
+    margin: 0 0 8px;
+    color: #ffd43b;
+    font-size: 30px;
+}
+
+.mypage-header p {
+    margin: 0;
+    color: #8e9aa5;
+    font-size: 14px;
+}
+
+.history-btn {
+    display: inline-block;
+    padding: 11px 18px;
+    color: #11161b;
+    background: #ffd43b;
+    border-radius: 7px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.history-btn:hover {
+    background: #ffdf5e;
+}
+
+.mypage-box {
+    margin-bottom: 24px;
+    background: #181e24;
+    border: 1px solid #303942;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #303942;
+}
+
+.section-title h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.count {
+    padding: 3px 8px;
+    color: #ffd43b;
+    background: #2c3238;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.user-info {
+    display: flex;
+    gap: 40px;
+    padding: 24px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 220px;
+}
+
+.info-label {
+    color: #8e9aa5;
+    font-size: 12px;
+}
+
+.info-value {
+    color: #e9edf1;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 15px 14px;
+    text-align: left;
+    border-bottom: 1px solid #2a3239;
+    font-size: 14px;
+}
+
+th {
+    color: #9da9b4;
+    background: #151a1f;
+    font-size: 12px;
+}
+
+tbody tr:hover {
+    background: #1d252c;
+}
+
+.file-name {
+    max-width: 320px;
+    word-break: break-all;
+}
+
+.source-type {
+    color: #66c7d4;
+}
+
+.delete-btn {
+    padding: 7px 12px;
+    color: #ff7777;
+    background: transparent;
+    border: 1px solid #6b3a3a;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.delete-btn:hover:not(:disabled) {
+    background: rgba(255, 119, 119, 0.1);
+}
+
+.delete-btn:disabled {
+    color: #69737c;
+    border-color: #39424a;
+    cursor: default;
+}
+
+.empty-message {
+    padding: 50px;
+    text-align: center;
+    color: #77838e;
+}
+
+.success-message,
+.error-message {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.success-message {
+    color: #7ee787;
+    background: rgba(126, 231, 135, 0.08);
+    border: 1px solid rgba(126, 231, 135, 0.25);
+}
+
+.error-message {
+    color: #ff8c8c;
+    background: rgba(255, 90, 90, 0.08);
+    border: 1px solid rgba(255, 90, 90, 0.25);
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.delete-modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 28px;
+    background: #181e24;
+    border: 1px solid #405469;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.delete-modal h3 {
+    margin: 0 0 14px;
+    color: #ffd43b;
+    font-size: 20px;
+}
+
+.delete-modal p {
+    margin: 0;
+    color: #e9edf1;
+    font-size: 14px;
+}
+
+.modal-guide {
+    margin-top: 8px !important;
+    color: #8e9aa5 !important;
+    font-size: 12px !important;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.modal-cancel,
+.modal-delete {
+    min-width: 90px;
+    padding: 10px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-cancel {
+    color: #d7dde2;
+    background: #222b34;
+    border: 1px solid #405469;
+}
+
+.modal-delete {
+    color: #fff;
+    background: #d94b4b;
+    border: 1px solid #d94b4b;
+}
+
+@media (max-width: 800px) {
+    .mypage-header {
+        align-items: flex-start;
+        gap: 20px;
+        flex-direction: column;
+    }
+
+    .user-info {
+        gap: 20px;
+        flex-direction: column;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+}
