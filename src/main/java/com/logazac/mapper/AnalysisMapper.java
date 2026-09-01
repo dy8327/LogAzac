@@ -32,7 +32,7 @@ public interface AnalysisMapper {
     // 검사 실패
     int failInspection(@Param("insNo") int insNo);
 
-    InspectionDTO findInspection(@Param("insNo") int insNo);
+    InspectionDTO findInspection(@Param("insNo") int insNo,  @Param("userNo") int userNo);
 
     List<AnalysisResultDTO> findDetectionResults(@Param("insNo") int insNo);
 

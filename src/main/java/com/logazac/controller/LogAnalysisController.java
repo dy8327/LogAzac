@@ -39,8 +39,14 @@ public class LogAnalysisController {
     /*
      * 로그 업로드 화면
      */
-    @GetMapping("/analysis")
-    public String uploadForm() {
+   @GetMapping("/analysis")
+    public String uploadForm(HttpSession session) {
+
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
 
         return "analysis/upload";
     }
@@ -95,11 +101,24 @@ public class LogAnalysisController {
     @GetMapping("/analysis/result/{insNo}")
     public String analysisResult(
         @PathVariable("insNo") int insNo,
+        HttpSession session,
         Model model
     ) {
 
-        InspectionDTO inspection = analysisService.getInspection(insNo);
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        InspectionDTO inspection = analysisService.getInspection(insNo, loginUser.getUserNo());
+
+        if (inspection == null) {
+            return "redirect:/analysis/history";
+        }
+
         List<AnalysisResultDTO> results = analysisService.getDetectionResults(insNo);
+
         List<RuleSummaryDTO> topRules = analysisService.getTopDetectionRules(insNo);
 
         model.addAttribute("inspection", inspection);

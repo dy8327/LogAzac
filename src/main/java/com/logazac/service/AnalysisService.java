@@ -108,9 +108,9 @@ public class AnalysisService {
         }
     }
 
-    public InspectionDTO getInspection(int insNo) {
+    public InspectionDTO getInspection(int insNo, int userNo) {
 
-        return analysisMapper.findInspection(insNo);
+        return analysisMapper.findInspection(insNo, userNo);
     }
 
     public List<AnalysisResultDTO> getDetectionResults(int insNo) {

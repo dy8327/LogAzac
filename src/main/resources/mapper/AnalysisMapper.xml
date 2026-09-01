@@ -129,6 +129,7 @@
         ON I.FILE_NO = F.FILE_NO
 
         WHERE I.INS_NO = #{insNo}
+        AND F.USER_NO = #{userNo}
 
     </select>
 
