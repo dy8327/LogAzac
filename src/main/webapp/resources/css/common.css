@@ -21,6 +21,14 @@ body {
     height: 64px;
     background: #081019;
     border-bottom: 1px solid #343b42;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.site-header.header-hide {
+    transform: translateY(-100%);
 }
 
 main {
@@ -68,7 +76,7 @@ main {
 }
 
 .site-footer {
-    margin-top: 70px;
+    margin-top: 20px;
     background: #081019;
     border-top: 1px solid #343b42;
 }
@@ -76,7 +84,7 @@ main {
 .site-footer-inner {
     width: 92%;
     max-width: 1400px;
-    min-height: 110px;
+    min-height: 80px;
     margin: 0 auto;
 
     display: flex;

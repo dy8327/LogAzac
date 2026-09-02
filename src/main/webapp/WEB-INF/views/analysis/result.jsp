@@ -9,229 +9,158 @@
     <meta charset="UTF-8">
     <title>LogAzac - 분석 결과</title>
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-result.css">
 </head>
 
 <body>
 
-<c:set var="normalCount"
-       value="${inspection.totalLines - inspection.abnormalLogCount}" />
-
+<c:set var="normalCount" value="${inspection.totalLines - inspection.abnormalLogCount}" />
 <c:set var="errorRate"
        value="${inspection.totalLines > 0
            ? inspection.abnormalLogCount * 100.0 / inspection.totalLines
            : 0}" />
+<jsp:include page="../common/header.jsp">
+        <jsp:param name="activeMenu" value="analysis" />
+    </jsp:include>
 
-<header class="header">
-
-    <div class="logo">
-        Log <span>Azac</span>
-    </div>
-
-    <nav class="nav">
-        <a class="active"
-           href="${pageContext.request.contextPath}/analysis">
-            로그 분석
-        </a>
-
-        <a href="#">
-            검사 이력
-        </a>
-
-        <a href="#">
-            마이페이지
-        </a>
-    </nav>
-
-</header>
-
-<main class="container">
-
+<main class="page-wrap">
     <h1 class="title">
         검사 <span>완료!</span>
     </h1>
 
     <section class="summary-grid">
-
         <div class="summary-card">
             <div class="summary-label">
                 전체 로그
             </div>
-
             <div class="summary-value total">
                 ${inspection.totalLines}
             </div>
         </div>
-
         <div class="summary-card">
             <div class="summary-label">
                 정상 로그
             </div>
-
             <div class="summary-value normal">
                 ${normalCount}
             </div>
         </div>
-
         <div class="summary-card">
             <div class="summary-label">
                 이상 로그
             </div>
-
             <div class="summary-value abnormal">
                 ${inspection.abnormalLogCount}
             </div>
         </div>
-
         <div class="summary-card">
             <div class="summary-label">
                 오류율
             </div>
-
             <div class="summary-value rate">
                 <fmt:formatNumber
                     value="${errorRate}"
                     pattern="0.00" />%
             </div>
         </div>
-
     </section>
 
     <section class="info-box">
-
         <div class="box-title">
             검사 정보
         </div>
 
         <table class="info-table">
-            
             <tr>
                 <th>검사 번호</th>
                 <td>${inspection.insNo}</td>
-
                 <th>분석 상태</th>
                 <td>${inspection.insStatus}</td>
             </tr>
-
             <tr>
                 <th>파일명</th>
-                <td>${inspection.fileName}</td>
-
-                <th>로그 종류</th>
-                <td>${inspection.sourceType}</td>
-            </tr>
-
+                <td colspan="3">${inspection.fileName}</td>
             <tr>
                 <th>탐지 결과 건</th>
                 <td>${inspection.errorCount}</td>
-
                 <th>이상 로그 건</th>
                 <td>${inspection.abnormalLogCount}</td>
             </tr>
-
         </table>
-
     </section>
 
     <section class="result-box">
-
         <div class="box-title">
             이상 탐지 결과
-
             <span class="count-badge">
                 ${inspection.errorCount}건
             </span>
         </div>
 
         <c:choose>
-
             <c:when test="${empty results}">
-
                 <div class="empty">
                     탐지된 이상 로그가 없습니다.
                 </div>
 
             </c:when>
-
             <c:otherwise>
-
                 <table class="result-table">
-
                     <thead>
-
                     <tr>
                         <th class="col-line">
                             라인
                         </th>
-
                         <th class="col-rule">
                             탐지 규칙
                         </th>
-
                         <th class="col-value">
                             탐지 값
                         </th>
-
                         <th>
                             원본 로그
                         </th>
                     </tr>
-
                     </thead>
 
                     <tbody>
-
-                    <c:forEach var="result"
-                               items="${results}">
-
+                    <c:forEach var="result" items="${results}">
                         <tr>
-
                             <td>
                                 ${result.lineNo}
                             </td>
-
                             <td>
                                 <div class="rule-name">
                                     ${result.ruleType}
                                 </div>
-
                                 <div class="rule-description">
                                     ${result.ruleDescription}
                                 </div>
                             </td>
-
                             <td class="detected-value">
                                 ${result.detectedValue}
                             </td>
-
                             <td class="log-content">
                                 <span class="raw-log">${result.logContent}</span>
                                 <span class="highlight-value" hidden>${result.detectedValue}</span>
                             </td>
-
                         </tr>
-
                     </c:forEach>
-
                     </tbody>
-
                 </table>
-
             </c:otherwise>
-
         </c:choose>
-
     </section>
 
     <div class="actions">
-
-        <a class="btn" href="${pageContext.request.contextPath}/analysis">
-            다른 로그 분석하기
-        </a>
-
+        <a class="btn secondary" href="${pageContext.request.contextPath}/analysis/history">검사 이력</a>
+        <a class="btn" href="${pageContext.request.contextPath}/analysis">다른 로그 분석하기</a>
     </div>
-
+   
 </main>
+ <jsp:include page="../common/footer.jsp" />
+
 
 <script>
 document.querySelectorAll(".log-content").forEach(function(container) {

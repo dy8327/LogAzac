@@ -8,15 +8,10 @@ body {
     color: #f4f4f4;
     font-family: Arial, sans-serif;
 }
-
-.header {
-    height: 64px;
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #0d1115;
-    border-bottom: 1px solid #343b42;
+.page-wrap {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 24px 0 60px;
 }
 
 .logo {
@@ -39,12 +34,6 @@ body {
     color: #ffd43b;
 }
 
-.container {
-    width: 1180px;
-    max-width: calc(100% - 48px);
-    margin: 36px auto 60px;
-}
-
 .title {
     font-size: 30px;
     margin-bottom: 28px;
@@ -57,7 +46,7 @@ body {
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 16px;
     margin-bottom: 28px;
 }
 
@@ -115,7 +104,7 @@ body {
 .info-table,
 .result-table {
     width: 100%;
-    border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .info-table th,
@@ -126,6 +115,10 @@ body {
     padding: 14px 16px;
     text-align: left;
 }
+.result-table th:nth-child(1) { width: 7%; }
+.result-table th:nth-child(2) { width: 20%; }
+.result-table th:nth-child(3) { width: 20%; }
+.result-table th:nth-child(4) { width: 53%; }
 
 .info-table th {
     width: 150px;
@@ -186,10 +179,9 @@ body {
 
 .log-content {
     max-width: 520px;
-    line-height: 1.6;
-    color: #d5d9dc;
+    white-space: normal;
     word-break: break-all;
-    font-size: 12px;
+    line-height: 1.5;
 }
 
 .count-badge {
@@ -211,7 +203,8 @@ body {
 .actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 24px;
 }
 
 .btn {
@@ -230,13 +223,6 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .container {
-        max-width: calc(100% - 24px);
-    }
-
-    .header {
-        padding: 0 20px;
-    }
 }
 
 .top-rule-list {

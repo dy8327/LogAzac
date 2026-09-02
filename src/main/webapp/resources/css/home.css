@@ -9,7 +9,7 @@
 ========================================================= */
 
 .hero {
-    min-height: 450px;
+    min-height: 310px;
 
     display: grid;
     grid-template-columns: 400px 1fr;

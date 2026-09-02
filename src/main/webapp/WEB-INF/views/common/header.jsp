@@ -75,3 +75,20 @@
     </div>
 
 </header>
+
+<script>
+let lastScrollY = window.scrollY;
+
+window.addEventListener("scroll", function() {
+    const header = document.querySelector(".site-header");
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        header.classList.add("header-hide");
+    } else {
+        header.classList.remove("header-hide");
+    }
+
+    lastScrollY = currentScrollY;
+});
+</script>
