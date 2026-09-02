@@ -7,6 +7,7 @@ import com.logazac.dto.AdminDashboardDTO;
 import com.logazac.mapper.AdminMapper;
 import com.logazac.dto.DailyStatisticsDTO;
 import com.logazac.dto.RuleSummaryDTO;
+import com.logazac.dto.InspectionDTO;
 
 @Service
 public class AdminService {
@@ -26,5 +27,9 @@ public class AdminService {
 
     public List<RuleSummaryDTO> getRuleStatistics() {
         return adminMapper.findRuleStatistics();
+    }
+
+    public List<InspectionDTO> getInspectionHistory() {
+        return adminMapper.findInspectionHistory();
     }
 }

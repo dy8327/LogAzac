@@ -64,4 +64,18 @@
         ORDER BY COUNT(*) DESC
     </select>
 
+    <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
+        SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
+            I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE, U.USER_ID,
+            (
+                SELECT COUNT(DISTINCT R.LINE_NO)
+                FROM DETECTION_RESULTS R
+                WHERE R.INS_NO = I.INS_NO
+            ) AS "abnormalLogCount"
+        FROM INSPECTIONS I
+        JOIN LOG_FILES F ON I.FILE_NO = F.FILE_NO
+        JOIN USERS U ON F.USER_NO = U.USER_NO
+        ORDER BY I.INS_NO DESC
+    </select>
+
 </mapper>

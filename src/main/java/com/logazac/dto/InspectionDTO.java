@@ -12,6 +12,7 @@ public class InspectionDTO {
     private int errorCount;
     private String fileName;
     private String sourceType;
+    private String userId;
     private int abnormalLogCount;
     private LocalDateTime startDate;
 
@@ -95,5 +96,13 @@ public class InspectionDTO {
         return startDate.format(
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         );
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

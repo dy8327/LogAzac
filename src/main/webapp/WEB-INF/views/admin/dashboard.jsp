@@ -21,7 +21,7 @@
             <h1>통계 대시보드</h1>
             <p>LogAzac의 전체 로그 분석 현황입니다.</p>
         </div>
-        <a class="analysis-link" href="${pageContext.request.contextPath}/analysis/history">전체 검사 이력</a>
+        <a class="analysis-link" href="${pageContext.request.contextPath}/admin/inspections">전체 검사 이력</a>
     </section>
 
     <section class="summary-grid">

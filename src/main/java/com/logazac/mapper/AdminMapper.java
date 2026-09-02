@@ -5,10 +5,12 @@ import org.apache.ibatis.annotations.Mapper;
 import com.logazac.dto.AdminDashboardDTO;
 import com.logazac.dto.DailyStatisticsDTO;
 import com.logazac.dto.RuleSummaryDTO;
+import com.logazac.dto.InspectionDTO;
 
 @Mapper
 public interface AdminMapper {
     AdminDashboardDTO findDashboardSummary();
     List<DailyStatisticsDTO> findDailyStatistics();
     List<RuleSummaryDTO> findRuleStatistics();
+    List<InspectionDTO> findInspectionHistory();
 }

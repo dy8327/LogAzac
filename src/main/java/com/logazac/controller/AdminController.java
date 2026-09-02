@@ -45,4 +45,21 @@ public class AdminController {
         model.addAttribute("ruleStatistics", ruleStatistics);
         return "admin/dashboard";
     }
+
+    @GetMapping("/inspections")
+    public String inspectionHistory(HttpSession session, Model model) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("inspections", adminService.getInspectionHistory());
+
+        return "admin/inspectionList";
+    }
 }
