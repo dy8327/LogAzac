@@ -13,8 +13,8 @@ public interface DetectionRuleMapper {
     Integer findDetNoByRuleType(@Param("ruleType") String ruleType);
 
     List<DetectionRuleDTO> findAllRules();
-
+    List<DetectionRuleDTO> findActiveRules();
+    
     int updateUseYn(@Param("detNo") int detNo, @Param("useYn") String useYn);
-
     int insertRule(DetectionRuleDTO rule);
 }

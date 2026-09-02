@@ -20,7 +20,8 @@ def main():
     file_path = sys.argv[1]
 
     try:
-        results = analyze_file(file_path)
+        active_rules = set(sys.argv[2].split(",")) if len(sys.argv) >= 3 and sys.argv[2] else set()
+        results = analyze_file(file_path, active_rules)
         records = read_records(file_path)
         total_lines = len(records)
 

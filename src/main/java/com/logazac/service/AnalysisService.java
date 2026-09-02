@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.logazac.dto.DetectionResultDTO;
 import com.logazac.dto.DetectionSaveDTO;
+import com.logazac.dto.DetectionRuleDTO;
 import com.logazac.dto.InspectionDTO;
 import com.logazac.dto.LogFileDTO;
 import com.logazac.dto.PythonAnalysisResponse;
@@ -63,7 +64,12 @@ public class AnalysisService {
         try {
 
             /* 3. Python 로그 분석 */
-            PythonAnalysisResponse response = pythonAnalyzerService.analyze(filePath);
+            List<DetectionRuleDTO> activeRules = detectionRuleMapper.findActiveRules();
+            String activeRuleTypes = activeRules.stream()
+                .map(DetectionRuleDTO::getDetRuleType)
+                .collect(java.util.stream.Collectors.joining(","));
+
+            PythonAnalysisResponse response = pythonAnalyzerService.analyze(filePath, activeRuleTypes);
 
             if (!response.isSuccess()) {
                 throw new RuntimeException("Python 분석 실패: " + response.getMessage());

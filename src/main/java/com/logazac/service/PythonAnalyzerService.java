@@ -21,7 +21,7 @@ public class PythonAnalyzerService {
         this.jsonMapper = jsonMapper;
     }
 
-    public PythonAnalysisResponse analyze(String filePath) throws Exception {
+    public PythonAnalysisResponse analyze(String filePath, String activeRuleTypes) throws Exception {
 
         String pythonExe =
             "C:/Users/Administrator/AppData/Local/Python/pythoncore-3.14-64/python.exe";
@@ -39,7 +39,8 @@ public class PythonAnalyzerService {
         ProcessBuilder processBuilder = new ProcessBuilder(
             pythonExe,
             analyzerPath,
-            filePath
+            filePath,
+            activeRuleTypes
         );
 
         // Python 출력 인코딩 UTF-8 고정

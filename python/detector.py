@@ -17,13 +17,13 @@ def has_corrupted_character(text):
     return False
 
 
-def detect_basic_errors(parsed):
+def detect_basic_errors(parsed, active_rules):
     errors = []
     corrupted_found = False
 
     for slot in parsed["slots"]:
 
-        if slot["product_name"] == "":
+        if "MISSING_PRODUCT_NAME" in active_rules and slot["product_name"] == "":
             errors.append({
                 "rule_type": "MISSING_PRODUCT_NAME",
                 "slot_code": slot["slot_code"],
@@ -34,18 +34,18 @@ def detect_basic_errors(parsed):
                 )
             })
 
-        if has_corrupted_character(slot["product_name"]):
+        if "CORRUPTED_DATA" in active_rules and has_corrupted_character(slot["product_name"]):
             errors.append({
                 "rule_type": "CORRUPTED_DATA",
                 "slot_code": slot["slot_code"],
                 "detected_value": slot["product_name"]
             })
-
             corrupted_found = True
 
     # 슬롯에서 잡히지 않은 깨진 문자만 전체 로그 검사
     if (
-        not corrupted_found
+        "CORRUPTED_DATA" in active_rules
+        and not corrupted_found
         and has_corrupted_character(parsed["raw_log"])
     ):
         errors.append({
@@ -56,7 +56,7 @@ def detect_basic_errors(parsed):
 
     return errors
 
-def compare_with_previous(current, previous):
+def compare_with_previous(current, previous, active_rules):
     """
     동일 장비의 이전 로그와 비교해서 판단
     """
@@ -82,7 +82,7 @@ def compare_with_previous(current, previous):
     )
 
     # 몇 개 빠진 정도가 아니라 대량으로 사라진 경우 우선 탐지
-    if missing_slots:
+    if "MISSING_SLOT" in active_rules and missing_slots:
         errors.append({
             "rule_type": "MISSING_SLOT",
             "slot_code": None,
@@ -101,7 +101,8 @@ def compare_with_previous(current, previous):
         new = current_slots[slot_code]
 
         if (
-            old["price"]
+            "PRICE_CHANGED" in active_rules
+            and old["price"]
             and new["price"]
             and old["price"] != new["price"]
         ):
@@ -116,7 +117,8 @@ def compare_with_previous(current, previous):
             })
 
         if (
-            old["product_name"]
+            "PRODUCT_NAME_CHANGED" in active_rules
+            and old["product_name"]
             and new["product_name"]
             and old["product_name"] != new["product_name"]
         ):
@@ -134,7 +136,7 @@ def compare_with_previous(current, previous):
     return errors
 
 
-def analyze_file(file_path):
+def analyze_file(file_path, active_rules):
 
     records = read_records(file_path)
 
@@ -158,7 +160,7 @@ def analyze_file(file_path):
 
         # 로그 자체 검사
         errors.extend(
-            detect_basic_errors(parsed)
+            detect_basic_errors(parsed, active_rules)
         )
 
         # 동일 장비의 이전 로그 가져오기
@@ -170,7 +172,8 @@ def analyze_file(file_path):
         errors.extend(
             compare_with_previous(
                 parsed,
-                previous
+                previous,
+                active_rules
             )
         )
 
@@ -197,8 +200,15 @@ def analyze_file(file_path):
 def main():
 
     file_path = "02021070138상품명및금액변경건.txt"
+    active_rules = {
+        "MISSING_PRODUCT_NAME",
+        "CORRUPTED_DATA",
+        "MISSING_SLOT",
+        "PRICE_CHANGED",
+        "PRODUCT_NAME_CHANGED"
+    }
 
-    results = analyze_file(file_path)
+    results = analyze_file(file_path, active_rules)
 
     print()
     print("===== 이상 탐지 결과 =====")
