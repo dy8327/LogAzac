@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -12,16 +11,12 @@
 
 <h1>로그 이상 분석</h1>
 
-<form action="${pageContext.request.contextPath}/analysis/upload"
-      method="post"
-      enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/analysis/upload" method="post" enctype="multipart/form-data">
 
     <div>
         <label for="sourceType">로그 종류</label>
 
-        <select id="sourceType"
-                name="sourceType"
-                required>
+        <select id="sourceType" name="sourceType" required>
 
             <option value="">선택</option>
             <option value="VENDING">자판기 로그</option>
@@ -35,11 +30,7 @@
     <div>
         <label for="logFile">로그 파일</label>
 
-        <input type="file"
-               id="logFile"
-               name="logFile"
-               accept=".txt,.log"
-               required>
+        <input type="file" id="logFile" name="logFile" accept=".txt,.log" required>
     </div>
 
     <br>

@@ -8,11 +8,8 @@
     <meta charset="UTF-8">
     <title>LogAzac - 로그 이상 분석 시스템</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/resources/css/common.css">
-
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/resources/css/home.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/home.css">
 </head>
 
 <body>

@@ -8,8 +8,7 @@
     <meta charset="UTF-8">
     <title>검사 이력 - LogAzac</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
 </head>
 <body>
 

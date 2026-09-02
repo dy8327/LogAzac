@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-
-<%@ taglib prefix="c"
-           uri="jakarta.tags.core" %>
-
-<%@ taglib prefix="fmt"
-           uri="jakarta.tags.fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -14,8 +9,7 @@
     <meta charset="UTF-8">
     <title>LogAzac - 분석 결과</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/resources/css/analysis-result.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-result.css">
 </head>
 
 <body>
@@ -231,8 +225,7 @@
 
     <div class="actions">
 
-        <a class="btn"
-           href="${pageContext.request.contextPath}/analysis">
+        <a class="btn" href="${pageContext.request.contextPath}/analysis">
             다른 로그 분석하기
         </a>
 
@@ -294,10 +287,7 @@ document.querySelectorAll(".log-content").forEach(function(container) {
                 value: value
             });
 
-            index = logContent.indexOf(
-                value,
-                index + value.length
-            );
+            index = logContent.indexOf(value, index + value.length);
         }
     });
 
@@ -308,10 +298,7 @@ document.querySelectorAll(".log-content").forEach(function(container) {
     const filteredMatches = [];
 
     matches.forEach(function(match) {
-        const last =
-            filteredMatches[
-                filteredMatches.length - 1
-            ];
+        const last = filteredMatches[filteredMatches.length - 1];
 
         if (!last || match.start >= last.end) {
             filteredMatches.push(match);
@@ -334,8 +321,7 @@ document.querySelectorAll(".log-content").forEach(function(container) {
             );
         }
 
-        const highlight =
-            document.createElement("span");
+        const highlight = document.createElement("span");
 
         highlight.className = "log-highlight";
         highlight.textContent = match.value;
