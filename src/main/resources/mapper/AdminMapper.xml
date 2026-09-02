@@ -89,5 +89,14 @@
         SET BLOCK_YN = #{blockYn}
         WHERE USER_NO = #{userNo}
     </update>
+    
+    <!--로그파일 조회-->
+    <select id="findAllLogFiles" resultType="com.logazac.dto.LogFileDTO">
+        SELECT F.FILE_NO, F.FILE_NAME, F.FILE_SIZE, F.USER_NO, F.SOURCE_TYPE,
+            F.FILE_PATH, F.DELETED_YN, F.FILE_REGDATE, U.USER_ID
+        FROM LOG_FILES F
+        JOIN USERS U ON F.USER_NO = U.USER_NO
+        ORDER BY F.FILE_NO DESC
+    </select>
 
 </mapper>

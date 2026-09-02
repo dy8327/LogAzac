@@ -1,5 +1,7 @@
 package com.logazac.dto;
 
+import java.time.LocalDateTime;
+
 public class LogFileDTO {
 
     private int fileNo;
@@ -8,6 +10,9 @@ public class LogFileDTO {
     private int userNo;
     private String sourceType;
     private String filePath;
+    private String userId;
+    private String deletedYn;
+    private LocalDateTime fileRegdate;
 
     public int getFileNo() {
         return fileNo;
@@ -55,5 +60,36 @@ public class LogFileDTO {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getDeletedYn() {
+        return deletedYn;
+    }
+
+    public void setDeletedYn(String deletedYn) {
+        this.deletedYn = deletedYn;
+    }
+
+    public LocalDateTime getFileRegdate() {
+        return fileRegdate;
+    }
+
+    public void setFileRegdate(LocalDateTime fileRegdate) {
+        this.fileRegdate = fileRegdate;
+    }
+
+    public String getFormattedFileRegdate() {
+        if (fileRegdate == null) {
+            return "";
+        }
+        return fileRegdate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }

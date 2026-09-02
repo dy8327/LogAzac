@@ -9,6 +9,7 @@ import com.logazac.dto.DailyStatisticsDTO;
 import com.logazac.dto.RuleSummaryDTO;
 import com.logazac.dto.InspectionDTO;
 import com.logazac.dto.UserDTO;
+import com.logazac.dto.LogFileDTO;
 
 @Service
 public class AdminService {
@@ -40,5 +41,9 @@ public class AdminService {
 
     public int updateUserBlockStatus(int userNo, String blockYn) {
         return adminMapper.updateUserBlockStatus(userNo, blockYn);
+    }
+
+    public List<LogFileDTO> getAllLogFiles() {
+        return adminMapper.findAllLogFiles();
     }
 }

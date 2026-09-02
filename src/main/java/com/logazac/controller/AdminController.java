@@ -110,4 +110,21 @@ public class AdminController {
 
         return "redirect:/admin/users";
     }
+
+    @GetMapping("/files")
+    public String fileList(HttpSession session, Model model) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("logFiles", adminService.getAllLogFiles());
+
+        return "admin/fileList";
+    }
 }
