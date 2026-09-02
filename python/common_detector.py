@@ -17,10 +17,7 @@ def analyze_common(file_path, active_rules):
         if not text:
             continue
 
-        if "DUPLICATE_ERROR" in active_rules and (
-            "ORA-00001" in text
-            or "SQLIntegrityConstraintViolationException" in text
-        ):
+        if "DUPLICATE_ERROR" in active_rules and "ORA-00001" in text:
             results.append({
                 "log_no": line_no,
                 "line_no": line_no,
