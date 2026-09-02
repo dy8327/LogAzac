@@ -7,12 +7,35 @@
 <mapper namespace="com.logazac.mapper.DetectionRuleMapper">
 
     <select id="findDetNoByRuleType" resultType="java.lang.Integer">
-
         SELECT DET_NO
         FROM DETECTION_RULES
         WHERE DET_RULE_TYPE = #{ruleType}
           AND USE_YN = 'Y'
-
     </select>
+
+    <select id="findAllRules" resultType="com.logazac.dto.DetectionRuleDTO">
+        SELECT DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION, USE_YN, REG_DATE
+        FROM DETECTION_RULES
+        ORDER BY DET_NO
+    </select>
+
+    <update id="updateUseYn">
+        UPDATE DETECTION_RULES
+        SET USE_YN = #{useYn}
+        WHERE DET_NO = #{detNo}
+    </update>
+
+    <insert id="insertRule" parameterType="com.logazac.dto.DetectionRuleDTO">
+        INSERT INTO DETECTION_RULES (
+            DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION, USE_YN, REG_DATE
+        ) VALUES (
+            SEQ_DETECTION_RULES.NEXTVAL,
+            #{detRuleType},
+            #{detPattern},
+            #{detDescription},
+            #{useYn},
+            SYSDATE
+        )
+    </insert>
 
 </mapper>

@@ -8,12 +8,10 @@
 
     <!-- 로그 파일 저장 -->
     <insert id="insertLogFile" parameterType="com.logazac.dto.LogFileDTO">
-
         <selectKey keyProperty="fileNo" resultType="int" order="BEFORE">
             SELECT SEQ_LOG_FILES.NEXTVAL
             FROM DUAL
         </selectKey>
-
         INSERT INTO LOG_FILES (
             FILE_NO, FILE_NAME, FILE_SIZE, USER_NO, SOURCE_TYPE, FILE_PATH
         ) VALUES (
@@ -24,17 +22,14 @@
             #{sourceType},
             #{filePath}
         )
-
     </insert>
 
     <!-- 검사 생성 -->
     <insert id="insertInspection" parameterType="com.logazac.dto.InspectionDTO">
-
         <selectKey keyProperty="insNo" resultType="int" order="BEFORE">
             SELECT SEQ_INSPECTIONS.NEXTVAL
             FROM DUAL
         </selectKey>
-
         INSERT INTO INSPECTIONS (
             INS_NO, FILE_NO, INS_STATUS, START_DATE, TOTAL_LINES, ERROR_COUNT
         ) VALUES (
@@ -45,17 +40,14 @@
             0,
             0
         )
-
     </insert>
 
     <!-- 이상 탐지 결과 저장 -->
     <insert id="insertDetectionResult" parameterType="com.logazac.dto.DetectionSaveDTO">
-
         <selectKey keyProperty="resultNo" resultType="int" order="BEFORE">
             SELECT SEQ_DETECTION_RESULTS.NEXTVAL
             FROM DUAL
         </selectKey>
-
         INSERT INTO DETECTION_RESULTS (
             RESULT_NO, INS_NO, DET_NO, LINE_NO, LOG_CONTENT, DETECTED_VALUE
         ) VALUES (
@@ -66,94 +58,71 @@
             #{logContent},
             #{detectedValue}
         )
-
     </insert>
 
     <!-- 검사 완료 -->
     <update id="completeInspection">
-
         UPDATE INSPECTIONS
         SET INS_STATUS = 'COMPLETED',
             END_DATE = SYSDATE,
             TOTAL_LINES = #{totalLines},
             ERROR_COUNT = #{errorCount}
         WHERE INS_NO = #{insNo}
-
     </update>
 
     <!-- 검사 실패 -->
     <update id="failInspection">
-
         UPDATE INSPECTIONS
         SET INS_STATUS = 'FAILED',
             END_DATE = SYSDATE
         WHERE INS_NO = #{insNo}
-
     </update>
 
     <!-- 검사 기본 정보 -->
     <select id="findInspection" resultType="com.logazac.dto.InspectionDTO">
-
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT, F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
                 WHERE R.INS_NO = I.INS_NO
             ) AS "abnormalLogCount"
-
         FROM INSPECTIONS I
-
         JOIN LOG_FILES F
         ON I.FILE_NO = F.FILE_NO
-
         WHERE I.INS_NO = #{insNo}
         AND F.USER_NO = #{userNo}
-
     </select>
 
     <!-- 이상 탐지 결과 -->
     <select id="findDetectionResults" resultType="com.logazac.dto.AnalysisResultDTO">
-
         SELECT R.RESULT_NO, R.INS_NO, R.LINE_NO, D.DET_RULE_TYPE AS RULE_TYPE, 
             D.DET_DESCRIPTION AS RULE_DESCRIPTION,  R.DETECTED_VALUE, R.LOG_CONTENT
-
         FROM DETECTION_RESULTS R
-
         JOIN DETECTION_RULES D
         ON R.DET_NO = D.DET_NO
-
         WHERE R.INS_NO = #{insNo}
-
         ORDER BY R.LINE_NO,
                 R.RESULT_NO
-
     </select>
 
     <select id="findTopDetectionRules" resultType="com.logazac.dto.RuleSummaryDTO">
-
         SELECT *
         FROM (
             SELECT
                 D.DET_RULE_TYPE AS "ruleType",
                 COUNT(*) AS "count"
             FROM DETECTION_RESULTS R
-
             JOIN DETECTION_RULES D
             ON R.DET_NO = D.DET_NO
-
             WHERE R.INS_NO = #{insNo}
-
             GROUP BY D.DET_RULE_TYPE
-
             ORDER BY COUNT(*) DESC
         )
 
         WHERE ROWNUM <![CDATA[ <= ]]> 5
-
     </select>
 
     <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
-
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
             I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE,
             (
@@ -166,7 +135,6 @@
             ON I.FILE_NO = F.FILE_NO
         WHERE F.USER_NO = #{userNo}
         ORDER BY I.INS_NO DESC
-
     </select>
   
     <!--마이페이지 목록-->
@@ -188,13 +156,11 @@
     </select>
 
     <update id="markLogFileDeleted">
-
         UPDATE LOG_FILES
         SET DELETED_YN = 'Y'
         WHERE FILE_NO = #{fileNo}
         AND USER_NO = #{userNo}
         AND DELETED_YN = 'N'
-
     </update>
 
 </mapper>

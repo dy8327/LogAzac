@@ -87,6 +87,21 @@
             </div>
         </article>
     </section>
+    <section class="admin-menu">
+        <a class="admin-menu-card" href="${pageContext.request.contextPath}/admin/users">
+            <strong>회원관리</strong>
+            <span>회원 계정 및 차단 상태 관리</span>
+        </a>
+        <a class="admin-menu-card" href="${pageContext.request.contextPath}/admin/files">
+            <strong>로그파일 관리</strong>
+            <span>전체 업로드 파일 현황 확인</span>
+        </a>
+        <a class="admin-menu-card" href="${pageContext.request.contextPath}/admin/rules">
+            <strong>이상 판단 규칙 관리</strong>
+            <span>탐지 규칙 조회 및 설정</span>
+        </a>
+    </section>
+
 </main>
 
 <jsp:include page="../common/footer.jsp" />

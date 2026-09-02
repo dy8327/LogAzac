@@ -14,16 +14,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.logazac.dto.AdminDashboardDTO;
 import com.logazac.dto.UserDTO;
 import com.logazac.service.AdminService;
+import com.logazac.service.DetectionRuleService;
 import com.logazac.dto.DailyStatisticsDTO;
 import com.logazac.dto.RuleSummaryDTO;
+import com.logazac.dto.DetectionRuleDTO;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
+    private final DetectionRuleService detectionRuleService;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService, DetectionRuleService detectionRuleService) {
         this.adminService = adminService;
+        this.detectionRuleService = detectionRuleService;
     }
 
     @GetMapping({"", "/", "/dashboard"})
@@ -126,5 +130,79 @@ public class AdminController {
         model.addAttribute("logFiles", adminService.getAllLogFiles());
 
         return "admin/fileList";
+    }
+
+   @GetMapping("/rules")
+    public String ruleList(HttpSession session, Model model) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+        model.addAttribute("rules", detectionRuleService.getAllRules());
+        return "admin/ruleList";
+    }
+
+    @PostMapping("/rules/use")
+    public String updateRuleUseYn(
+        @RequestParam("detNo") int detNo,
+        @RequestParam("useYn") String useYn,
+        HttpSession session
+    ) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+        if (!"Y".equals(useYn) && !"N".equals(useYn)) {
+            return "redirect:/admin/rules";
+        }
+        detectionRuleService.updateUseYn(detNo, useYn);
+        return "redirect:/admin/rules";
+    }
+
+    // 신규 규칙 등록
+    @GetMapping("/rules/new")
+    public String ruleForm(HttpSession session) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+        return "admin/ruleForm";
+    }
+
+    //규칙 등록 처리
+    @PostMapping("/rules")
+    public String insertRule(
+        @RequestParam("detRuleType") String detRuleType,
+        @RequestParam("detPattern") String detPattern,
+        @RequestParam("detDescription") String detDescription,
+        @RequestParam("useYn") String useYn,
+        HttpSession session
+    ) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+        if (!"Y".equals(useYn) && !"N".equals(useYn)) {
+            return "redirect:/admin/rules";
+        }
+        DetectionRuleDTO rule = new DetectionRuleDTO();
+        rule.setDetRuleType(detRuleType);
+        rule.setDetPattern(detPattern);
+        rule.setDetDescription(detDescription);
+        rule.setUseYn(useYn);
+        detectionRuleService.insertRule(rule);
+        return "redirect:/admin/rules";
     }
 }
