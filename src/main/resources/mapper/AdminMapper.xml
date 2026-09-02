@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.logazac.mapper.AdminMapper">
+
+    <select id="findDashboardSummary" resultType="com.logazac.dto.AdminDashboardDTO">
+        SELECT
+            (SELECT COUNT(*) FROM USERS) AS "userCount",
+            (SELECT COUNT(*) FROM LOG_FILES) AS "fileCount",
+            (SELECT COUNT(*)
+             FROM INSPECTIONS
+             WHERE INS_STATUS = 'COMPLETED') AS "inspectionCount",
+            (SELECT NVL(SUM(TOTAL_LINES), 0)
+             FROM INSPECTIONS
+             WHERE INS_STATUS = 'COMPLETED') AS "totalLineCount",
+            (SELECT COUNT(*)
+             FROM (
+                 SELECT R.INS_NO, R.LINE_NO
+                 FROM DETECTION_RESULTS R
+                 JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
+                 WHERE I.INS_STATUS = 'COMPLETED'
+                 GROUP BY R.INS_NO, R.LINE_NO
+             )) AS "abnormalLogCount",
+            (SELECT COUNT(*)
+             FROM DETECTION_RESULTS R
+             JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
+             WHERE I.INS_STATUS = 'COMPLETED') AS "detectionCount"
+        FROM DUAL
+    </select>
+
+    <select id="findDailyStatistics" resultType="com.logazac.dto.DailyStatisticsDTO">
+        SELECT
+            TO_CHAR(D.STAT_DATE, 'MM-DD') AS "statDate",
+            COUNT(I.INS_NO) AS "inspectionCount",
+            NVL(SUM(NVL(R.ABNORMAL_COUNT, 0)), 0) AS "abnormalLogCount"
+        FROM (
+            SELECT TRUNC(SYSDATE) - (7 - LEVEL) AS STAT_DATE
+            FROM DUAL
+            CONNECT BY LEVEL <![CDATA[ <= ]]> 7
+        ) D
+        LEFT JOIN INSPECTIONS I
+            ON TRUNC(I.START_DATE) = D.STAT_DATE
+            AND I.INS_STATUS = 'COMPLETED'
+        LEFT JOIN (
+            SELECT INS_NO, COUNT(DISTINCT LINE_NO) AS ABNORMAL_COUNT
+            FROM DETECTION_RESULTS
+            GROUP BY INS_NO
+        ) R ON I.INS_NO = R.INS_NO
+        GROUP BY D.STAT_DATE
+        ORDER BY D.STAT_DATE
+    </select>
+
+    <select id="findRuleStatistics" resultType="com.logazac.dto.RuleSummaryDTO">
+        SELECT
+            D.DET_RULE_TYPE AS "ruleType",
+            COUNT(*) AS "count"
+        FROM DETECTION_RESULTS R
+        JOIN DETECTION_RULES D ON R.DET_NO = D.DET_NO
+        JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
+        WHERE I.INS_STATUS = 'COMPLETED'
+        GROUP BY D.DET_RULE_TYPE
+        ORDER BY COUNT(*) DESC
+    </select>
+
+</mapper>
