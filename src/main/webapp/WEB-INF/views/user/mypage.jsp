@@ -18,14 +18,14 @@
 <main class="mypage-main">
 
     <section class="mypage-header">
-        <div>
-            <h1>마이페이지</h1>
-            <p>회원 정보와 업로드한 로그 파일을 관리할 수 있습니다.</p>
+        <div class="mypage-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/member.png" alt="마이페이지 카피바라" class="mypage-character">
+            <div>
+                <h1>마이페이지</h1>
+                <p>회원 정보와 업로드한 로그 파일을 관리할 수 있습니다.</p>
+            </div>
         </div>
-
-        <a href="${pageContext.request.contextPath}/analysis/history" class="history-btn">
-            검사 이력
-        </a>
+        <a href="${pageContext.request.contextPath}/analysis/history" class="history-btn">검사 이력</a>
     </section>
 
     <c:if test="${not empty successMessage}">

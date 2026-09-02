@@ -15,9 +15,12 @@
 
 <main class="page-wrap">
     <section class="page-header">
-        <div>
-            <h1>전체 검사이력</h1>
-            <p>전체 사용자의 로그 검사 이력입니다.</p>
+        <div class="page-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/inspection.png" alt="검사이력 카피바라" class="page-character">
+            <div>
+                <h1>전체 검사이력</h1>
+                <p>전체 사용자의 로그 검사 이력입니다.</p>
+            </div>
         </div>
         <a class="analysis-btn" href="${pageContext.request.contextPath}/admin/dashboard">대시보드</a>
     </section>

@@ -15,13 +15,16 @@
 
 <main class="page-wrap">
     <section class="page-header">
-        <div>
-            <h1>로그파일 관리</h1>
-            <p>전체 사용자가 업로드한 로그파일 현황입니다.</p>
+        <div class="page-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/logfile.png" alt="로그파일 관리 카피바라" class="page-character">
+            <div>
+                <h1>로그파일 관리</h1>
+                <p>전체 사용자가 업로드한 로그파일 현황입니다.</p>
+            </div>
         </div>
         <a class="analysis-btn" href="${pageContext.request.contextPath}/admin/dashboard">대시보드</a>
     </section>
-
+    
     <section class="history-box">
         <div class="history-title">
             <h2>파일 목록</h2>

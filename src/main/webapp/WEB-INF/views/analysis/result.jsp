@@ -25,9 +25,10 @@
     </jsp:include>
 
 <main class="page-wrap">
-    <h1 class="title">
-        검사 <span>완료!</span>
-    </h1>
+    <div class="result-title-wrap">
+        <img src="${pageContext.request.contextPath}/resources/images/result.png" alt="분석결과 카피바라" class="result-character">
+        <h1 class="title">검사 <span>완료!</span></h1>
+    </div>
 
     <section class="summary-grid">
         <div class="summary-card">

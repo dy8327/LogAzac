@@ -18,11 +18,13 @@
 
 <main class="page-wrap">
     <section class="page-header">
-        <div>
-            <h1>검사 이력</h1>
-            <p>분석했던 로그 검사 결과를 다시 확인할 수 있습니다.</p>
+        <div class="page-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/inspection.png" alt="검사이력 카피바라" class="page-character">
+            <div>
+                <h1>검사이력</h1>
+                <p>내가 분석한 로그 검사 이력입니다.</p>
+            </div>
         </div>
-        <a href="${pageContext.request.contextPath}/analysis" class="analysis-btn">새 로그 분석</a>
     </section>
 
     <section class="history-box">

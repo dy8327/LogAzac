@@ -15,9 +15,12 @@
 
 <main class="page-wrap">
     <section class="page-header">
-        <div>
-            <h1>이상 판단 규칙 관리</h1>
-            <p>로그 분석에 사용되는 이상 판단 규칙을 관리합니다.</p>
+        <div class="page-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/detection.png" alt="규칙 관리 카피바라" class="page-character">
+            <div>
+                <h1>이상 판단 규칙 관리</h1>
+                <p>로그 분석에 사용되는 이상 판단 규칙을 관리합니다.</p>
+            </div>
         </div>
         <div class="page-actions">
             <a class="analysis-btn" href="${pageContext.request.contextPath}/admin/dashboard">대시보드</a>

@@ -173,6 +173,17 @@
     color: #8e979f;
     font-size: 13px;
 }
+
+.dashboard-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.admin-character {
+    width: 100px;
+    height: auto;
+    image-rendering: pixelated;
+}
 @media (max-width: 900px) {
     .admin-menu {
         grid-template-columns: 1fr;

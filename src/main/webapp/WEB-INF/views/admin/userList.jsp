@@ -15,9 +15,12 @@
 
 <main class="page-wrap">
     <section class="page-header">
-        <div>
-            <h1>회원관리</h1>
-            <p>가입된 회원의 계정 상태를 확인합니다.</p>
+        <div class="page-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/member.png" alt="회원관리 카피바라" class="page-character">
+            <div>
+                <h1>회원관리</h1>
+                <p>가입된 회원의 계정 상태를 확인합니다.</p>
+            </div>
         </div>
         <a class="analysis-btn" href="${pageContext.request.contextPath}/admin/dashboard">대시보드</a>
     </section>

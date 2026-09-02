@@ -22,14 +22,6 @@
 
     <section class="hero">
 
-        <div class="hero-character">
-
-            <img src="${pageContext.request.contextPath}/resources/images/main.png"
-                alt="LogAzac 카피바라"
-                class="capybara-image">
-
-        </div>
-
         <div class="hero-content">
 
             <div class="hero-label">

@@ -16,10 +16,13 @@
 
 <main class="dashboard-main">
     <section class="dashboard-header">
-        <div>
-            <span class="dashboard-label">ADMIN DASHBOARD</span>
-            <h1>통계 대시보드</h1>
-            <p>LogAzac의 전체 로그 분석 현황입니다.</p>
+        <div class="dashboard-title-wrap">
+            <img src="${pageContext.request.contextPath}/resources/images/admin.png" alt="관리자 카피바라" class="admin-character">
+            <div>
+                <span class="dashboard-label">ADMIN DASHBOARD</span>
+                <h1>통계 대시보드</h1>
+                <p>LogAzac의 전체 로그 분석 현황입니다.</p>
+            </div>
         </div>
         <a class="analysis-link" href="${pageContext.request.contextPath}/admin/inspections">전체 검사 이력</a>
     </section>
