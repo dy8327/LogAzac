@@ -9,6 +9,9 @@ body {
 }
 
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: #0a1420;
     color: #e9edf1;
     font-family: Arial, sans-serif;
@@ -18,6 +21,10 @@ body {
     height: 64px;
     background: #081019;
     border-bottom: 1px solid #343b42;
+}
+
+main {
+    flex: 1;
 }
 
 .site-header-inner {

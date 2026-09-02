@@ -8,6 +8,7 @@ import com.logazac.mapper.AdminMapper;
 import com.logazac.dto.DailyStatisticsDTO;
 import com.logazac.dto.RuleSummaryDTO;
 import com.logazac.dto.InspectionDTO;
+import com.logazac.dto.UserDTO;
 
 @Service
 public class AdminService {
@@ -31,5 +32,13 @@ public class AdminService {
 
     public List<InspectionDTO> getInspectionHistory() {
         return adminMapper.findInspectionHistory();
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return adminMapper.findAllUsers();
+    }
+
+    public int updateUserBlockStatus(int userNo, String blockYn) {
+        return adminMapper.updateUserBlockStatus(userNo, blockYn);
     }
 }

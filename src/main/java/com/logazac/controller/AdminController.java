@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.logazac.dto.AdminDashboardDTO;
 import com.logazac.dto.UserDTO;
@@ -61,5 +63,51 @@ public class AdminController {
         model.addAttribute("inspections", adminService.getInspectionHistory());
 
         return "admin/inspectionList";
+    }
+
+    @GetMapping("/users")
+    public String userList(HttpSession session, Model model) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("users", adminService.getAllUsers());
+
+        return "admin/userList";
+    }
+
+    @PostMapping("/users/block")
+    public String updateUserBlockStatus(
+        @RequestParam("userNo") int userNo,
+        @RequestParam("blockYn") String blockYn,
+        HttpSession session
+    ) {
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        if (!"ADMIN".equals(loginUser.getRole())) {
+            return "redirect:/";
+        }
+
+        if (loginUser.getUserNo() == userNo) {
+            return "redirect:/admin/users";
+        }
+
+        if (!"Y".equals(blockYn) && !"N".equals(blockYn)) {
+            return "redirect:/admin/users";
+        }
+
+        adminService.updateUserBlockStatus(userNo, blockYn);
+
+        return "redirect:/admin/users";
     }
 }

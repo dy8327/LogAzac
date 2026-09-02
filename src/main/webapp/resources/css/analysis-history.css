@@ -154,6 +154,37 @@ tbody tr:hover {
     color: #77838e;
 }
 
+.action-form {
+    margin: 0;
+}
+
+.action-btn {
+    min-width: 64px;
+    padding: 7px 12px;
+    border: 1px solid #ffd43b;
+    border-radius: 6px;
+    background: transparent;
+    color: #ffd43b;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #ffd43b;
+    color: #11161b;
+}
+
+.action-btn.unblock {
+    border-color: #66c7d4;
+    color: #66c7d4;
+}
+
+.action-btn.unblock:hover {
+    background: #66c7d4;
+    color: #11161b;
+}
+
 @media (max-width: 900px) {
 
     .page-header {

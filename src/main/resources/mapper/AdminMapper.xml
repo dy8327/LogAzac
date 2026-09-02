@@ -78,4 +78,16 @@
         ORDER BY I.INS_NO DESC
     </select>
 
+    <select id="findAllUsers" resultType="com.logazac.dto.UserDTO">
+        SELECT USER_NO, USER_ID, USER_EMAIL, ROLE, REG_DATE, BLOCK_YN
+        FROM USERS
+        ORDER BY USER_NO DESC
+    </select>
+
+    <update id="updateUserBlockStatus">
+        UPDATE USERS
+        SET BLOCK_YN = #{blockYn}
+        WHERE USER_NO = #{userNo}
+    </update>
+
 </mapper>
