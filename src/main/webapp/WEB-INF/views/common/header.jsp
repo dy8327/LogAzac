@@ -29,6 +29,12 @@
                     검사 이력
                 </a>
 
+                <c:if test="${sessionScope.loginUser.role eq 'ADMIN'}">
+                    <a href="${pageContext.request.contextPath}/admin">
+                        관리자
+                    </a>
+                </c:if>
+
             </nav>
 
             <div class="site-user-menu">
