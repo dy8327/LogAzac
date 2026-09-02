@@ -2,7 +2,7 @@ import sys
 import json
 
 from detector import analyze_file
-from parser import read_records
+from common_detector import analyze_common, read_all_lines
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -22,8 +22,11 @@ def main():
     try:
         active_rules = set(sys.argv[2].split(",")) if len(sys.argv) >= 3 and sys.argv[2] else set()
         results = analyze_file(file_path, active_rules)
-        records = read_records(file_path)
-        total_lines = len(records)
+        common_results = analyze_common(file_path, active_rules)
+        results.extend(common_results)
+
+        all_lines = read_all_lines(file_path)
+        total_lines = len(all_lines)
 
         json_results = []
 

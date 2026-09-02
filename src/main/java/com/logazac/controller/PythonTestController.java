@@ -35,9 +35,9 @@ public class PythonTestController {
             "D:/doyoung/LogAzac/02021070138상품명및금액변경건.txt";
 
         return pythonAnalyzerService.analyze(
-    filePath,
-    "MISSING_PRODUCT_NAME,CORRUPTED_DATA,MISSING_SLOT,PRICE_CHANGED,PRODUCT_NAME_CHANGED"
-);
+            filePath,
+            "MISSING_PRODUCT_NAME,CORRUPTED_DATA,MISSING_SLOT,PRICE_CHANGED,PRODUCT_NAME_CHANGED"
+        );
     }
 
     @GetMapping("/test/db")

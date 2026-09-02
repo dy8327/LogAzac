@@ -11,6 +11,7 @@ import com.logazac.dto.DetectionRuleDTO;
 public interface DetectionRuleMapper {
 
     Integer findDetNoByRuleType(@Param("ruleType") String ruleType);
+    Integer countByRuleType(@Param("ruleType") String ruleType);
 
     List<DetectionRuleDTO> findAllRules();
     List<DetectionRuleDTO> findActiveRules();

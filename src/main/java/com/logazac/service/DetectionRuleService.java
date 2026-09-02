@@ -22,6 +22,12 @@ public class DetectionRuleService {
     }
 
     public int insertRule(DetectionRuleDTO rule) {
+        Integer count = detectionRuleMapper.countByRuleType(rule.getDetRuleType());
+
+        if (count != null && count > 0) {
+            return 0;
+        }
+
         return detectionRuleMapper.insertRule(rule);
     }
 }

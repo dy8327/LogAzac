@@ -46,4 +46,10 @@
         )
     </insert>
 
+    <select id="countByRuleType" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM DETECTION_RULES
+        WHERE DET_RULE_TYPE = #{ruleType}
+    </select>
+
 </mapper>

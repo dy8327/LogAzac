@@ -41,3 +41,14 @@
     gap: 10px;
     margin-top: 24px;
 }
+
+.error-message {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid #d9534f;
+    border-radius: 8px;
+    background: #fff2f2;
+    color: #b52b27;
+    font-size: 14px;
+    font-weight: 700;
+}

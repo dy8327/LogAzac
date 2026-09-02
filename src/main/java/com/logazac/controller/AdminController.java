@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.logazac.dto.AdminDashboardDTO;
 import com.logazac.dto.UserDTO;
@@ -185,24 +186,36 @@ public class AdminController {
         @RequestParam("detPattern") String detPattern,
         @RequestParam("detDescription") String detDescription,
         @RequestParam("useYn") String useYn,
-        HttpSession session
+        HttpSession session,
+        RedirectAttributes redirectAttributes
     ) {
         UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
         if (loginUser == null) {
             return "redirect:/user/login";
         }
+
         if (!"ADMIN".equals(loginUser.getRole())) {
             return "redirect:/";
         }
+
         if (!"Y".equals(useYn) && !"N".equals(useYn)) {
             return "redirect:/admin/rules";
         }
+
         DetectionRuleDTO rule = new DetectionRuleDTO();
         rule.setDetRuleType(detRuleType);
         rule.setDetPattern(detPattern);
         rule.setDetDescription(detDescription);
         rule.setUseYn(useYn);
-        detectionRuleService.insertRule(rule);
+
+        int result = detectionRuleService.insertRule(rule);
+
+        if (result == 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "이미 등록된 규칙입니다.");
+            return "redirect:/admin/rules/new";
+        }
+
         return "redirect:/admin/rules";
     }
 }
