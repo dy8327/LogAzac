@@ -134,7 +134,7 @@ public class AnalysisService {
 
     public void deleteUserLogFile(int fileNo, int userNo) throws Exception {
 
-        LogFileDTO logFile = analysisMapper.findUserLogFiles(fileNo, userNo);
+        LogFileDTO logFile = analysisMapper.findUserLogFile(fileNo, userNo);
 
         if (logFile == null) {
             throw new IllegalArgumentException("삭제할 파일을 찾을 수 없습니다.");

@@ -15,12 +15,7 @@
         </selectKey>
 
         INSERT INTO LOG_FILES (
-            FILE_NO,
-            FILE_NAME,
-            FILE_SIZE,
-            USER_NO,
-            SOURCE_TYPE,
-            FILE_PATH
+            FILE_NO, FILE_NAME, FILE_SIZE, USER_NO, SOURCE_TYPE, FILE_PATH
         ) VALUES (
             #{fileNo},
             #{fileName},
@@ -41,12 +36,7 @@
         </selectKey>
 
         INSERT INTO INSPECTIONS (
-            INS_NO,
-            FILE_NO,
-            INS_STATUS,
-            START_DATE,
-            TOTAL_LINES,
-            ERROR_COUNT
+            INS_NO, FILE_NO, INS_STATUS, START_DATE, TOTAL_LINES, ERROR_COUNT
         ) VALUES (
             #{insNo},
             #{fileNo},
@@ -67,12 +57,7 @@
         </selectKey>
 
         INSERT INTO DETECTION_RESULTS (
-            RESULT_NO,
-            INS_NO,
-            DET_NO,
-            LINE_NO,
-            LOG_CONTENT,
-            DETECTED_VALUE
+            RESULT_NO, INS_NO, DET_NO, LINE_NO, LOG_CONTENT, DETECTED_VALUE
         ) VALUES (
             #{resultNo},
             #{insNo},
@@ -109,14 +94,7 @@
     <!-- 검사 기본 정보 -->
     <select id="findInspection" resultType="com.logazac.dto.InspectionDTO">
 
-        SELECT
-            I.INS_NO,
-            I.FILE_NO,
-            I.INS_STATUS,
-            I.TOTAL_LINES,
-            I.ERROR_COUNT,
-            F.FILE_NAME,
-            F.SOURCE_TYPE,
+        SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT, F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
@@ -136,14 +114,8 @@
     <!-- 이상 탐지 결과 -->
     <select id="findDetectionResults" resultType="com.logazac.dto.AnalysisResultDTO">
 
-        SELECT
-            R.RESULT_NO,
-            R.INS_NO,
-            R.LINE_NO,
-            D.DET_RULE_TYPE AS RULE_TYPE,
-            D.DET_DESCRIPTION AS RULE_DESCRIPTION,
-            R.DETECTED_VALUE,
-            R.LOG_CONTENT
+        SELECT R.RESULT_NO, R.INS_NO, R.LINE_NO, D.DET_RULE_TYPE AS RULE_TYPE, 
+            D.DET_DESCRIPTION AS RULE_DESCRIPTION,  R.DETECTED_VALUE, R.LOG_CONTENT
 
         FROM DETECTION_RESULTS R
 
@@ -182,15 +154,8 @@
 
     <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
 
-        SELECT
-            I.INS_NO,
-            I.FILE_NO,
-            I.INS_STATUS,
-            I.TOTAL_LINES,
-            I.ERROR_COUNT,
-            I.START_DATE,
-            F.FILE_NAME,
-            F.SOURCE_TYPE,
+        SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
+            I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
@@ -203,21 +168,23 @@
         ORDER BY I.INS_NO DESC
 
     </select>
-
-    <select id="findUserLogFiles" resultType="com.logazac.dto.LogFileDTO">
-
-        SELECT
-            FILE_NO,
-            FILE_NAME,
-            FILE_SIZE,
-            USER_NO,
-            SOURCE_TYPE,
-            FILE_PATH
+  
+    <!--마이페이지 목록-->
+   <select id="findUserLogFiles" resultType="com.logazac.dto.LogFileDTO">
+        SELECT FILE_NO, FILE_NAME, FILE_SIZE, USER_NO, SOURCE_TYPE, FILE_PATH
         FROM LOG_FILES
         WHERE USER_NO = #{userNo}
         AND DELETED_YN = 'N'
         ORDER BY FILE_NO DESC
+    </select>
 
+    <!--삭제할 1개 파일 조회-->
+    <select id="findUserLogFile" resultType="com.logazac.dto.LogFileDTO">
+        SELECT FILE_NO, USER_NO, FILE_NAME, FILE_SIZE, SOURCE_TYPE, FILE_PATH
+        FROM LOG_FILES
+        WHERE FILE_NO = #{fileNo}
+        AND USER_NO = #{userNo}
+        AND DELETED_YN = 'N'
     </select>
 
     <update id="markLogFileDeleted">

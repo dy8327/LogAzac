@@ -42,7 +42,7 @@ public interface AnalysisMapper {
     //업로드 파일 조회
     List<LogFileDTO> findUserLogFiles(@Param("userNo") int userNo);
 
-    LogFileDTO findUserLogFiles(@Param("fileNo") int fileNo, @Param("userNo") int userNo);
+    LogFileDTO findUserLogFile(@Param("fileNo") int fileNo, @Param("userNo") int userNo);
 
     int markLogFileDeleted(@Param("fileNo") int fileNo, @Param("userNo") int userNo);
 }

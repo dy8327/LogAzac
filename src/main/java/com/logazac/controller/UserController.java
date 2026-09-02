@@ -167,7 +167,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
 
         } catch (Exception e) {
-
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "파일 삭제 중 오류가 발생했습니다.");
         }
 
