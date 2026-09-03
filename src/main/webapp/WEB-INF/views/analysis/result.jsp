@@ -94,7 +94,7 @@
     <section class="result-box">
         <div class="box-title">
             이상 탐지 결과
-            <span class="count-badge">
+            <span class="count-badge" id="resultCount">
                 ${inspection.errorCount}건
             </span>
         </div>
@@ -107,6 +107,13 @@
 
             </c:when>
             <c:otherwise>
+                <div class="result-filter">
+                    <select id="ruleFilter">
+                        <option value="">전체 탐지 규칙</option>
+                    </select>
+                    <input type="text" id="valueFilter" placeholder="탐지 값 검색">
+                    <button type="button" id="filterReset">초기화</button>
+                </div>
                 <table class="result-table">
                     <thead>
                     <tr>
@@ -127,7 +134,7 @@
 
                     <tbody>
                     <c:forEach var="result" items="${results}">
-                        <tr>
+                        <tr class="result-row" data-rule="${result.ruleType}" data-value="${result.detectedValue}">
                             <td>
                                 ${result.lineNo}
                             </td>
@@ -271,6 +278,53 @@ document.querySelectorAll(".log-content").forEach(function(container) {
 
     logElement.textContent = "";
     logElement.appendChild(fragment);
+});
+//결과 필터
+const ruleFilter = document.getElementById("ruleFilter");
+const valueFilter = document.getElementById("valueFilter");
+const filterReset = document.getElementById("filterReset");
+const resultRows = document.querySelectorAll(".result-row");
+
+const ruleSet = new Set();
+
+resultRows.forEach(function(row) {
+    const rule = row.dataset.rule.trim();
+    if (rule) ruleSet.add(rule);
+});
+
+ruleSet.forEach(function(rule) {
+    const option = document.createElement("option");
+    option.value = rule;
+    option.textContent = rule;
+    ruleFilter.appendChild(option);
+});
+
+function applyResultFilter() {
+    const selectedRule = ruleFilter.value;
+    const searchValue = valueFilter.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    resultRows.forEach(function(row) {
+        const rule = row.dataset.rule;
+        const value = row.dataset.value.toLowerCase();
+        const ruleMatch = !selectedRule || rule === selectedRule;
+        const valueMatch = !searchValue || value.includes(searchValue);
+        const visible = ruleMatch && valueMatch;
+
+        row.style.display = visible ? "" : "none";
+        if (visible) visibleCount++;
+    });
+
+    document.getElementById("resultCount").textContent = visibleCount + "건";
+}
+
+ruleFilter.addEventListener("change", applyResultFilter);
+valueFilter.addEventListener("input", applyResultFilter);
+
+filterReset.addEventListener("click", function() {
+    ruleFilter.value = "";
+    valueFilter.value = "";
+    applyResultFilter();
 });
 </script>
 

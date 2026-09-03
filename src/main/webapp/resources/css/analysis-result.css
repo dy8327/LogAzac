@@ -232,6 +232,60 @@ body {
     display: block;
     image-rendering: pixelated;
 }
+
+.result-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #343b42;
+    background: #171c21;
+}
+
+.result-filter select,
+.result-filter input {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #48515a;
+    border-radius: 6px;
+    background: #1b2127;
+    color: #f4f4f4;
+    font-size: 13px;
+    outline: none;
+}
+
+.result-filter select {
+    width: 190px;
+}
+
+.result-filter input {
+    width: 230px;
+}
+
+.result-filter select:focus,
+.result-filter input:focus {
+    border-color: #ffd43b;
+}
+
+.result-filter input::placeholder {
+    color: #777f86;
+}
+
+#filterReset {
+    height: 38px;
+    padding: 0 15px;
+    border: 1px solid #48515a;
+    border-radius: 6px;
+    background: #2b3238;
+    color: #d8dde1;
+    cursor: pointer;
+}
+
+#filterReset:hover {
+    border-color: #ffd43b;
+    color: #ffd43b;
+}
+
 @media (max-width: 900px) {
 
     .summary-grid {
