@@ -140,8 +140,7 @@
 }
 
 .section-title span {
-    color: #ffd43b;
-
+    color: #198754;
     font-size: 11px;
     font-weight: bold;
     letter-spacing: 3px;
@@ -149,9 +148,7 @@
 
 .section-title h2 {
     margin: 10px 0 0;
-
-    color: #e9edf1;
-
+    color: #17352a;
     font-size: 28px;
 }
 
@@ -164,44 +161,35 @@
 
 .feature-card {
     min-height: 190px;
-
     padding: 26px;
-
-    background: #181e24;
-
-    border: 1px solid #303942;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 12px;
-
+    box-shadow: 0 2px 8px rgba(15, 81, 50, 0.04);
     transition: 0.2s;
 }
 
 .feature-card:hover {
-    border-color: #46515a;
+    border-color: #58a77d;
     transform: translateY(-3px);
 }
 
 .feature-number {
     margin-bottom: 25px;
-
-    color: #ffd43b;
-
+    color: #198754;
     font-size: 12px;
     font-weight: bold;
 }
 
 .feature-card h3 {
     margin: 0 0 10px;
-
-    color: #e9edf1;
-
+    color: #17352a;
     font-size: 17px;
 }
 
 .feature-card p {
     margin: 0;
-
-    color: #808c95;
-
+    color: #617a70;
     font-size: 13px;
     line-height: 1.7;
 }
