@@ -41,9 +41,52 @@
 
 <jsp:include page="../common/footer.jsp" />
 <script>
-document.getElementById("logFile").addEventListener("change", function() {
-    const fileName = this.files.length > 0 ? this.files[0].name : "선택된 파일이 없습니다.";
-    document.getElementById("selectedFileName").textContent = fileName;
+const fileInput = document.getElementById("logFile");
+const dropArea = document.querySelector(".upload-drop");
+const fileNameText = document.getElementById("selectedFileName");
+
+function updateFileName(file) {
+    fileNameText.textContent = file ? file.name : "선택된 파일이 없습니다.";
+}
+
+fileInput.addEventListener("change", function() {
+    updateFileName(this.files.length > 0 ? this.files[0] : null);
+});
+
+["dragenter", "dragover"].forEach(function(eventName) {
+    dropArea.addEventListener(eventName, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.classList.add("drag-over");
+    });
+});
+
+["dragleave", "drop"].forEach(function(eventName) {
+    dropArea.addEventListener(eventName, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.classList.remove("drag-over");
+    });
+});
+
+dropArea.addEventListener("drop", function(e) {
+    const files = e.dataTransfer.files;
+
+    if (files.length === 0) return;
+
+    const file = files[0];
+    const fileName = file.name.toLowerCase();
+
+    if (!fileName.endsWith(".txt") && !fileName.endsWith(".log")) {
+        alert("TXT 또는 LOG 파일만 업로드할 수 있습니다.");
+        return;
+    }
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files;
+
+    updateFileName(file);
 });
 </script>
 </body>

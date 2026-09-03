@@ -318,6 +318,11 @@ tbody tr:hover {
     image-rendering: pixelated;
 }
 
+.upload-drop.drag-over {
+    border-color: #ffd43b;
+    background: rgba(255, 212, 59, 0.08);
+}
+
 @media (max-width: 900px) {
 
     .page-header {
