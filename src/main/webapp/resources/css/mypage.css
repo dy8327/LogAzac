@@ -262,20 +262,68 @@ tbody tr:hover {
     image-rendering: pixelated;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 760px) {
+    .mypage-main {
+        width: calc(100% - 24px);
+        padding: 28px 0;
+    }
     .mypage-header {
         align-items: flex-start;
-        gap: 20px;
+        gap: 16px;
         flex-direction: column;
     }
-
+    .mypage-title-wrap {
+        gap: 10px;
+    }
+    .mypage-character {
+        width: 64px;
+    }
+    .mypage-header h1 {
+        font-size: 25px;
+    }
+    .mypage-header p {
+        font-size: 13px;
+    }
+    .history-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .mypage-box {
+        margin-bottom: 18px;
+    }
+    .section-title {
+        padding: 16px 18px;
+    }
     .user-info {
-        gap: 20px;
+        gap: 16px;
+        padding: 18px;
         flex-direction: column;
     }
-
+    .info-item {
+        min-width: 0;
+    }
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    table {
+        min-width: 720px;
+    }
     th,
     td {
+        padding: 12px 10px;
         white-space: nowrap;
+        font-size: 12px;
+    }
+    .delete-modal {
+        width: calc(100% - 32px);
+        padding: 22px;
+    }
+    .modal-buttons {
+        flex-direction: column;
+    }
+    .modal-cancel,
+    .modal-delete {
+        width: 100%;
     }
 }

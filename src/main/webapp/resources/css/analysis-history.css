@@ -337,16 +337,65 @@ tbody tr:hover {
     background: #def1e7;
 }
 
-@media (max-width: 900px) {
-
+@media (max-width: 760px) {
+    .page-wrap {
+        width: calc(100% - 24px);
+        padding: 28px 0;
+    }
     .page-header {
         align-items: flex-start;
-        gap: 20px;
+        gap: 18px;
         flex-direction: column;
     }
-
+    .page-title-wrap {
+        gap: 10px;
+    }
+    .page-character {
+        width: 64px;
+    }
+    .page-header h1 {
+        font-size: 25px;
+    }
+    .history-box {
+        overflow: hidden;
+    }
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    table {
+        min-width: 850px;
+    }
     th,
     td {
+        padding: 12px 10px;
         white-space: nowrap;
+        font-size: 12px;
+    }
+    .history-title {
+        padding: 16px 18px;
+    }
+    .analysis-upload-box {
+        width: 100%;
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+    .upload-panel {
+        padding: 24px 20px;
+    }
+    .upload-panel h2 {
+        font-size: 22px;
+        text-align: center;
+    }
+    .upload-drop {
+        min-height: 230px;
+    }
+    .analysis-character {
+        min-height: 260px;
+        padding: 20px 20px 0;
+    }
+    .analysis-character img {
+        width: 220px;
+        max-width: 80%;
     }
 }

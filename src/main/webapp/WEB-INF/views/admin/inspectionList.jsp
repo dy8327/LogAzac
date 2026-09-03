@@ -4,6 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 검사이력</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">

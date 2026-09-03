@@ -3,6 +3,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogAzac - 로그 분석</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
@@ -16,7 +17,7 @@
 <main class="page-wrap">
     <section class="analysis-upload-box">
         <div class="upload-panel">
-            <h2>지금 바로 로그를 분석해보세요! &gt;</h2>
+            <h2>지금 바로 로그를 분석해보세요!</h2>
 
             <label class="upload-drop" for="logFile">
                 <div class="upload-icon">☁</div>

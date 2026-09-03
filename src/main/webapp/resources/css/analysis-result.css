@@ -292,48 +292,75 @@
     border-color: #198754;
     color: #198754;
 }
-@media (max-width: 900px) {
-
+@media (max-width: 760px) {
+    .page-wrap {
+        width: calc(100% - 24px);
+        padding: 24px 0 40px;
+    }
+    .result-title-wrap {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .result-character {
+        width: 64px;
+    }
+    .title {
+        font-size: 25px;
+    }
     .summary-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
-
-}
-
-.top-rule-list {
-    padding: 10px 20px 18px;
-}
-
-.top-rule-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid #dcece4;
-}
-
-.top-rule-item:last-child {
-    border-bottom: none;
-}
-
-.rank {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: #def1e7;
-    color: #198754;
-    font-weight: bold;
-}
-
-.top-rule-name {
-    flex: 1;
-    font-weight: bold;
-}
-
-.top-rule-count {
-    color: #c56a26;
-    font-weight: bold;
+    .summary-card {
+        padding: 16px 10px;
+    }
+    .summary-value {
+        font-size: 22px;
+    }
+    .summary-label {
+        font-size: 11px;
+    }
+    .info-box,
+    .result-box {
+        margin-bottom: 18px;
+    }
+    .info-table {
+        table-layout: auto;
+    }
+    .info-table th {
+        width: 110px;
+    }
+    .info-table th,
+    .info-table td {
+        padding: 11px 10px;
+        font-size: 12px;
+    }
+    .result-filter {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 12px;
+    }
+    .result-filter select,
+    .result-filter input,
+    #filterReset {
+        width: 100%;
+    }
+    .result-box {
+        overflow-x: auto;
+    }
+    .result-table {
+        min-width: 900px;
+    }
+    .result-table th,
+    .result-table td {
+        padding: 11px 10px;
+        font-size: 12px;
+    }
+    .actions {
+        justify-content: stretch;
+    }
+    .actions .btn {
+        width: 100%;
+        text-align: center;
+    }
 }
