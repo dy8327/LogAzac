@@ -13,28 +13,30 @@
         <div class="site-header-menu">
 
             <nav class="site-nav">
-
                 <a class="${param.activeMenu eq 'home' ? 'active' : ''}"
-                   href="${pageContext.request.contextPath}/">
+                href="${pageContext.request.contextPath}/">
                     홈
                 </a>
 
-                <a class="${param.activeMenu eq 'analysis' ? 'active' : ''}"
-                   href="${pageContext.request.contextPath}/analysis">
-                    로그 분석
-                </a>
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser.role eq 'ADMIN'}">
+                        <a href="${pageContext.request.contextPath}/admin">
+                            관리페이지
+                        </a>
+                    </c:when>
 
-                <a class="${param.activeMenu eq 'history' ? 'active' : ''}"
-                   href="${pageContext.request.contextPath}/analysis/history">
-                    검사 이력
-                </a>
+                    <c:otherwise>
+                        <a class="${param.activeMenu eq 'analysis' ? 'active' : ''}"
+                        href="${pageContext.request.contextPath}/analysis">
+                            로그 분석
+                        </a>
 
-                <c:if test="${sessionScope.loginUser.role eq 'ADMIN'}">
-                    <a href="${pageContext.request.contextPath}/admin">
-                        관리자
-                    </a>
-                </c:if>
-
+                        <a class="${param.activeMenu eq 'history' ? 'active' : ''}"
+                        href="${pageContext.request.contextPath}/analysis/history">
+                            검사 이력
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </nav>
 
             <div class="site-user-menu">
@@ -44,7 +46,7 @@
                     <c:when test="${not empty sessionScope.loginUser}">
 
                         <a href="${pageContext.request.contextPath}/user/mypage">
-                            ${sessionScope.loginUser.userId}님
+                            마이페이지
                         </a>
 
                         <a href="${pageContext.request.contextPath}/user/logout">
