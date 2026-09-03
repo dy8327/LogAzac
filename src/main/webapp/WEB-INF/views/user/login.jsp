@@ -35,6 +35,8 @@
         <form action="${pageContext.request.contextPath}/user/login"
               method="post">
 
+            <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
+
             <div class="form-group">
 
                 <label for="userId">

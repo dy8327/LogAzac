@@ -34,6 +34,8 @@
 
         <form id="joinForm" action="${pageContext.request.contextPath}/user/join" method="post">
 
+            <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
+
             <!-- 아이디 -->
             <div class="form-group">
 
