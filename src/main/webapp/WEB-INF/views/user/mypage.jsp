@@ -108,7 +108,7 @@
                                 </td>
 
                                 <td class="file-name">
-                                    ${file.fileName}
+                                    <c:out value="${file.fileName}" />
                                 </td>
 
                                 <td>
@@ -124,6 +124,7 @@
                                 <td>
                                     <form action="${pageContext.request.contextPath}/user/mypage/delete-file" method="post" class="delete-form">
 
+                                        <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                         <input type="hidden" name="fileNo" value="${file.fileNo}">
 
                                         <button type="button" class="delete-btn" onclick="openDeleteModal(this)">

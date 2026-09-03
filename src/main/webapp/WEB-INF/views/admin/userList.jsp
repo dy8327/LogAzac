@@ -70,6 +70,7 @@
                                             </c:when>
                                             <c:when test="${user.blockYn eq 'Y'}">
                                                 <form class="action-form" action="${pageContext.request.contextPath}/admin/users/block" method="post">
+                                                    <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                                     <input type="hidden" name="userNo" value="${user.userNo}">
                                                     <input type="hidden" name="blockYn" value="N">
                                                     <button class="action-btn unblock" type="submit">해제</button>
@@ -77,6 +78,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <form class="action-form" action="${pageContext.request.contextPath}/admin/users/block" method="post">
+                                                    <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                                     <input type="hidden" name="userNo" value="${user.userNo}">
                                                     <input type="hidden" name="blockYn" value="Y">
                                                     <button class="action-btn" type="submit">차단</button>

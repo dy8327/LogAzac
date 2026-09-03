@@ -70,6 +70,7 @@
                                         <c:choose>
                                             <c:when test="${rule.useYn eq 'Y'}">
                                                 <form class="action-form" action="${pageContext.request.contextPath}/admin/rules/use" method="post">
+                                                    <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                                     <input type="hidden" name="detNo" value="${rule.detNo}">
                                                     <input type="hidden" name="useYn" value="N">
                                                     <button class="action-btn" type="submit">미사용</button>
@@ -77,6 +78,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <form class="action-form" action="${pageContext.request.contextPath}/admin/rules/use" method="post">
+                                                    <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                                     <input type="hidden" name="detNo" value="${rule.detNo}">
                                                     <input type="hidden" name="useYn" value="Y">
                                                     <button class="action-btn unblock" type="submit">사용</button>

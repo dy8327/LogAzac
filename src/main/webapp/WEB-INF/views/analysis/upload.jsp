@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,6 +20,13 @@
         <div class="upload-panel">
             <h2>지금 바로 로그를 분석해보세요!</h2>
 
+            <c:if test="${not empty errorMessage}">
+                <div class="error-message">
+                    <c:out value="${errorMessage}" />
+                </div>
+            </c:if>
+
+
             <label class="upload-drop" for="logFile">
                 <div class="upload-icon">☁</div>
                 <p>로그 파일을 드래그하거나<br>클릭하여 업로드하세요.</p>
@@ -28,6 +36,7 @@
             </label>
 
             <form action="${pageContext.request.contextPath}/analysis/upload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                 <input type="hidden" name="sourceType" value="VENDING">
                 <input type="file" id="logFile" name="logFile" accept=".txt,.log" required>
                 <button type="submit" class="analysis-start-btn">로그 분석 시작</button>

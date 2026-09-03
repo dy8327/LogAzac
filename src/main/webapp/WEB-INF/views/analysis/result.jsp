@@ -81,7 +81,7 @@
             </tr>
             <tr>
                 <th>파일명</th>
-                <td colspan="3">${inspection.fileName}</td>
+                <td colspan="3"><c:out value="${inspection.fileName}" /></td>
             <tr>
                 <th>탐지 결과 건</th>
                 <td>${inspection.errorCount}</td>
@@ -134,24 +134,24 @@
 
                     <tbody>
                     <c:forEach var="result" items="${results}">
-                        <tr class="result-row" data-rule="${result.ruleType}" data-value="${result.detectedValue}">
+                        <tr class="result-row" data-rule="<c:out value="${result.ruleType}" />" data-value="<c:out value="${result.detectedValue}" />">
                             <td>
                                 ${result.lineNo}
                             </td>
                             <td>
                                 <div class="rule-name">
-                                    ${result.ruleType}
+                                    <c:out value="${result.ruleType}" />
                                 </div>
                                 <div class="rule-description">
-                                    ${result.ruleDescription}
+                                    <c:out value="${result.ruleDescription}" />
                                 </div>
                             </td>
                             <td class="detected-value">
-                                ${result.detectedValue}
+                                <c:out value="${result.detectedValue}" />
                             </td>
                             <td class="log-content">
-                                <span class="raw-log">${result.logContent}</span>
-                                <span class="highlight-value" hidden>${result.detectedValue}</span>
+                                <span class="raw-log"><c:out value="${result.logContent}" /></span>
+                                <span class="highlight-value" hidden><c:out value="${result.detectedValue}" /></span>
                             </td>
                         </tr>
                     </c:forEach>

@@ -29,6 +29,7 @@
         <div class="error-message">${errorMessage}</div>
     </c:if>
         <form action="${pageContext.request.contextPath}/admin/rules" method="post">
+            <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
             <div class="form-group">
                 <label for="detRuleType">규칙 유형</label>
                 <select id="detRuleType" name="detRuleType" onchange="setRuleInfo()" required>

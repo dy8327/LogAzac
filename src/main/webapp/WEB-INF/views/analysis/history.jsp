@@ -59,7 +59,7 @@
                         <c:forEach var="inspection" items="${inspections}">
                             <tr>
                                 <td>${inspection.insNo}</td>
-                                <td class="file-name">${inspection.fileName}</td>
+                                <td class="file-name"><c:out value="${inspection.fileName}" /></td>
                                 <td>${inspection.totalLines}</td>
                                 <td class="abnormal-count">${inspection.abnormalLogCount}</td>
                                 <td>${inspection.errorCount}</td>
