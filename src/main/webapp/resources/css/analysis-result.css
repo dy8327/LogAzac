@@ -309,7 +309,7 @@
     align-items: center;
     gap: 14px;
     padding: 14px 0;
-    border-bottom: 1px solid #343b42;
+    border-bottom: 1px solid #dcece4;
 }
 
 .top-rule-item:last-child {
@@ -323,8 +323,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #2b3238;
-    color: #ffd43b;
+    background: #def1e7;
+    color: #198754;
     font-weight: bold;
 }
 
@@ -334,6 +334,6 @@
 }
 
 .top-rule-count {
-    color: #ffb36b;
+    color: #c56a26;
     font-weight: bold;
 }

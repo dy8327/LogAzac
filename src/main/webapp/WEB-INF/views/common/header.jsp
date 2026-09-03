@@ -20,7 +20,8 @@
 
                 <c:choose>
                     <c:when test="${sessionScope.loginUser.role eq 'ADMIN'}">
-                        <a href="${pageContext.request.contextPath}/admin">
+                        <a class="${param.activeMenu eq 'admin' ? 'active' : ''}"
+                        href="${pageContext.request.contextPath}/admin">
                             관리페이지
                         </a>
                     </c:when>
@@ -45,7 +46,8 @@
 
                     <c:when test="${not empty sessionScope.loginUser}">
 
-                        <a href="${pageContext.request.contextPath}/user/mypage">
+                        <a class="${param.activeMenu eq 'mypage' ? 'active' : ''}"
+                        href="${pageContext.request.contextPath}/user/mypage">
                             마이페이지
                         </a>
 

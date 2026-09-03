@@ -13,7 +13,7 @@
 <body>
 
 <jsp:include page="../common/header.jsp">
-    <jsp:param name="activeMenu" value="analysis" />
+    <jsp:param name="activeMenu" value="history" />
 </jsp:include>
 
 <main class="page-wrap">

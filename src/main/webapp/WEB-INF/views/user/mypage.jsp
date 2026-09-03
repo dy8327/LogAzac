@@ -13,7 +13,9 @@
 
 <body>
 
-<jsp:include page="../common/header.jsp" />
+<jsp:include page="../common/header.jsp">
+    <jsp:param name="activeMenu" value="mypage" />
+</jsp:include>
 
 <main class="mypage-main">
 
