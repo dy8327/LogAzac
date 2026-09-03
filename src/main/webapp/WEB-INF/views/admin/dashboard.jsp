@@ -149,8 +149,8 @@
                     type: "bar",
                     label: "검사 건수",
                     data: inspectionData,
-                    backgroundColor: "rgba(255, 212, 59, 0.55)",
-                    borderColor: "#ffd43b",
+                    backgroundColor: "rgba(255, 193, 7, 0.45)",
+                    borderColor: "#e0a800",
                     borderWidth: 1,
                     borderRadius: 5,
                     yAxisID: "inspectionAxis"
@@ -188,10 +188,10 @@
             scales: {
                 x: {
                     ticks: {
-                        color: "#8e9aa5"
+                        color: "#617a70"
                     },
                     grid: {
-                        color: "rgba(90, 104, 117, 0.15)"
+                        color: "rgba(15, 81, 50, 0.14)"
                     }
                 },
                 inspectionAxis: {
@@ -248,7 +248,7 @@
                 legend: {
                     position: "bottom",
                     labels: {
-                        color: "#b8c1c9",
+                        color: "#49685c",
                         padding: 16,
                         boxWidth: 12,
                         boxHeight: 12

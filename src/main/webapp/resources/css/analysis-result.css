@@ -2,12 +2,6 @@
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    background: #11161b;
-    color: #f4f4f4;
-    font-family: Arial, sans-serif;
-}
 .page-wrap {
     width: min(1180px, calc(100% - 48px));
     margin: 0 auto;
@@ -36,11 +30,12 @@ body {
 
 .title {
     font-size: 30px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
+    color: #17352a;
 }
 
 .title span {
-    color: #ffd43b;
+    color: #198754;
 }
 
 .summary-grid {
@@ -51,15 +46,16 @@ body {
 }
 
 .summary-card {
-    background: #1b2127;
-    border: 1px solid #48515a;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 10px;
     padding: 24px;
     text-align: center;
+    box-shadow: 0 4px 14px rgba(15, 81, 50, 0.04);
 }
 
 .summary-label {
-    color: #8e979f;
+    color: #617a70;
     font-size: 13px;
     margin-bottom: 12px;
 }
@@ -70,35 +66,37 @@ body {
 }
 
 .summary-value.total {
-    color: #48d7ff;
+    color: #2878a8;
 }
 
 .summary-value.normal {
-    color: #42d96b;
+    color: #198754;
 }
 
 .summary-value.abnormal {
-    color: #ff5b62;
+    color: #c0392b;
 }
 
 .summary-value.rate {
-    color: #ffd43b;
+    color: #9a6b00;
 }
 
 .info-box,
 .result-box {
-    background: #1b2127;
-    border: 1px solid #48515a;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 10px;
     margin-bottom: 28px;
     overflow: hidden;
+    box-shadow: 0 4px 14px rgba(15, 81, 50, 0.04);
 }
 
 .box-title {
     padding: 18px 20px;
+    color: #17352a;
     font-size: 18px;
     font-weight: bold;
-    border-bottom: 1px solid #343b42;
+    border-bottom: 1px solid #dcece4;
 }
 
 .info-table,
@@ -111,7 +109,7 @@ body {
 .info-table td,
 .result-table th,
 .result-table td {
-    border-bottom: 1px solid #343b42;
+    border-bottom: 1px solid #dcece4;
     padding: 14px 16px;
     text-align: left;
 }
@@ -122,17 +120,22 @@ body {
 
 .info-table th {
     width: 150px;
-    color: #aeb6bd;
-    background: #171c21;
+    color: #617a70;
+    background: #eef8f3;
+}
+
+.info-table td {
+    color: #294b3e;
 }
 
 .result-table th {
-    background: #171c21;
-    color: #aeb6bd;
+    background: #eef8f3;
+    color: #617a70;
     font-size: 13px;
 }
 
 .result-table td {
+    color: #294b3e;
     vertical-align: top;
     font-size: 14px;
 }
@@ -154,25 +157,25 @@ body {
 }
 
 .rule-name {
-    color: #ffd43b;
+    color: #198754;
     font-weight: bold;
     margin-bottom: 6px;
 }
 
 .rule-description {
-    color: #969fa7;
+    color: #7f968d;
     font-size: 12px;
 }
 
 .detected-value {
-    color: #ffb36b;
+    color: #c56a26;
     word-break: break-all;
 }
 
 .log-highlight {
-    color: #ffb36b;
+    color: #b85c1f;
     font-weight: bold;
-    background: rgba(255, 179, 107, 0.12);
+    background: #fff2df;
     border-radius: 3px;
     padding: 1px 2px;
 }
@@ -189,15 +192,15 @@ body {
     margin-left: 8px;
     padding: 4px 9px;
     border-radius: 20px;
-    background: #2b3238;
-    color: #ffd43b;
+    background: #def1e7;
+    color: #198754;
     font-size: 12px;
 }
 
 .empty {
     padding: 40px;
     text-align: center;
-    color: #aeb6bd;
+    color: #7f968d;
 }
 
 .actions {
@@ -212,9 +215,13 @@ body {
     padding: 11px 18px;
     border-radius: 7px;
     text-decoration: none;
-    background: #ffd43b;
-    color: #11161b;
+    background: #198754;
+    color: #ffffff;
     font-weight: bold;
+}
+
+.btn:hover {
+    background: #146c43;
 }
 
 .result-title-wrap {
@@ -238,18 +245,18 @@ body {
     align-items: center;
     gap: 10px;
     padding: 14px 20px;
-    border-bottom: 1px solid #343b42;
-    background: #171c21;
+    border-bottom: 1px solid #dcece4;
+    background: #eef8f3;
 }
 
 .result-filter select,
 .result-filter input {
     height: 38px;
     padding: 0 12px;
-    border: 1px solid #48515a;
+    border: 1px solid #b9dccc;
     border-radius: 6px;
-    background: #1b2127;
-    color: #f4f4f4;
+    background: #ffffff;
+    color: #17352a;
     font-size: 13px;
     outline: none;
 }
@@ -264,28 +271,27 @@ body {
 
 .result-filter select:focus,
 .result-filter input:focus {
-    border-color: #ffd43b;
+    border-color: #198754;
 }
 
 .result-filter input::placeholder {
-    color: #777f86;
+    color: #8ba096;
 }
 
 #filterReset {
     height: 38px;
     padding: 0 15px;
-    border: 1px solid #48515a;
+    border: 1px solid #b9dccc;
     border-radius: 6px;
-    background: #2b3238;
-    color: #d8dde1;
+    background: #f8fcfa;
+    color: #617a70;
     cursor: pointer;
 }
 
 #filterReset:hover {
-    border-color: #ffd43b;
-    color: #ffd43b;
+    border-color: #198754;
+    color: #198754;
 }
-
 @media (max-width: 900px) {
 
     .summary-grid {

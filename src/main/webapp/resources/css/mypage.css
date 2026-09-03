@@ -14,36 +14,37 @@
 
 .mypage-header h1 {
     margin: 0 0 8px;
-    color: #ffd43b;
+    color: #0f5132;
     font-size: 30px;
 }
 
 .mypage-header p {
     margin: 0;
-    color: #8e9aa5;
+    color: #617a70;
     font-size: 14px;
 }
 
 .history-btn {
     display: inline-block;
     padding: 11px 18px;
-    color: #11161b;
-    background: #ffd43b;
+    color: #ffffff;
+    background: #198754;
     border-radius: 7px;
     text-decoration: none;
     font-weight: bold;
 }
 
 .history-btn:hover {
-    background: #ffdf5e;
+    background: #146c43;
 }
 
 .mypage-box {
     margin-bottom: 24px;
-    background: #181e24;
-    border: 1px solid #303942;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 14px rgba(15, 81, 50, 0.04);
 }
 
 .section-title {
@@ -51,18 +52,19 @@
     align-items: center;
     gap: 10px;
     padding: 20px 24px;
-    border-bottom: 1px solid #303942;
+    border-bottom: 1px solid #dcece4;
 }
 
 .section-title h2 {
     margin: 0;
+    color: #17352a;
     font-size: 18px;
 }
 
 .count {
     padding: 3px 8px;
-    color: #ffd43b;
-    background: #2c3238;
+    color: #198754;
+    background: #def1e7;
     border-radius: 20px;
     font-size: 12px;
 }
@@ -81,12 +83,12 @@
 }
 
 .info-label {
-    color: #8e9aa5;
+    color: #617a70;
     font-size: 12px;
 }
 
 .info-value {
-    color: #e9edf1;
+    color: #294b3e;
     font-size: 15px;
     font-weight: bold;
 }
@@ -104,18 +106,22 @@ th,
 td {
     padding: 15px 14px;
     text-align: left;
-    border-bottom: 1px solid #2a3239;
+    border-bottom: 1px solid #dcece4;
     font-size: 14px;
 }
 
 th {
-    color: #9da9b4;
-    background: #151a1f;
+    color: #617a70;
+    background: #eef8f3;
     font-size: 12px;
 }
 
+td {
+    color: #294b3e;
+}
+
 tbody tr:hover {
-    background: #1d252c;
+    background: #f0f8f4;
 }
 
 .file-name {
@@ -124,14 +130,14 @@ tbody tr:hover {
 }
 
 .source-type {
-    color: #66c7d4;
+    color: #198754;
 }
 
 .delete-btn {
     padding: 7px 12px;
-    color: #ff7777;
+    color: #c0392b;
     background: transparent;
-    border: 1px solid #6b3a3a;
+    border: 1px solid #e0aaa5;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
@@ -139,19 +145,19 @@ tbody tr:hover {
 }
 
 .delete-btn:hover:not(:disabled) {
-    background: rgba(255, 119, 119, 0.1);
+    background: #fff1f0;
 }
 
 .delete-btn:disabled {
-    color: #69737c;
-    border-color: #39424a;
+    color: #9aa8a1;
+    border-color: #d5dfda;
     cursor: default;
 }
 
 .empty-message {
     padding: 50px;
     text-align: center;
-    color: #77838e;
+    color: #7f968d;
 }
 
 .success-message,
@@ -163,15 +169,15 @@ tbody tr:hover {
 }
 
 .success-message {
-    color: #7ee787;
-    background: rgba(126, 231, 135, 0.08);
-    border: 1px solid rgba(126, 231, 135, 0.25);
+    color: #198754;
+    background: #eef8f3;
+    border: 1px solid #b9dccc;
 }
 
 .error-message {
-    color: #ff8c8c;
-    background: rgba(255, 90, 90, 0.08);
-    border: 1px solid rgba(255, 90, 90, 0.25);
+    color: #c0392b;
+    background: #fff1f0;
+    border: 1px solid #e0aaa5;
 }
 
 .modal-overlay {
@@ -192,27 +198,27 @@ tbody tr:hover {
     width: 90%;
     max-width: 400px;
     padding: 28px;
-    background: #181e24;
-    border: 1px solid #405469;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 12px;
     text-align: center;
 }
 
 .delete-modal h3 {
     margin: 0 0 14px;
-    color: #ffd43b;
+    color: #0f5132;
     font-size: 20px;
 }
 
 .delete-modal p {
     margin: 0;
-    color: #e9edf1;
+    color: #294b3e;
     font-size: 14px;
 }
 
 .modal-guide {
     margin-top: 8px !important;
-    color: #8e9aa5 !important;
+    color: #617a70 !important;
     font-size: 12px !important;
 }
 
@@ -233,15 +239,15 @@ tbody tr:hover {
 }
 
 .modal-cancel {
-    color: #d7dde2;
-    background: #222b34;
-    border: 1px solid #405469;
+    color: #294b3e;
+    background: #eef8f3;
+    border: 1px solid #b9dccc;
 }
 
 .modal-delete {
-    color: #fff;
-    background: #d94b4b;
-    border: 1px solid #d94b4b;
+    color: #ffffff;
+    background: #c0392b;
+    border: 1px solid #c0392b;
 }
 
 .mypage-title-wrap {

@@ -27,6 +27,19 @@
     color: #617a70;
 }
 
+.page-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.page-character {
+    width: 86px;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
+}
+
 .page-actions {
     display: flex;
     gap: 10px;
@@ -95,8 +108,8 @@ td {
 }
 
 th {
-    background: #eef8f3;
-    color: #617a70;
+    background: #e5f4ec;
+    color: #49685c;
     font-size: 12px;
 }
 
@@ -118,7 +131,7 @@ tbody tr:hover {
 }
 
 .abnormal-count {
-    color: #c0392b;
+    color: #c44b3f;
     font-weight: bold;
 }
 

@@ -13,7 +13,7 @@
 }
 
 .dashboard-label {
-    color: #ffd43b;
+    color: #198754;
     font-size: 12px;
     font-weight: bold;
     letter-spacing: 1.5px;
@@ -21,27 +21,27 @@
 
 .dashboard-header h1 {
     margin: 8px 0;
-    color: #f4f4f4;
+    color: #0f5132;
     font-size: 32px;
 }
 
 .dashboard-header p {
     margin: 0;
-    color: #8e9aa5;
+    color: #617a70;
 }
 
 .analysis-link {
     padding: 11px 17px;
-    border: 1px solid #46515b;
+    border: 1px solid #b9dccc;
     border-radius: 7px;
-    color: #d5dbe0;
+    color: #198754;
     font-size: 13px;
     text-decoration: none;
 }
 
 .analysis-link:hover {
-    color: #ffd43b;
-    border-color: #ffd43b;
+    color: #146c43;
+    border-color: #198754;
 }
 
 .summary-grid {
@@ -53,10 +53,11 @@
 .summary-card {
     position: relative;
     padding: 24px;
-    background: #151e28;
-    border: 1px solid #303c47;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 14px rgba(15, 81, 50, 0.04);
 }
 
 .summary-card::before {
@@ -65,38 +66,38 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background: #ffd43b;
+    background: #198754;
     content: "";
 }
 
 .summary-card.cyan::before {
-    background: #66c7d4;
+    background: #58a77d;
 }
 
 .summary-card.red::before {
-    background: #ff7777;
+    background: #c0392b;
 }
 
 .summary-card.orange::before {
-    background: #ffad66;
+    background: #d28a35;
 }
 
 .card-label {
     display: block;
     margin-bottom: 15px;
-    color: #9ca8b3;
+    color: #617a70;
     font-size: 13px;
 }
 
 .summary-card strong {
     display: block;
-    color: #f4f4f4;
+    color: #17352a;
     font-size: 30px;
 }
 
 .summary-card p {
     margin: 10px 0 0;
-    color: #697681;
+    color: #7f968d;
     font-size: 12px;
 }
 
@@ -109,20 +110,21 @@
 
 .dashboard-panel {
     padding: 24px;
-    background: #151e28;
-    border: 1px solid #303c47;
+    background: #f8fcfa;
+    border: 1px solid #c7e2d5;
     border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(15, 81, 50, 0.04);
 }
 
 .panel-header h2 {
     margin: 0 0 7px;
-    color: #e9edf1;
+    color: #17352a;
     font-size: 18px;
 }
 
 .panel-header p {
     margin: 0;
-    color: #788590;
+    color: #617a70;
     font-size: 13px;
 }
 
@@ -132,12 +134,11 @@
     justify-content: center;
     height: 260px;
     margin-top: 20px;
-    border: 1px dashed #3b4752;
+    border: 1px dashed #b9dccc;
     border-radius: 8px;
-    color: #64717c;
+    color: #7f968d;
     font-size: 13px;
 }
-
 .chart-container {
     position: relative;
     height: 260px;
@@ -150,27 +151,31 @@
     gap: 18px;
     margin-top: 28px;
 }
+
 .admin-menu-card {
     padding: 22px;
-    border: 1px solid #343b42;
+    border: 1px solid #c7e2d5;
     border-radius: 10px;
-    background: #111a22;
-    color: #e9edf1;
+    background: #f8fcfa;
+    color: #17352a;
     text-decoration: none;
     transition: 0.2s;
 }
+
 .admin-menu-card:hover {
-    border-color: #ffd43b;
+    border-color: #198754;
     transform: translateY(-2px);
 }
+
 .admin-menu-card strong {
     display: block;
     margin-bottom: 8px;
-    color: #ffd43b;
+    color: #198754;
     font-size: 17px;
 }
+
 .admin-menu-card span {
-    color: #8e979f;
+    color: #617a70;
     font-size: 13px;
 }
 
@@ -188,9 +193,6 @@
     .admin-menu {
         grid-template-columns: 1fr;
     }
-}
-
-@media (max-width: 900px) {
     .summary-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -198,7 +200,9 @@
     .chart-grid {
         grid-template-columns: 1fr;
     }
+    
 }
+
 
 @media (max-width: 600px) {
     .dashboard-header {
