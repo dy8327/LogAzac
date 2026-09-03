@@ -55,7 +55,7 @@
                                 <tr>
                                     <td>${file.fileNo}</td>
                                     <td>${file.userId}</td>
-                                    <td class="file-name">${file.fileName}</td>
+                                    <td class="file-name"><c:out value="${file.fileName}" /></td>
                                     <td class="source-type">
                                         <c:choose>
                                             <c:when test="${file.sourceType eq 'VENDING'}">자판기 로그</c:when>

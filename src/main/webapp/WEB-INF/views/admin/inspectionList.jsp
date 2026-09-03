@@ -56,7 +56,7 @@
                                 <tr>
                                     <td>${inspection.insNo}</td>
                                     <td>${inspection.userId}</td>
-                                    <td class="file-name">${inspection.fileName}</td>
+                                    <td class="file-name"><c:out value="${inspection.fileName}" /></td>
                                     <td class="source-type">
                                         <c:choose>
                                             <c:when test="${inspection.sourceType eq 'VENDING'}">자판기 로그</c:when>
