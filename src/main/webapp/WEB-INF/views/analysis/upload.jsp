@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,6 +19,13 @@
     <section class="analysis-upload-box">
         <div class="upload-panel">
             <h2>지금 바로 로그를 분석해보세요!</h2>
+
+            <c:if test="${not empty errorMessage}">
+                <div class="error-message">
+                    <c:out value="${errorMessage}" />
+                </div>
+            </c:if>
+
 
             <label class="upload-drop" for="logFile">
                 <div class="upload-icon">☁</div>
