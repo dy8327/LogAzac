@@ -18,5 +18,5 @@ jobs:
             git pull origin master
             chmod +x mvnw
             ./mvnw clean package -DskipTests
-            sudo systemctl restart logazac
-            sudo systemctl status logazac --no-pager
+            sudo /usr/bin/systemctl restart logazac
+            /usr/bin/systemctl is-active logazac
