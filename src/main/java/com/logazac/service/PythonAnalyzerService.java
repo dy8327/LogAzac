@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.logazac.dto.PythonAnalysisResponse;
 
@@ -17,17 +18,17 @@ public class PythonAnalyzerService {
 
     private final JsonMapper jsonMapper;
 
+    @Value("${logazac.python-exe}")
+    private String pythonExe;
+
+    @Value("${logazac.analyzer-path}")
+    private String analyzerPath;
+
     public PythonAnalyzerService(JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
     }
 
     public PythonAnalysisResponse analyze(String filePath, String activeRuleTypes) throws Exception {
-
-        String pythonExe =
-            "C:/Users/Administrator/AppData/Local/Python/pythoncore-3.14-64/python.exe";
-
-        String analyzerPath =
-            "D:/doyoung/LogAzac/logazac/python/analyzer.py";
 
         // 경로 확인
         System.out.println("Python 실행파일: " + pythonExe);
