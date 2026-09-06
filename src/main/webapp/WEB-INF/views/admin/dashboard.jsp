@@ -83,7 +83,7 @@
             <div class="panel-header">
                 <div>
                     <h2>이상 유형별 현황</h2>
-                    <p>탐지 규칙별 발생 건수</p>
+                    <p>분석 규칙별 발생 건수</p>
                 </div>
             </div>
             <div class="chart-container">
@@ -102,7 +102,7 @@
         </a>
         <a class="admin-menu-card" href="${pageContext.request.contextPath}/admin/rules">
             <strong>분석 규칙 관리</strong>
-            <span>탐지 규칙 조회 및 설정</span>
+            <span>분석 규칙 조회 및 설정</span>
         </a>
     </section>
 
