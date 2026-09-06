@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이상 판단 규칙 등록 - LogAzac</title>
+    <title>분석 규칙 등록 - LogAzac</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-rule.css">
@@ -18,7 +18,7 @@
 <main class="page-wrap">
     <section class="page-header">
         <div>
-            <h1>이상 판단 규칙 등록</h1>
+            <h1>분석 규칙 등록</h1>
             <p>로그 분석에 사용할 새 규칙을 등록합니다.</p>
         </div>
         <a class="analysis-btn" href="${pageContext.request.contextPath}/admin/rules">목록</a>

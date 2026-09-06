@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이상 판단 규칙 관리 - LogAzac</title>
+    <title>분석 규칙 관리 - LogAzac</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
 </head>
@@ -19,8 +19,8 @@
         <div class="page-title-wrap">
             <img src="${pageContext.request.contextPath}/resources/images/detection.png" alt="규칙 관리 카피바라" class="page-character">
             <div>
-                <h1>이상 판단 규칙 관리</h1>
-                <p>로그 분석에 사용되는 이상 판단 규칙을 관리합니다.</p>
+                <h1>분석 규칙 관리</h1>
+                <p>로그 분석에 사용되는 분석 규칙을 관리합니다.</p>
             </div>
         </div>
         <div class="page-actions">
@@ -37,7 +37,7 @@
 
         <c:choose>
             <c:when test="${empty rules}">
-                <div class="empty-message">등록된 이상 판단 규칙이 없습니다.</div>
+                <div class="empty-message">등록된 분석 규칙이 없습니다.</div>
             </c:when>
             <c:otherwise>
                 <div class="table-wrap">

@@ -109,7 +109,7 @@
             <c:otherwise>
                 <div class="result-filter">
                     <select id="ruleFilter">
-                        <option value="">전체 탐지 규칙</option>
+                        <option value="">전체 분석 규칙</option>
                     </select>
                     <input type="text" id="valueFilter" placeholder="탐지 값 검색">
                     <button type="button" id="filterReset">초기화</button>

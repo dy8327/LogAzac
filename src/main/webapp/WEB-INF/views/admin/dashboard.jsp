@@ -101,7 +101,7 @@
             <span>전체 업로드 파일 현황 확인</span>
         </a>
         <a class="admin-menu-card" href="${pageContext.request.contextPath}/admin/rules">
-            <strong>이상 판단 규칙 관리</strong>
+            <strong>분석 규칙 관리</strong>
             <span>탐지 규칙 조회 및 설정</span>
         </a>
     </section>
