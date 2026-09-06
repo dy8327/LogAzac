@@ -8,7 +8,7 @@
         </div>
 
         <div class="footer-text">
-            로그 이상 탐지 및 분석 시스템
+            운영 로그 분석 및 상태 판정 시스템
         </div>
 
         <div class="footer-copy">

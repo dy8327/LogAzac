@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogAzac - 로그 이상 분석 시스템</title>
+    <title>LogAzac - 운영 로그 분석 시스템</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/home.css">
 </head>
@@ -30,7 +30,7 @@
 
             <h1>
                 복잡한 로그에서<br>
-                <span>이상 징후를 빠르게.</span>
+                <span>상태와 처리결과를 한번에.</span>
             </h1>
 
             <img src="${pageContext.request.contextPath}/resources/images/logo.png"
