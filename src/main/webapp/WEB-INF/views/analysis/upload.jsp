@@ -20,19 +20,18 @@
         <div class="upload-panel">
             <h2>지금 바로 로그를 분석해보세요!</h2>
 
-            <c:if test="${not empty errorMessage}">
-                <div class="error-message">
-                    <c:out value="${errorMessage}" />
-                </div>
-            </c:if>
-
-
             <label class="upload-drop" for="logFile">
                 <div class="upload-icon">☁</div>
                 <p>로그 파일을 드래그하거나<br>클릭하여 업로드하세요.</p>
                 <span>(TXT, LOG)</span>
                 <strong>파일 선택</strong>
                 <p id="selectedFileName" class="selected-file-name">선택된 파일이 없습니다.</p>
+                
+                <c:if test="${not empty errorMessage}">
+                <div class="error-message">
+                    <c:out value="${errorMessage}" />
+                </div>
+                </c:if>
             </label>
 
             <form action="${pageContext.request.contextPath}/analysis/upload" method="post" enctype="multipart/form-data">

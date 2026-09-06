@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.dao.DataAccessException;
 
 import com.logazac.service.AnalysisService;
 import com.logazac.dto.AnalysisResultDTO;
@@ -121,9 +122,13 @@ public class LogAnalysisController {
             return "redirect:/analysis/result/" + insNo;
 
         } catch (IllegalArgumentException e) {
-
             model.addAttribute("errorMessage", e.getMessage());
-
+            return "analysis/upload";
+        } catch (DataAccessException e) {
+            model.addAttribute("errorMessage", "데이터 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+            return "analysis/upload";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "로그 분석 중 오류가 발생했습니다. 파일을 확인하거나 잠시 후 다시 시도해 주세요.");
             return "analysis/upload";
         }
     }

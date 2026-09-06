@@ -51,7 +51,7 @@ public class AnalysisService {
         logFile.setUserNo(userNo);
         logFile.setSourceType(sourceType);
         logFile.setFilePath(filePath);
-
+        
         analysisMapper.insertLogFile(logFile);
 
         /* 2. 검사 생성 */
@@ -72,7 +72,7 @@ public class AnalysisService {
             PythonAnalysisResponse response = pythonAnalyzerService.analyze(filePath, activeRuleTypes);
 
             if (!response.isSuccess()) {
-                throw new RuntimeException("Python 분석 실패: " + response.getMessage());
+                throw new IllegalArgumentException(response.getMessage());
             }
 
             /* 4. 탐지 결과 저장 */

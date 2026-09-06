@@ -332,9 +332,19 @@ tbody tr:hover {
     word-break: break-all;
 }
 
+
 .upload-drop.drag-over {
     border-color: #198754;
     background: #def1e7;
+}
+
+.upload-drop .error-message {
+    width: 100%;
+    margin-top: 14px;
+    color: #d93025 !important;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
 }
 
 @media (max-width: 760px) {
