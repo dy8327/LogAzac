@@ -25,12 +25,12 @@
         <div class="hero-content">
 
             <div class="hero-label">
-                LOG ANOMALY ANALYSIS
+                OPERATION LOG ANALYSIS
             </div>
 
             <h1>
-                복잡한 로그에서<br>
-                <span>상태와 처리결과를 한번에.</span>
+                운영로그를 분석해<br>
+                <span>상태와 결과를 한눈에</span>
             </h1>
 
             <img src="${pageContext.request.contextPath}/resources/images/logo.png"
@@ -68,17 +68,17 @@
                 <div class="feature-number">01</div>
                 <h3>로그 업로드</h3>
                 <p>
-                    자판기 및 결제기 로그 파일을
+                    다양한 운영 로그 파일을
                     간단하게 업로드할 수 있습니다.
                 </p>
             </article>
 
             <article class="feature-card">
                 <div class="feature-number">02</div>
-                <h3>이상 로그 탐지</h3>
+                <h3>상태·결과 판정</h3>
                 <p>
-                    등록된 탐지 규칙을 기준으로
-                    이상 패턴을 자동으로 찾아냅니다.
+                    등록된 분석 규칙과 로그 흐름을 기준으로
+                    상태 변화와 처리 결과를 자동으로 판정합니다.
                 </p>
             </article>
 
@@ -86,7 +86,7 @@
                 <div class="feature-number">03</div>
                 <h3>분석 결과 확인</h3>
                 <p>
-                    탐지 규칙, 이상 값, 원본 로그를
+                    판정 결과와 이상 값, 원본 로그를
                     한 화면에서 확인할 수 있습니다.
                 </p>
             </article>
