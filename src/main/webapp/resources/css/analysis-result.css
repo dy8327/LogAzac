@@ -350,7 +350,15 @@ color: #617a70;
 width: 70px;
 }
 .success-detail-table th:nth-child(2) {
-width: 190px;
+width: 120px;
+}
+.success-detail-table th:nth-child(3) {
+width: 220px;
+}
+.success-detail-table td:nth-child(4) {
+white-space: normal;
+word-break: break-all;
+line-height: 1.5;
 }
 .success-result-value {
 color: #198754;
@@ -422,7 +430,7 @@ font-weight: bold;
     width: 70px;
 }
 .failure-detail-table th:nth-child(2) {
-    width: 130px;
+    width: 120px;
 }
 .failure-detail-table th:nth-child(3) {
     width: 220px;

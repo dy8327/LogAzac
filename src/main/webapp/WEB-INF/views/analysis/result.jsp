@@ -102,13 +102,29 @@
                 <th>검사 번호</th>
                 <td>${inspection.insNo}</td>
                 <th>분석 상태</th>
-                <td>${inspection.insStatus}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${inspection.insStatus eq 'COMPLETED'}">분석 완료</c:when>
+                        <c:when test="${inspection.insStatus eq 'PROCESSING'}">분석 중</c:when>
+                        <c:when test="${inspection.insStatus eq 'FAILED'}">분석 실패</c:when>
+                        <c:otherwise><c:out value="${inspection.insStatus}" /></c:otherwise>
+                    </c:choose>
+                </td>
             </tr>
             <tr>
                 <th>파일명</th>
                 <td colspan="3"><c:out value="${inspection.fileName}" /></td>
             <tr>
-                <th>탐지 결과 건</th>
+                <th>
+                    <c:choose>
+                        <c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION' or inspection.sourceType eq 'EXTERNAL_RETRANSMISSION'}">
+                            실패 결과 건
+                        </c:when>
+                        <c:otherwise>
+                            탐지 결과 건
+                        </c:otherwise>
+                    </c:choose>
+                </th>
                 <td>${inspection.errorCount}</td>
                 <th>이상 로그 건</th>
                 <td>${inspection.abnormalLogCount}</td>
@@ -161,7 +177,16 @@
                             <c:forEach var="result" items="${successResults}" varStatus="status">
                                 <details class="success-device-group">
                                     <summary>
-                                        <span class="success-device-id">정상 처리 #${status.count}</span>
+                                        <span class="success-device-id">
+                                            <c:choose>
+                                                <c:when test="${not empty result.deviceId}">
+                                                    <c:out value="${result.deviceId}" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    정상 처리 #${status.count}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
                                         <span class="success-device-count"><c:out value="${result.detectedValue}" /></span>
                                     </summary>
                                     <div class="success-detail-table-wrap">
@@ -169,6 +194,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>라인</th>
+                                                    <th>장비</th>
                                                     <th>처리 결과</th>
                                                     <th>원본 로그</th>
                                                 </tr>
@@ -176,6 +202,14 @@
                                             <tbody>
                                                 <tr>
                                                     <td>${result.lineNo}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${not empty result.deviceId}">
+                                                                <c:out value="${result.deviceId}" />
+                                                            </c:when>
+                                                            <c:otherwise>-</c:otherwise>
+                                                        </c:choose>
+                                                    </td>
                                                     <td class="success-result-value"><c:out value="${result.detectedValue}" /></td>
                                                     <td class="log-content"><c:out value="${result.logContent}" /></td>
                                                 </tr>
