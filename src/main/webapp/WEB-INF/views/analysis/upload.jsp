@@ -36,7 +36,6 @@
 
             <form action="${pageContext.request.contextPath}/analysis/upload" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
-                <input type="hidden" name="sourceType" value="VENDING">
                 <input type="file" id="logFile" name="logFile" accept=".txt,.log" required>
                 <button type="submit" class="analysis-start-btn">로그 분석 시작</button>
             </form>

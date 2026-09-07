@@ -9,6 +9,10 @@ public class PythonAnalysisResponse {
     private String message;
     private List<DetectionResultDTO> results;
     private int totalLines;
+    private String logType;
+    private int successDeviceCount;
+    private int successCount;
+    private int failureDeviceCount;
 
     public boolean isSuccess() {
         return success;
@@ -48,5 +52,37 @@ public class PythonAnalysisResponse {
 
     public void setTotalLines(int totalLines) {
         this.totalLines = totalLines;
+    }
+
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
+
+    public int getSuccessDeviceCount() {
+        return successDeviceCount;
+    }
+
+    public void setSuccessDeviceCount(int successDeviceCount) {
+        this.successDeviceCount = successDeviceCount;
+    }
+
+    public int getSuccessCount() {
+        return successCount;
+    }
+
+    public void setSuccessCount(int successCount) {
+        this.successCount = successCount;
+    }
+
+    public int getFailureDeviceCount() {
+        return failureDeviceCount;
+    }
+
+    public void setFailureDeviceCount(int failureDeviceCount) {
+        this.failureDeviceCount = failureDeviceCount;
     }
 }

@@ -16,6 +16,9 @@ public interface AnalysisMapper {
     // 로그 파일 저장
     int insertLogFile(LogFileDTO logFile);
 
+    //로그 파일 종류
+    int updateLogFileSourceType(@Param("fileNo") int fileNo, @Param("sourceType") String sourceType);
+
     // 검사 생성
     int insertInspection(InspectionDTO inspection);
 
@@ -26,6 +29,9 @@ public interface AnalysisMapper {
     int completeInspection(
         @Param("insNo") int insNo,
         @Param("totalLines") int totalLines,
+        @Param("successCount") int successCount,
+        @Param("successDeviceCount") int successDeviceCount,
+        @Param("failureDeviceCount") int failureDeviceCount,
         @Param("errorCount") int errorCount
     );
 

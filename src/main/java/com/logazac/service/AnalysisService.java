@@ -37,8 +37,7 @@ public class AnalysisService {
     public int analyzeAndSave(
         String filePath,
         String originalFileName,
-        int userNo,
-        String sourceType
+        int userNo
     ) throws Exception {
 
         Path path = Path.of(filePath);
@@ -49,7 +48,7 @@ public class AnalysisService {
         logFile.setFileName(originalFileName);
         logFile.setFileSize(Files.size(path));
         logFile.setUserNo(userNo);
-        logFile.setSourceType(sourceType);
+        logFile.setSourceType("UNKNOWN");
         logFile.setFilePath(filePath);
         
         analysisMapper.insertLogFile(logFile);
@@ -75,6 +74,19 @@ public class AnalysisService {
                 throw new IllegalArgumentException(response.getMessage());
             }
 
+            if (response.getLogType() == null || response.getLogType().isBlank()) {
+                throw new IllegalArgumentException("로그 유형을 판별할 수 없습니다.");
+            }
+
+            int sourceTypeUpdateResult = analysisMapper.updateLogFileSourceType(
+                logFile.getFileNo(),
+                response.getLogType()
+            );
+
+            if (sourceTypeUpdateResult == 0) {
+                throw new IllegalStateException("로그 유형 저장에 실패했습니다.");
+            }
+
             /* 4. 탐지 결과 저장 */
             for (
                 DetectionResultDTO result : response.getResults()
@@ -93,6 +105,13 @@ public class AnalysisService {
                 save.setLineNo(result.getLineNo());
                 save.setLogContent(result.getRawLog());
                 save.setDetectedValue(result.getDetectedValue());
+                save.setDeviceId(result.getDeviceId());
+                save.setSlotCode(result.getSlotCode());
+                save.setResultStatus(
+                    result.getResultStatus() == null || result.getResultStatus().isBlank()
+                        ? "ERROR"
+                        : result.getResultStatus()
+                );
 
                 analysisMapper.insertDetectionResult(save);
             }
@@ -101,6 +120,9 @@ public class AnalysisService {
             analysisMapper.completeInspection(
                 inspection.getInsNo(),
                 response.getTotalLines(),
+                response.getErrorCount(),
+                response.getSuccessDeviceCount(),
+                response.getFailureDeviceCount(),
                 response.getErrorCount()
             );
 

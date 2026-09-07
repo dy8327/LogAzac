@@ -11,6 +11,9 @@ public class AnalysisResultDTO {
 
     private String detectedValue;
     private String logContent;
+    private String deviceId;
+    private String slotCode;
+    private String resultStatus;
 
     public int getResultNo() {
         return resultNo;
@@ -66,5 +69,29 @@ public class AnalysisResultDTO {
 
     public void setLogContent(String logContent) {
         this.logContent = logContent;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getSlotCode() {
+        return slotCode;
+    }
+
+    public void setSlotCode(String slotCode) {
+        this.slotCode = slotCode;
+    }
+
+    public String getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(String resultStatus) {
+        this.resultStatus = resultStatus;
     }
 }

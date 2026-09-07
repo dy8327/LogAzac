@@ -70,7 +70,6 @@ public class LogAnalysisController {
     @PostMapping("/analysis/upload")
     public String uploadAndAnalyze(
         @RequestParam("logFile") MultipartFile logFile,
-        @RequestParam("sourceType") String sourceType,
         HttpSession session,
         Model model
     ) throws Exception {
@@ -85,10 +84,6 @@ public class LogAnalysisController {
 
             if (logFile.isEmpty()) {
                 throw new IllegalArgumentException("업로드할 로그 파일이 없습니다.");
-            }
-
-            if (!"VENDING".equals(sourceType) && !"PAYMENT".equals(sourceType)) {
-                throw new IllegalArgumentException("지원하지 않는 로그 종류입니다.");
             }
 
             String originalFileName =
@@ -115,8 +110,7 @@ public class LogAnalysisController {
             int insNo = analysisService.analyzeAndSave(
                 savedPath.toString(),
                 originalFileName,
-                loginUser.getUserNo(),
-                sourceType
+                loginUser.getUserNo()
             );
 
             return "redirect:/analysis/result/" + insNo;

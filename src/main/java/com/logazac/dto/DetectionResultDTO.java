@@ -9,6 +9,7 @@ public class DetectionResultDTO {
     private String slotCode;
     private String detectedValue;
     private String rawLog;
+    private String resultStatus;
 
     public int getLogNo() {
         return logNo;
@@ -64,5 +65,13 @@ public class DetectionResultDTO {
 
     public void setRawLog(String rawLog) {
         this.rawLog = rawLog;
+    }
+
+    public String getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(String resultStatus) {
+        this.resultStatus = resultStatus;
     }
 }

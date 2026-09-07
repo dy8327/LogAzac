@@ -15,6 +15,9 @@ public class InspectionDTO {
     private String userId;
     private int abnormalLogCount;
     private LocalDateTime startDate;
+    private int successCount;
+    private int successDeviceCount;
+    private int failureDeviceCount;
 
     public int getInsNo() {
         return insNo;
@@ -104,5 +107,29 @@ public class InspectionDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getSuccessCount() {
+        return successCount;
+    }
+
+    public void setSuccessCount(int successCount) {
+        this.successCount = successCount;
+    }
+
+    public int getSuccessDeviceCount() {
+        return successDeviceCount;
+    }
+
+    public void setSuccessDeviceCount(int successDeviceCount) {
+        this.successDeviceCount = successDeviceCount;
+    }
+
+    public int getFailureDeviceCount() {
+        return failureDeviceCount;
+    }
+
+    public void setFailureDeviceCount(int failureDeviceCount) {
+        this.failureDeviceCount = failureDeviceCount;
     }
 }
