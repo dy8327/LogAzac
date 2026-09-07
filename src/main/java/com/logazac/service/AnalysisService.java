@@ -67,10 +67,8 @@ public class AnalysisService {
             String activeRuleTypes = activeRules.stream()
                 .map(DetectionRuleDTO::getDetRuleType)
                 .collect(java.util.stream.Collectors.joining(","));
-                System.out.println("활성 분석 규칙: " + activeRuleTypes);
 
             PythonAnalysisResponse response = pythonAnalyzerService.analyze(filePath, activeRuleTypes);
-            System.out.println("Python 분석 결과: type=" + response.getLogType() + ", success=" + response.getSuccessCount() + ", error=" + response.getErrorCount() + ", results=" + response.getResults().size());
 
             if (!response.isSuccess()) {
                 throw new IllegalArgumentException(response.getMessage());
