@@ -292,6 +292,141 @@
     border-color: #198754;
     color: #198754;
 }
+
+.success-device-list {
+padding: 14px 20px 20px;
+}
+.success-device-group {
+border: 1px solid #c7e2d5;
+border-radius: 8px;
+margin-top: 10px;
+overflow: hidden;
+}
+.success-device-group:first-child {
+margin-top: 0;
+}
+.success-device-group summary {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 16px;
+background: #eef8f3;
+cursor: pointer;
+list-style: none;
+}
+.success-device-group summary::-webkit-details-marker {
+display: none;
+}
+.success-device-id {
+color: #294b3e;
+font-weight: bold;
+}
+.success-device-count {
+color: #198754;
+font-weight: bold;
+}
+.success-detail-table-wrap {
+overflow-x: auto;
+}
+.success-detail-table {
+width: 100%;
+min-width: 850px;
+table-layout: fixed;
+border-collapse: collapse;
+}
+.success-detail-table th,
+.success-detail-table td {
+padding: 12px 14px;
+border-top: 1px solid #dcece4;
+text-align: left;
+vertical-align: top;
+font-size: 13px;
+}
+.success-detail-table th {
+background: #f5fbf8;
+color: #617a70;
+}
+.success-detail-table th:nth-child(1) {
+width: 70px;
+}
+.success-detail-table th:nth-child(2) {
+width: 190px;
+}
+.success-result-value {
+color: #198754;
+font-weight: bold;
+}
+
+.success-message {
+    padding: 24px 20px;
+    color: #198754;
+}
+.error-badge {
+    background: #f9e3df;
+    color: #c0392b;
+}
+.failure-list {
+    padding: 14px 20px 20px;
+}
+.failure-group {
+    border: 1px solid #e4c8c2;
+    border-radius: 8px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+.failure-group:first-child {
+    margin-top: 0;
+}
+.failure-group summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #fff7f5;
+    cursor: pointer;
+    list-style: none;
+}
+.failure-group summary::-webkit-details-marker {
+    display: none;
+}
+.failure-name {
+    color: #7d2d21;
+    font-weight: bold;
+}
+.failure-meta {
+    color: #c0392b;
+    font-weight: bold;
+}
+.failure-detail-table-wrap {
+    overflow-x: auto;
+}
+.failure-detail-table {
+    width: 100%;
+    min-width: 900px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.failure-detail-table th,
+.failure-detail-table td {
+    padding: 12px 14px;
+    border-top: 1px solid #eadbd7;
+    text-align: left;
+    vertical-align: top;
+    font-size: 13px;
+}
+.failure-detail-table th {
+    background: #fbf1ef;
+    color: #77544c;
+}
+.failure-detail-table th:nth-child(1) {
+    width: 70px;
+}
+.failure-detail-table th:nth-child(2) {
+    width: 130px;
+}
+.failure-detail-table th:nth-child(3) {
+    width: 220px;
+}
 @media (max-width: 760px) {
     .page-wrap {
         width: calc(100% - 24px);
@@ -362,5 +497,11 @@
     .actions .btn {
         width: 100%;
         text-align: center;
+    }
+    .success-device-list {
+        padding: 12px;
+    }
+    .failure-list {
+        padding: 10px;
     }
 }

@@ -7,6 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -201,12 +207,58 @@ public class LogAnalysisController {
         }
 
         List<AnalysisResultDTO> results = analysisService.getDetectionResults(insNo);
-
         List<RuleSummaryDTO> topRules = analysisService.getTopDetectionRules(insNo);
+        List<AnalysisResultDTO> successResults = new ArrayList<>();
+        Map<String, List<AnalysisResultDTO>> failureGroups = new LinkedHashMap<>();
+        Map<String, Integer> successDeviceSummary = new LinkedHashMap<>();
+        Map<String, Integer> failureDeviceCounts = new LinkedHashMap<>();
+        Map<String, List<AnalysisResultDTO>> successDeviceGroups = new LinkedHashMap<>();
+
+        for (AnalysisResultDTO result : results) {
+            if ("SUCCESS".equals(result.getResultStatus())) {
+                successResults.add(result);
+                if (result.getDeviceId() != null && !result.getDeviceId().isBlank()) {
+                    successDeviceSummary.merge(result.getDeviceId(), 1, Integer::sum);
+                    successDeviceGroups.computeIfAbsent(result.getDeviceId(), key -> new ArrayList<>()).add(result);
+                }
+            } else {
+                String groupName;
+
+                if ("DUPLICATE_RESPONSE".equals(result.getRuleType())) {
+                    groupName = "중복 응답 오류";
+                } else if ("RETRANSMISSION_FAILED".equals(result.getRuleType())) {
+                    groupName = "재전송 실패";
+                } else {
+                    groupName = result.getDetectedValue();
+                    if (groupName != null && groupName.contains(" - ")) {
+                        groupName = groupName.substring(groupName.indexOf(" - ") + 3).trim();
+                    }
+                    if (groupName == null || groupName.isBlank()) {
+                        groupName = result.getRuleType();
+                    }
+                }
+                failureGroups.computeIfAbsent(groupName, key -> new ArrayList<>()).add(result);
+            }
+        }
+
+        for (Map.Entry<String, List<AnalysisResultDTO>> entry : failureGroups.entrySet()) {
+            Set<String> devices = new LinkedHashSet<>();
+            for (AnalysisResultDTO result : entry.getValue()) {
+                if (result.getDeviceId() != null && !result.getDeviceId().isBlank()) {
+                    devices.add(result.getDeviceId());
+                }
+            }
+            failureDeviceCounts.put(entry.getKey(), devices.size());
+        }
 
         model.addAttribute("inspection", inspection);
         model.addAttribute("results", results);
+        model.addAttribute("successResults", successResults);
+        model.addAttribute("successDeviceSummary", successDeviceSummary);
+        model.addAttribute("failureGroups", failureGroups);
         model.addAttribute("topRules", topRules);
+        model.addAttribute("failureDeviceCounts", failureDeviceCounts);
+        model.addAttribute("successDeviceGroups", successDeviceGroups);
 
         return "analysis/result";
     }

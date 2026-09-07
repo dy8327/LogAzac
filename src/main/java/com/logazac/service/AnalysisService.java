@@ -120,7 +120,7 @@ public class AnalysisService {
             analysisMapper.completeInspection(
                 inspection.getInsNo(),
                 response.getTotalLines(),
-                response.getErrorCount(),
+                response.getSuccessCount(),
                 response.getSuccessDeviceCount(),
                 response.getFailureDeviceCount(),
                 response.getErrorCount()

@@ -94,11 +94,14 @@
 
     <!-- 검사 기본 정보 -->
     <select id="findInspection" resultType="com.logazac.dto.InspectionDTO">
-        SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT, F.FILE_NAME, F.SOURCE_TYPE,
+        SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
+            I.SUCCESS_COUNT, I.SUCCESS_DEVICE_COUNT, I.FAILURE_DEVICE_COUNT,
+            F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
                 WHERE R.INS_NO = I.INS_NO
+                AND R.RESULT_STATUS = 'ERROR'
             ) AS "abnormalLogCount"
         FROM INSPECTIONS I
         JOIN LOG_FILES F
@@ -139,15 +142,17 @@
 
     <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
+            I.SUCCESS_COUNT, I.SUCCESS_DEVICE_COUNT, I.FAILURE_DEVICE_COUNT,
             I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
                 WHERE R.INS_NO = I.INS_NO
+                AND R.RESULT_STATUS = 'ERROR'
             ) AS "abnormalLogCount"
         FROM INSPECTIONS I
         JOIN LOG_FILES F
-            ON I.FILE_NO = F.FILE_NO
+        ON I.FILE_NO = F.FILE_NO
         WHERE F.USER_NO = #{userNo}
         ORDER BY I.INS_NO DESC
     </select>

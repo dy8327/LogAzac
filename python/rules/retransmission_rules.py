@@ -13,7 +13,7 @@ def analyze(records, active_rules):
             results.append({
                 "log_no": record["line_no"],
                 "line_no": record["line_no"],
-                "device_id": "",
+                "device_id": record.get("device_id") or "",
                 "rule_type": "RETRANSMISSION_SUCCESS",
                 "slot_code": None,
                 "detected_value": message or "정상 응답",
@@ -26,7 +26,7 @@ def analyze(records, active_rules):
             results.append({
                 "log_no": record["line_no"],
                 "line_no": record["line_no"],
-                "device_id": "",
+                "device_id": record.get("device_id") or "",
                 "rule_type": "DUPLICATE_RESPONSE",
                 "slot_code": None,
                 "detected_value": message,
@@ -39,7 +39,7 @@ def analyze(records, active_rules):
             results.append({
                 "log_no": record["line_no"],
                 "line_no": record["line_no"],
-                "device_id": "",
+                "device_id": record.get("device_id") or "",
                 "rule_type": "RETRANSMISSION_FAILED",
                 "slot_code": None,
                 "detected_value": f"CODE={code}, MESSAGE={message}",

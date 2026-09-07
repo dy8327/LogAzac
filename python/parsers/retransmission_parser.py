@@ -1,6 +1,7 @@
 import re
 
 RESPONSE_PATTERN = re.compile(r"<CODE>(?P<code>.*?)</CODE>.*?<MESSAGE>(?P<message>.*?)</MESSAGE>", re.IGNORECASE)
+INPUT_DEVICE_PATTERN = re.compile(r"CATSN=(?P<device>[A-Za-z0-9]+)", re.IGNORECASE)
 
 def read_lines(file_path):
     for encoding in ["utf-8", "cp949", "euc-kr"]:
@@ -15,6 +16,7 @@ def parse_file(file_path):
     lines = read_lines(file_path)
     records = []
     current_request = None
+    pending_device_id = None
 
     for line_no, line in enumerate(lines, start=1):
         text = line.strip()
@@ -22,9 +24,16 @@ def parse_file(file_path):
             continue
         upper = text.upper()
 
+        if "INPUT:" in upper:
+            device_match = INPUT_DEVICE_PATTERN.search(text)
+            if device_match:
+                pending_device_id = device_match.group("device").strip()
+            continue
+
         if "START SENDJOUNSYSTEM" in upper or "JOUN:" in upper:
             current_request = {
                 "line_no": line_no,
+                "device_id": pending_device_id,
                 "request": text,
                 "response_code": None,
                 "response_message": None,
@@ -41,6 +50,7 @@ def parse_file(file_path):
 
         record = current_request.copy() if current_request else {
             "line_no": line_no,
+            "device_id": pending_device_id,
             "request": None,
             "response_code": None,
             "response_message": None,
@@ -52,5 +62,6 @@ def parse_file(file_path):
         record["raw_log"] = (record["raw_log"] + " " + text).strip()
         records.append(record)
         current_request = None
+        pending_device_id = None
 
     return records
