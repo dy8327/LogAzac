@@ -21,12 +21,14 @@
                  FROM DETECTION_RESULTS R
                  JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
                  WHERE I.INS_STATUS = 'COMPLETED'
+                 AND R.RESULT_STATUS = 'ERROR'
                  GROUP BY R.INS_NO, R.LINE_NO
              )) AS "abnormalLogCount",
             (SELECT COUNT(*)
              FROM DETECTION_RESULTS R
              JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
-             WHERE I.INS_STATUS = 'COMPLETED') AS "detectionCount"
+             WHERE I.INS_STATUS = 'COMPLETED'
+             AND R.RESULT_STATUS = 'ERROR') AS "detectionCount"
         FROM DUAL
     </select>
 
@@ -46,6 +48,7 @@
         LEFT JOIN (
             SELECT INS_NO, COUNT(DISTINCT LINE_NO) AS ABNORMAL_COUNT
             FROM DETECTION_RESULTS
+            WHERE RESULT_STATUS = 'ERROR'
             GROUP BY INS_NO
         ) R ON I.INS_NO = R.INS_NO
         GROUP BY D.STAT_DATE
@@ -60,6 +63,7 @@
         JOIN DETECTION_RULES D ON R.DET_NO = D.DET_NO
         JOIN INSPECTIONS I ON R.INS_NO = I.INS_NO
         WHERE I.INS_STATUS = 'COMPLETED'
+        AND R.RESULT_STATUS = 'ERROR'
         GROUP BY D.DET_RULE_TYPE
         ORDER BY COUNT(*) DESC
     </select>
@@ -71,6 +75,7 @@
                 SELECT COUNT(DISTINCT R.LINE_NO)
                 FROM DETECTION_RESULTS R
                 WHERE R.INS_NO = I.INS_NO
+                AND R.RESULT_STATUS = 'ERROR'
             ) AS "abnormalLogCount"
         FROM INSPECTIONS I
         JOIN LOG_FILES F ON I.FILE_NO = F.FILE_NO

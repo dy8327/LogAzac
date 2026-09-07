@@ -186,6 +186,8 @@ public class AdminController {
         @RequestParam("detPattern") String detPattern,
         @RequestParam("detDescription") String detDescription,
         @RequestParam("useYn") String useYn,
+        @RequestParam("logType") String logType,
+        @RequestParam("severity") String severity,
         HttpSession session,
         RedirectAttributes redirectAttributes
     ) {
@@ -202,11 +204,19 @@ public class AdminController {
         if (!"Y".equals(useYn) && !"N".equals(useYn)) {
             return "redirect:/admin/rules";
         }
+        if (!List.of("DEVICE_STATUS", "EXTERNAL_RETRANSMISSION", "EXTERNAL_INTEGRATION").contains(logType)) {
+            return "redirect:/admin/rules";
+        }
+        if (!List.of("INFO", "WARN", "ERROR").contains(severity)) {
+            return "redirect:/admin/rules";
+        }
 
         DetectionRuleDTO rule = new DetectionRuleDTO();
+        rule.setLogType(logType);
         rule.setDetRuleType(detRuleType);
         rule.setDetPattern(detPattern);
         rule.setDetDescription(detDescription);
+        rule.setSeverity(severity);
         rule.setUseYn(useYn);
 
         int result = detectionRuleService.insertRule(rule);

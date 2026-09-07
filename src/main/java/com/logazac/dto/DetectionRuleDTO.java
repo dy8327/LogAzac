@@ -9,6 +9,8 @@ public class DetectionRuleDTO {
     private String detDescription;
     private String useYn;
     private LocalDateTime regDate;
+    private String logType;
+    private String severity;
 
     public int getDetNo() {
         return detNo;
@@ -63,5 +65,21 @@ public class DetectionRuleDTO {
             return "";
         }
         return regDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
     }
 }

@@ -8,6 +8,7 @@
     <title>분석 규칙 관리 - LogAzac</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-history.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-rule.css">
 </head>
 <body>
 <jsp:include page="../common/header.jsp">
@@ -41,50 +42,79 @@
             </c:when>
             <c:otherwise>
                 <div class="table-wrap">
-                    <table>
+                    <table class="rule-table">
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th>규칙유형</th>
-                                <th>패턴</th>
-                                <th>설명</th>
-                                <th>사용여부</th>
+                                <th>대상 로그</th>
+                                <th>규칙 유형</th>
+                                <th>심각도</th>
+                                <th>상태</th>
                                 <th>등록일</th>
-                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="rule" items="${rules}">
-                                <tr>
+                                <tr class="rule-row" onclick="toggleRuleDetail(this)">
                                     <td>${rule.detNo}</td>
-                                    <td>${rule.detRuleType}</td>
-                                    <td>${rule.detPattern}</td>
-                                    <td>${rule.detDescription}</td>
+                                    <td class="rule-type">
+                                        <c:choose>
+                                            <c:when test="${rule.detRuleType eq 'MISSING_PRODUCT_NAME'}">상품명 누락</c:when>
+                                            <c:when test="${rule.detRuleType eq 'CORRUPTED_DATA'}">깨진 데이터</c:when>
+                                            <c:when test="${rule.detRuleType eq 'MISSING_SLOT'}">슬롯 누락</c:when>
+                                            <c:when test="${rule.detRuleType eq 'PRICE_CHANGED'}">가격 변경</c:when>
+                                            <c:when test="${rule.detRuleType eq 'PRODUCT_NAME_CHANGED'}">상품명 변경</c:when>
+                                            <c:when test="${rule.detRuleType eq 'RETRANSMISSION_SUCCESS'}">재전송 정상</c:when>
+                                            <c:when test="${rule.detRuleType eq 'DUPLICATE_RESPONSE'}">중복 응답</c:when>
+                                            <c:when test="${rule.detRuleType eq 'RETRANSMISSION_FAILED'}">재전송 실패</c:when>
+                                            <c:when test="${rule.detRuleType eq 'DB_TRANSFER_SUCCESS'}">DB 정상 처리</c:when>
+                                            <c:when test="${rule.detRuleType eq 'CONSTRAINT_ERROR'}">DB 제약조건 오류</c:when>
+                                            <c:when test="${rule.detRuleType eq 'BUSINESS_PROCESS_ERROR'}">업무 처리 오류</c:when>
+                                            <c:when test="${rule.detRuleType eq 'DB_TRANSFER_FAILED'}">DB 처리 실패</c:when>
+                                            <c:otherwise><c:out value="${rule.detRuleType}" /></c:otherwise>
+                                        </c:choose>
+                                        <span class="rule-toggle">▼</span>
+                                    </td>
+                                    <td class="rule-type">${rule.detRuleType}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${rule.severity eq 'INFO'}">정보</c:when>
+                                            <c:when test="${rule.severity eq 'WARN'}">경고</c:when>
+                                            <c:when test="${rule.severity eq 'ERROR'}">오류</c:when>
+                                            <c:otherwise>-</c:otherwise>
+                                        </c:choose>
+                                    </td>
                                     <td>
                                         <span class="status ${rule.useYn eq 'Y' ? 'completed' : 'failed'}">
                                             ${rule.useYn eq 'Y' ? '사용' : '미사용'}
                                         </span>
                                     </td>
                                     <td>${rule.formattedRegDate}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${rule.useYn eq 'Y'}">
-                                                <form class="action-form" action="${pageContext.request.contextPath}/admin/rules/use" method="post">
+                                </tr>
+                                <tr class="rule-detail-row">
+                                    <td colspan="6">
+                                        <div class="rule-detail">
+                                            <div class="detail-item">
+                                                <strong>패턴</strong>
+                                                <span><c:out value="${rule.detPattern}" /></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <strong>설명</strong>
+                                                <span><c:out value="${rule.detDescription}" /></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <strong>사용 여부</strong>
+                                                <form action="${pageContext.request.contextPath}/admin/rules/use" method="post">
                                                     <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
                                                     <input type="hidden" name="detNo" value="${rule.detNo}">
-                                                    <input type="hidden" name="useYn" value="N">
-                                                    <button class="action-btn" type="submit">미사용</button>
+                                                    <select name="useYn">
+                                                        <option value="Y" ${rule.useYn eq 'Y' ? 'selected' : ''}>사용</option>
+                                                        <option value="N" ${rule.useYn eq 'N' ? 'selected' : ''}>미사용</option>
+                                                    </select>
+                                                    <button class="action-btn" type="submit">적용</button>
                                                 </form>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <form class="action-form" action="${pageContext.request.contextPath}/admin/rules/use" method="post">
-                                                    <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
-                                                    <input type="hidden" name="detNo" value="${rule.detNo}">
-                                                    <input type="hidden" name="useYn" value="Y">
-                                                    <button class="action-btn unblock" type="submit">사용</button>
-                                                </form>
-                                            </c:otherwise>
-                                        </c:choose>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -97,5 +127,13 @@
 </main>
 
 <jsp:include page="../common/footer.jsp" />
+<script>
+function toggleRuleDetail(row) {
+    const detailRow = row.nextElementSibling;
+    const opened = detailRow.classList.toggle("open");
+    row.classList.toggle("selected", opened);
+    row.querySelector(".rule-toggle").textContent = opened ? "▲" : "▼";
+}
+</script>
 </body>
 </html>

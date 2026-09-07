@@ -14,14 +14,16 @@
     </select>
 
     <select id="findAllRules" resultType="com.logazac.dto.DetectionRuleDTO">
-        SELECT DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION, USE_YN, REG_DATE
+        SELECT DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION,
+            LOG_TYPE, SEVERITY, USE_YN, REG_DATE
         FROM DETECTION_RULES
         ORDER BY DET_NO
     </select>
     
     <!--활성 규칙 조회-->
     <select id="findActiveRules" resultType="com.logazac.dto.DetectionRuleDTO">
-        SELECT DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION, USE_YN, REG_DATE
+        SELECT DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION,
+            LOG_TYPE, SEVERITY, USE_YN, REG_DATE
         FROM DETECTION_RULES
         WHERE USE_YN = 'Y'
         ORDER BY DET_NO
@@ -35,12 +37,15 @@
 
     <insert id="insertRule" parameterType="com.logazac.dto.DetectionRuleDTO">
         INSERT INTO DETECTION_RULES (
-            DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION, USE_YN, REG_DATE
+            DET_NO, DET_RULE_TYPE, DET_PATTERN, DET_DESCRIPTION,
+            LOG_TYPE, SEVERITY, USE_YN, REG_DATE
         ) VALUES (
             SEQ_DETECTION_RULES.NEXTVAL,
             #{detRuleType},
             #{detPattern},
             #{detDescription},
+            #{logType},
+            #{severity},
             #{useYn},
             SYSDATE
         )

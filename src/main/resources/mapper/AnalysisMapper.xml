@@ -133,6 +133,7 @@
             JOIN DETECTION_RULES D
             ON R.DET_NO = D.DET_NO
             WHERE R.INS_NO = #{insNo}
+            AND R.RESULT_STATUS = 'ERROR'
             GROUP BY D.DET_RULE_TYPE
             ORDER BY COUNT(*) DESC
         )

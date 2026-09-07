@@ -236,8 +236,8 @@
                     "#f472b6",
                     "#60a5fa"
                 ],
-                borderColor: "#151e28",
-                borderWidth: 3,
+                borderColor: "#d7e8df",
+                borderWidth: 1,
                 hoverOffset: 8
             }]
         },
