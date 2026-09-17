@@ -219,7 +219,13 @@ public class AdminController {
         rule.setSeverity(severity);
         rule.setUseYn(useYn);
 
-        int result = detectionRuleService.insertRule(rule);
+        int result;
+        try {
+            result = detectionRuleService.insertRule(rule);
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+            return "redirect:/admin/rules/new";
+        }
 
         if (result == 0) {
             redirectAttributes.addFlashAttribute("errorMessage", "이미 등록된 규칙입니다.");

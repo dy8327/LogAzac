@@ -40,9 +40,9 @@
                 <tr>
                     <th>검사번호</th>
                     <th>파일명</th>
-                    <th>전체 로그</th>
+                    <th>전체 줄</th>
                     <th>이상 로그</th>
-                    <th>탐지 결과</th>
+                    <th>이상 결과</th><th>성공 / 실패 / 미확인 작업</th>
                     <th>상태</th>
                     <th>검사일</th>
                     <th></th>
@@ -59,10 +59,10 @@
                         <c:forEach var="inspection" items="${inspections}">
                             <tr>
                                 <td>${inspection.insNo}</td>
-                                <td class="file-name"><c:out value="${inspection.fileName}" /></td>
+                                <td class="file-name"><c:out value="${inspection.displayFileName}" /></td>
                                 <td>${inspection.totalLines}</td>
                                 <td class="abnormal-count">${inspection.abnormalLogCount}</td>
-                                <td>${inspection.errorCount}</td>
+                                <td>${inspection.errorCount}</td><td><c:choose><c:when test="${inspection.schemaVersion ge 2}">${inspection.successCount} / ${inspection.failedOperationCount} / ${inspection.unknownCount}</c:when><c:otherwise>이전 집계</c:otherwise></c:choose></td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${inspection.insStatus eq 'COMPLETED'}">

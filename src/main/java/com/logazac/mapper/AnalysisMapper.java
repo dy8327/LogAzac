@@ -26,14 +26,9 @@ public interface AnalysisMapper {
     int insertDetectionResult(DetectionSaveDTO result);
 
     // 검사 완료
-    int completeInspection(
-        @Param("insNo") int insNo,
-        @Param("totalLines") int totalLines,
-        @Param("successCount") int successCount,
-        @Param("successDeviceCount") int successDeviceCount,
-        @Param("failureDeviceCount") int failureDeviceCount,
-        @Param("errorCount") int errorCount
-    );
+    int completeInspection(@Param("insNo") int insNo, @Param("response") com.logazac.dto.PythonAnalysisResponse response, @Param("ruleSnapshot") String ruleSnapshot);
+    int insertOperation(com.logazac.dto.AnalysisOperationDTO operation);
+    List<com.logazac.dto.AnalysisOperationDTO> findOperations(@Param("insNo") int insNo);
 
     // 검사 실패
     int failInspection(@Param("insNo") int insNo);
