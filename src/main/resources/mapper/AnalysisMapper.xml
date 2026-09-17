@@ -57,7 +57,8 @@
         </selectKey>
         INSERT INTO DETECTION_RESULTS (
             RESULT_NO, INS_NO, DET_NO, LINE_NO, DEVICE_ID, SLOT_CODE,
-            RESULT_STATUS, LOG_CONTENT, DETECTED_VALUE
+            RESULT_STATUS, LOG_CONTENT, DETECTED_VALUE,
+            LINE_END, CATEGORY, RESULT_SEVERITY, FINDING_TYPE, OPERATION_ID, OPERATION_TYPE, BUSINESS_DATE, TRANSACTION_KEY, REASON_CODE, PREVIOUS_LINE_NO, PREVIOUS_LOG_CONTENT, PREVIOUS_VALUE, CURRENT_VALUE, EVENT_TIME
         ) VALUES (
             #{resultNo},
             #{insNo},
@@ -67,22 +68,34 @@
             #{slotCode,jdbcType=VARCHAR},
             #{resultStatus,jdbcType=VARCHAR},
             #{logContent,jdbcType=CLOB},
-            #{detectedValue,jdbcType=VARCHAR}
+            #{detectedValue,jdbcType=VARCHAR},
+            #{lineEnd,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{severity,jdbcType=VARCHAR}, #{findingType,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR}, #{businessDate,jdbcType=VARCHAR}, #{transactionKey,jdbcType=VARCHAR}, #{reasonCode,jdbcType=VARCHAR}, #{previousLineNo,jdbcType=INTEGER}, #{previousRawLog,jdbcType=CLOB}, #{previousValue,jdbcType=CLOB}, #{currentValue,jdbcType=CLOB}, #{eventTime,jdbcType=VARCHAR}
         )
     </insert>
 
     <!-- 검사 완료 -->
     <update id="completeInspection">
-        UPDATE INSPECTIONS
-        SET INS_STATUS = 'COMPLETED',
-            END_DATE = SYSDATE,
-            TOTAL_LINES = #{totalLines},
-            SUCCESS_COUNT = #{successCount},
-            SUCCESS_DEVICE_COUNT = #{successDeviceCount},
-            FAILURE_DEVICE_COUNT = #{failureDeviceCount},
-            ERROR_COUNT = #{errorCount}
+        UPDATE INSPECTIONS SET INS_STATUS = 'COMPLETED', END_DATE = SYSDATE,
+            TOTAL_LINES = #{response.totalLines}, ERROR_COUNT = #{response.errorCount},
+            SUCCESS_COUNT = #{response.successCount}, SUCCESS_DEVICE_COUNT = #{response.successDeviceCount},
+            FAILURE_DEVICE_COUNT = #{response.failureDeviceCount}, SCHEMA_VERSION = #{response.schemaVersion},
+            PARSED_RECORD_COUNT = #{response.parsedRecordCount}, UNPARSED_LINE_COUNT = #{response.unparsedLineCount},
+            PARSE_FAILURE_COUNT = #{response.parseFailureCount}, CHANGE_COUNT = #{response.changeCount},
+            UNKNOWN_COUNT = #{response.unknownCount}, FAILED_OPERATION_COUNT = #{response.failedOperationCount},
+            RULE_SNAPSHOT = #{ruleSnapshot,jdbcType=CLOB}
         WHERE INS_NO = #{insNo}
     </update>
+    <insert id="insertOperation">
+        INSERT INTO ANALYSIS_OPERATIONS (INS_NO, OPERATION_ID, CATEGORY, OPERATION_TYPE, DEVICE_ID, BUSINESS_DATE,
+            TRANSACTION_KEY, RESULT_STATUS, REASON_CODE, LINE_NO, LINE_END, LOG_CONTENT)
+        VALUES (#{insNo}, #{operationId}, #{category}, #{operationType}, #{deviceId,jdbcType=VARCHAR}, #{businessDate,jdbcType=VARCHAR},
+            #{transactionKey,jdbcType=VARCHAR}, #{resultStatus}, #{reasonCode,jdbcType=VARCHAR}, #{lineNo}, #{lineEnd}, #{rawLog,jdbcType=CLOB})
+    </insert>
+    <select id="findOperations" resultType="com.logazac.dto.AnalysisOperationDTO">
+        SELECT INS_NO, OPERATION_ID, CATEGORY, OPERATION_TYPE, DEVICE_ID, BUSINESS_DATE, TRANSACTION_KEY,
+            RESULT_STATUS, REASON_CODE, LINE_NO, LINE_END, LOG_CONTENT AS RAW_LOG
+        FROM ANALYSIS_OPERATIONS WHERE INS_NO = #{insNo} ORDER BY LINE_NO
+    </select>
 
     <!-- 검사 실패 -->
     <update id="failInspection">
@@ -96,6 +109,8 @@
     <select id="findInspection" resultType="com.logazac.dto.InspectionDTO">
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
             I.SUCCESS_COUNT, I.SUCCESS_DEVICE_COUNT, I.FAILURE_DEVICE_COUNT,
+            I.SCHEMA_VERSION, I.PARSED_RECORD_COUNT, I.UNPARSED_LINE_COUNT, I.PARSE_FAILURE_COUNT,
+            I.CHANGE_COUNT, I.UNKNOWN_COUNT, I.FAILED_OPERATION_COUNT,
             F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)
@@ -115,7 +130,8 @@
         SELECT R.RESULT_NO, R.INS_NO, R.LINE_NO, R.DEVICE_ID, R.SLOT_CODE,
             R.RESULT_STATUS, D.DET_RULE_TYPE AS RULE_TYPE,
             D.DET_DESCRIPTION AS RULE_DESCRIPTION,
-            R.DETECTED_VALUE, R.LOG_CONTENT
+            R.DETECTED_VALUE, R.LOG_CONTENT,
+            R.LINE_END, R.CATEGORY, R.RESULT_SEVERITY AS SEVERITY, R.FINDING_TYPE, R.OPERATION_ID, R.OPERATION_TYPE, R.BUSINESS_DATE, R.TRANSACTION_KEY, R.REASON_CODE, R.PREVIOUS_LINE_NO, R.PREVIOUS_LOG_CONTENT AS PREVIOUS_RAW_LOG, R.PREVIOUS_VALUE, R.CURRENT_VALUE, R.EVENT_TIME
         FROM DETECTION_RESULTS R
         JOIN DETECTION_RULES D
         ON R.DET_NO = D.DET_NO
@@ -144,6 +160,8 @@
     <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
             I.SUCCESS_COUNT, I.SUCCESS_DEVICE_COUNT, I.FAILURE_DEVICE_COUNT,
+            I.SCHEMA_VERSION, I.PARSED_RECORD_COUNT, I.UNPARSED_LINE_COUNT, I.PARSE_FAILURE_COUNT,
+            I.CHANGE_COUNT, I.UNKNOWN_COUNT, I.FAILED_OPERATION_COUNT,
             I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)

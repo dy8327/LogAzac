@@ -85,4 +85,32 @@ public class PythonAnalysisResponse {
     public void setFailureDeviceCount(int failureDeviceCount) {
         this.failureDeviceCount = failureDeviceCount;
     }
+
+    private int schemaVersion;
+    public int getSchemaVersion() { return schemaVersion; }
+    public void setSchemaVersion(int value) { this.schemaVersion = value; }
+    private int parsedRecordCount;
+    public int getParsedRecordCount() { return parsedRecordCount; }
+    public void setParsedRecordCount(int value) { this.parsedRecordCount = value; }
+    private int unparsedLineCount;
+    public int getUnparsedLineCount() { return unparsedLineCount; }
+    public void setUnparsedLineCount(int value) { this.unparsedLineCount = value; }
+    private int parseFailureCount;
+    public int getParseFailureCount() { return parseFailureCount; }
+    public void setParseFailureCount(int value) { this.parseFailureCount = value; }
+    private int changeCount;
+    public int getChangeCount() { return changeCount; }
+    public void setChangeCount(int value) { this.changeCount = value; }
+    private int unknownCount;
+    public int getUnknownCount() { return unknownCount; }
+    public void setUnknownCount(int value) { this.unknownCount = value; }
+    private int failedOperationCount;
+    public int getFailedOperationCount() { return failedOperationCount; }
+    public void setFailedOperationCount(int value) { this.failedOperationCount = value; }
+
+    private List<AnalysisOperationDTO> operations;
+    public List<AnalysisOperationDTO> getOperations() { return operations; }
+    public void setOperations(List<AnalysisOperationDTO> value) { this.operations = value; }
+
+
 }

@@ -108,7 +108,7 @@
                                 </td>
 
                                 <td class="file-name">
-                                    <c:out value="${file.fileName}" />
+                                    <c:out value="${file.displayFileName}" />
                                 </td>
 
                                 <td>
