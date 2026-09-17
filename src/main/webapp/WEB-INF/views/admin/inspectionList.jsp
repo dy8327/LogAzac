@@ -46,7 +46,7 @@
                                 <th>파일명</th>
                                 <th>로그종류</th>
                                 <th>검사일시</th>
-                                <th>전체 로그</th>
+                                <th>전체 줄</th>
                                 <th>이상 로그</th>
                                 <th>상태</th>
                             </tr>
@@ -56,12 +56,12 @@
                                 <tr>
                                     <td>${inspection.insNo}</td>
                                     <td>${inspection.userId}</td>
-                                    <td class="file-name"><c:out value="${inspection.fileName}" /></td>
+                                    <td class="file-name"><c:out value="${inspection.displayFileName}" /></td>
                                     <td class="source-type">
                                         <c:choose>
                                             <c:when test="${inspection.sourceType eq 'VENDING'}">자판기 로그</c:when>
                                             <c:when test="${inspection.sourceType eq 'PAYMENT'}">결제기 로그</c:when>
-                                            <c:otherwise>${inspection.sourceType}</c:otherwise>
+                                            <c:when test="${inspection.sourceType eq 'DEVICE_STATUS'}">장비 상태 로그</c:when><c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION'}">외부 시스템 재전송 로그</c:when><c:when test="${inspection.sourceType eq 'EXTERNAL_RETRANSMISSION'}">외부 연동 데이터 로그</c:when><c:when test="${inspection.sourceType eq 'MIXED'}">복합 운영 로그</c:when><c:otherwise>미확인</c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>${inspection.formattedStartDate}</td>

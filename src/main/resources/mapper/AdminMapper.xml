@@ -70,6 +70,7 @@
 
     <select id="findInspectionHistory" resultType="com.logazac.dto.InspectionDTO">
         SELECT I.INS_NO, I.FILE_NO, I.INS_STATUS, I.TOTAL_LINES, I.ERROR_COUNT,
+            I.SCHEMA_VERSION, I.SUCCESS_COUNT, I.FAILED_OPERATION_COUNT, I.UNKNOWN_COUNT,
             I.START_DATE, F.FILE_NAME, F.SOURCE_TYPE, U.USER_ID,
             (
                 SELECT COUNT(DISTINCT R.LINE_NO)

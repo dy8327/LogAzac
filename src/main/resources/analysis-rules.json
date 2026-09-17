@@ -1,0 +1,114 @@
+[
+  {
+    "ruleType": "MISSING_PRODUCT_NAME",
+    "logType": "DEVICE_STATUS",
+    "severity": "WARN",
+    "pattern": "EMPTY_PRODUCT_NAME",
+    "description": "상품명 누락"
+  },
+  {
+    "ruleType": "CORRUPTED_DATA",
+    "logType": "DEVICE_STATUS",
+    "severity": "WARN",
+    "pattern": "INVALID_CHARACTER",
+    "description": "비정상 문자"
+  },
+  {
+    "ruleType": "MISSING_SLOT",
+    "logType": "DEVICE_STATUS",
+    "severity": "WARN",
+    "pattern": "PREVIOUS_SLOT_COMPARE",
+    "description": "슬롯 누락 후보"
+  },
+  {
+    "ruleType": "PRICE_CHANGED",
+    "logType": "DEVICE_STATUS",
+    "severity": "INFO",
+    "pattern": "PREVIOUS_PRICE_COMPARE",
+    "description": "가격 변경"
+  },
+  {
+    "ruleType": "PRODUCT_NAME_CHANGED",
+    "logType": "DEVICE_STATUS",
+    "severity": "INFO",
+    "pattern": "PREVIOUS_NAME_COMPARE",
+    "description": "상품명 변경"
+  },
+  {
+    "ruleType": "STOCK_CHANGED",
+    "logType": "DEVICE_STATUS",
+    "severity": "INFO",
+    "pattern": "PREVIOUS_STOCK_COMPARE",
+    "description": "재고 변화"
+  },
+  {
+    "ruleType": "SLOT_RESTORED",
+    "logType": "DEVICE_STATUS",
+    "severity": "INFO",
+    "pattern": "PREVIOUS_MISSING_SLOT",
+    "description": "슬롯 재등장"
+  },
+  {
+    "ruleType": "DB_TRANSFER_SUCCESS",
+    "logType": "EXTERNAL_INTEGRATION",
+    "severity": "INFO",
+    "pattern": "EXPLICIT_SQL_SUCCESS",
+    "description": "외부 시스템 재전송 성공"
+  },
+  {
+    "ruleType": "CONSTRAINT_ERROR",
+    "logType": "EXTERNAL_INTEGRATION",
+    "severity": "ERROR",
+    "pattern": "ORA-00001|ORA-01400",
+    "description": "중복 또는 필수값 NULL 오류"
+  },
+  {
+    "ruleType": "BUSINESS_PROCESS_ERROR",
+    "logType": "EXTERNAL_INTEGRATION",
+    "severity": "ERROR",
+    "pattern": "ORA-20001_AND_CLOSED",
+    "description": "일마감 처리 오류"
+  },
+  {
+    "ruleType": "DB_TRANSFER_FAILED",
+    "logType": "EXTERNAL_INTEGRATION",
+    "severity": "ERROR",
+    "pattern": "EXPLICIT_SQL_FAILURE",
+    "description": "외부 시스템 재전송 실패"
+  },
+  {
+    "ruleType": "DB_TRANSFER_UNKNOWN",
+    "logType": "EXTERNAL_INTEGRATION",
+    "severity": "WARN",
+    "pattern": "NO_CONFIRMED_RESULT",
+    "description": "외부 시스템 재전송 결과 미확인"
+  },
+  {
+    "ruleType": "RETRANSMISSION_SUCCESS",
+    "logType": "EXTERNAL_RETRANSMISSION",
+    "severity": "INFO",
+    "pattern": "RESPONSE_CODE_1",
+    "description": "외부 연동 정상 응답"
+  },
+  {
+    "ruleType": "DUPLICATE_RESPONSE",
+    "logType": "EXTERNAL_RETRANSMISSION",
+    "severity": "ERROR",
+    "pattern": "KEY_DUPLICATE_ERROR",
+    "description": "외부 연동 중복 응답"
+  },
+  {
+    "ruleType": "RETRANSMISSION_FAILED",
+    "logType": "EXTERNAL_RETRANSMISSION",
+    "severity": "ERROR",
+    "pattern": "NON_SUCCESS_RESPONSE",
+    "description": "외부 연동 실패 응답"
+  },
+  {
+    "ruleType": "RETRANSMISSION_UNKNOWN",
+    "logType": "EXTERNAL_RETRANSMISSION",
+    "severity": "WARN",
+    "pattern": "NO_CONFIRMED_RESPONSE",
+    "description": "외부 연동 응답 미확인"
+  }
+]
