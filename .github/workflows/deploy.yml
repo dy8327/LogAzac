@@ -5,7 +5,6 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-<<<<<<< HEAD
       - name: Deploy LogAzac
         run: |
           cd /home/dy8327/LogAzac
@@ -14,18 +13,3 @@ jobs:
           ./mvnw clean package -DskipTests
           sudo /usr/bin/systemctl restart logazac
           /usr/bin/systemctl is-active logazac
-=======
-      - name: Deploy to GCP VM
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /home/dy8327/LogAzac
-            git pull origin master
-            chmod +x mvnw
-            ./mvnw clean package -DskipTests
-            sudo /usr/bin/systemctl restart logazac
-            /usr/bin/systemctl is-active logazac
->>>>>>> 863d12ac18188c0a5f4e59f3e9cd3d1141738822
