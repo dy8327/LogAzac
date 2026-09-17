@@ -26,7 +26,7 @@
 
     <section class="history-box rule-form">
     <c:if test="${not empty errorMessage}">
-        <div class="error-message">${errorMessage}</div>
+        <div class="error-message"><c:out value="${errorMessage}" /></div>
     </c:if>
         <form action="${pageContext.request.contextPath}/admin/rules" method="post">
             <input type="hidden" name="_csrf" value="${sessionScope.csrfToken}">
@@ -35,8 +35,8 @@
                 <select id="logType" name="logType" onchange="updateRuleOptions()" required>
                     <option value="">로그 유형 선택</option>
                     <option value="DEVICE_STATUS">장비 상태 로그</option>
-                    <option value="EXTERNAL_RETRANSMISSION">외부 시스템 재전송</option>
-                    <option value="EXTERNAL_INTEGRATION">외부 연동 DB 처리</option>
+                    <option value="EXTERNAL_RETRANSMISSION">외부 연동 데이터 로그</option>
+                    <option value="EXTERNAL_INTEGRATION">외부 시스템 재전송 로그</option>
                 </select>
             </div>
             <div class="form-group">
@@ -77,39 +77,110 @@
 
 <script>
 const ruleDefinitions = {
-    DEVICE_STATUS: {
-        MISSING_PRODUCT_NAME: ["EMPTY_PRODUCT_NAME", "슬롯의 상품명이 누락된 경우", "ERROR"],
-        CORRUPTED_DATA: ["INVALID_CHARACTER", "로그 또는 상품명에 비정상 문자가 포함된 경우", "ERROR"],
-        MISSING_SLOT: ["PREVIOUS_SLOT_COMPARE", "이전 로그에 존재하던 슬롯이 현재 로그에서 누락된 경우", "ERROR"],
-        PRICE_CHANGED: ["PREVIOUS_PRICE_COMPARE", "동일 장비 동일 슬롯의 가격이 이전 값과 달라진 경우", "ERROR"],
-        PRODUCT_NAME_CHANGED: ["PREVIOUS_NAME_COMPARE", "동일 장비 동일 슬롯의 상품명이 변경된 경우", "ERROR"]
-    },
-    EXTERNAL_RETRANSMISSION: {
-        RETRANSMISSION_SUCCESS: ["RESPONSE_CODE_1", "외부 시스템 재전송이 정상 처리된 경우", "INFO"],
-        DUPLICATE_RESPONSE: ["KEY_DUPLICATE_ERROR", "외부 시스템 재전송에서 중복 응답이 발생한 경우", "ERROR"],
-        RETRANSMISSION_FAILED: ["NON_SUCCESS_RESPONSE", "외부 시스템 재전송이 정상 완료되지 않은 경우", "ERROR"]
-    },
-    EXTERNAL_INTEGRATION: {
-        DB_TRANSFER_SUCCESS: ["COMPLETED_WITHOUT_ERROR", "DB 재전송 작업이 오류 없이 정상 진행된 경우", "INFO"],
-        CONSTRAINT_ERROR: ["ORA-00001|ORA-01400", "DB 재전송 중 중복 데이터 또는 필수값 누락 오류가 발생한 경우", "ERROR"],
-        BUSINESS_PROCESS_ERROR: ["ORA-20001", "DB 재전송 중 업무 처리 조건에 의해 거부된 경우", "ERROR"],
-        DB_TRANSFER_FAILED: ["DB_TRANSFER_ERROR", "DB 재전송 작업이 정상 완료되지 않은 경우", "ERROR"]
-    }
+  "DEVICE_STATUS": {
+    "MISSING_PRODUCT_NAME": [
+      "EMPTY_PRODUCT_NAME",
+      "상품명 누락",
+      "WARN"
+    ],
+    "CORRUPTED_DATA": [
+      "INVALID_CHARACTER",
+      "비정상 문자",
+      "WARN"
+    ],
+    "MISSING_SLOT": [
+      "PREVIOUS_SLOT_COMPARE",
+      "슬롯 누락 후보",
+      "WARN"
+    ],
+    "PRICE_CHANGED": [
+      "PREVIOUS_PRICE_COMPARE",
+      "가격 변경",
+      "INFO"
+    ],
+    "PRODUCT_NAME_CHANGED": [
+      "PREVIOUS_NAME_COMPARE",
+      "상품명 변경",
+      "INFO"
+    ],
+    "STOCK_CHANGED": [
+      "PREVIOUS_STOCK_COMPARE",
+      "재고 변화",
+      "INFO"
+    ],
+    "SLOT_RESTORED": [
+      "PREVIOUS_MISSING_SLOT",
+      "슬롯 재등장",
+      "INFO"
+    ]
+  },
+  "EXTERNAL_INTEGRATION": {
+    "DB_TRANSFER_SUCCESS": [
+      "EXPLICIT_SQL_SUCCESS",
+      "외부 시스템 재전송 성공",
+      "INFO"
+    ],
+    "CONSTRAINT_ERROR": [
+      "ORA-00001|ORA-01400",
+      "중복 또는 필수값 NULL 오류",
+      "ERROR"
+    ],
+    "BUSINESS_PROCESS_ERROR": [
+      "ORA-20001_AND_CLOSED",
+      "일마감 처리 오류",
+      "ERROR"
+    ],
+    "DB_TRANSFER_FAILED": [
+      "EXPLICIT_SQL_FAILURE",
+      "외부 시스템 재전송 실패",
+      "ERROR"
+    ],
+    "DB_TRANSFER_UNKNOWN": [
+      "NO_CONFIRMED_RESULT",
+      "외부 시스템 재전송 결과 미확인",
+      "WARN"
+    ]
+  },
+  "EXTERNAL_RETRANSMISSION": {
+    "RETRANSMISSION_SUCCESS": [
+      "RESPONSE_CODE_1",
+      "외부 연동 정상 응답",
+      "INFO"
+    ],
+    "DUPLICATE_RESPONSE": [
+      "KEY_DUPLICATE_ERROR",
+      "외부 연동 중복 응답",
+      "ERROR"
+    ],
+    "RETRANSMISSION_FAILED": [
+      "NON_SUCCESS_RESPONSE",
+      "외부 연동 실패 응답",
+      "ERROR"
+    ],
+    "RETRANSMISSION_UNKNOWN": [
+      "NO_CONFIRMED_RESPONSE",
+      "외부 연동 응답 미확인",
+      "WARN"
+    ]
+  }
 };
-
 const ruleNames = {
-    MISSING_PRODUCT_NAME: "상품명 누락",
-    CORRUPTED_DATA: "깨진 데이터",
-    MISSING_SLOT: "슬롯 누락",
-    PRICE_CHANGED: "가격 변경",
-    PRODUCT_NAME_CHANGED: "상품명 변경",
-    RETRANSMISSION_SUCCESS: "재전송 정상 처리",
-    DUPLICATE_RESPONSE: "중복 응답",
-    RETRANSMISSION_FAILED: "재전송 실패",
-    DB_TRANSFER_SUCCESS: "DB 정상 처리",
-    CONSTRAINT_ERROR: "DB 제약조건 오류",
-    BUSINESS_PROCESS_ERROR: "업무 처리 오류",
-    DB_TRANSFER_FAILED: "DB 처리 실패"
+  "MISSING_PRODUCT_NAME": "상품명 누락",
+  "CORRUPTED_DATA": "비정상 문자",
+  "MISSING_SLOT": "슬롯 누락 후보",
+  "PRICE_CHANGED": "가격 변경",
+  "PRODUCT_NAME_CHANGED": "상품명 변경",
+  "STOCK_CHANGED": "재고 변화",
+  "SLOT_RESTORED": "슬롯 재등장",
+  "DB_TRANSFER_SUCCESS": "외부 시스템 재전송 성공",
+  "CONSTRAINT_ERROR": "중복 또는 필수값 NULL 오류",
+  "BUSINESS_PROCESS_ERROR": "일마감 처리 오류",
+  "DB_TRANSFER_FAILED": "외부 시스템 재전송 실패",
+  "DB_TRANSFER_UNKNOWN": "외부 시스템 재전송 결과 미확인",
+  "RETRANSMISSION_SUCCESS": "외부 연동 정상 응답",
+  "DUPLICATE_RESPONSE": "외부 연동 중복 응답",
+  "RETRANSMISSION_FAILED": "외부 연동 실패 응답",
+  "RETRANSMISSION_UNKNOWN": "외부 연동 응답 미확인"
 };
 
 function updateRuleOptions() {

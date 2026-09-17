@@ -92,4 +92,5 @@ public class LogFileDTO {
         }
         return fileRegdate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+    public String getDisplayFileName() { return com.logazac.service.DisplaySanitizer.redact(fileName); }
 }

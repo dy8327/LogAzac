@@ -1,106 +1,59 @@
+import re
+from decimal import Decimal, InvalidOperation
+from rule_registry import CATALOG
+
 def has_corrupted_character(text):
-    if not text:
-        return False
-    if "\ufffd" in text:
-        return True
-    for ch in text:
-        if ord(ch) < 32 and ch not in ("\t", "\n", "\r"):
-            return True
-    return False
+    return bool(text) and ('\ufffd' in text or any(ord(c) < 32 and c not in '\t\n\r' for c in text))
 
-def detect_basic_errors(parsed, active_rules):
-    errors = []
-    corrupted_found = False
-
-    for slot in parsed["slots"]:
-        if "MISSING_PRODUCT_NAME" in active_rules and slot["product_name"] == "":
-            errors.append({
-                "rule_type": "MISSING_PRODUCT_NAME",
-                "slot_code": slot["slot_code"],
-                "detected_value": f'{slot["slot_code"]}={slot["stock"]},{slot["price"]},'
-            })
-
-        if "CORRUPTED_DATA" in active_rules and has_corrupted_character(slot["product_name"]):
-            errors.append({
-                "rule_type": "CORRUPTED_DATA",
-                "slot_code": slot["slot_code"],
-                "detected_value": slot["product_name"]
-            })
-            corrupted_found = True
-
-    if "CORRUPTED_DATA" in active_rules and not corrupted_found and has_corrupted_character(parsed["raw_log"]):
-        errors.append({
-            "rule_type": "CORRUPTED_DATA",
-            "slot_code": None,
-            "detected_value": "로그 내 비정상 문자 발견"
-        })
-
-    return errors
-
-def compare_with_previous(current, previous, active_rules):
-    errors = []
-    if previous is None:
-        return errors
-
-    current_slots = {slot["slot_code"]: slot for slot in current["slots"]}
-    previous_slots = {slot["slot_code"]: slot for slot in previous["slots"]}
-
-    missing_slots = set(previous_slots) - set(current_slots)
-    if "MISSING_SLOT" in active_rules and missing_slots:
-        errors.append({
-            "rule_type": "MISSING_SLOT",
-            "slot_code": None,
-            "detected_value": ", ".join(sorted(missing_slots))
-        })
-
-    common_slots = set(previous_slots) & set(current_slots)
-
-    for slot_code in sorted(common_slots):
-        old = previous_slots[slot_code]
-        new = current_slots[slot_code]
-
-        if "PRICE_CHANGED" in active_rules and old["price"] and new["price"] and old["price"] != new["price"]:
-            errors.append({
-                "rule_type": "PRICE_CHANGED",
-                "slot_code": slot_code,
-                "detected_value": f'{old["price"]} -> {new["price"]}',
-                "line_no": previous["line_no"],
-                "raw_log": previous["raw_log"]
-            })
-
-        if "PRODUCT_NAME_CHANGED" in active_rules and old["product_name"] and new["product_name"] and old["product_name"] != new["product_name"]:
-            errors.append({
-                "rule_type": "PRODUCT_NAME_CHANGED",
-                "slot_code": slot_code,
-                "detected_value": f'{old["product_name"]} -> {new["product_name"]}',
-                "line_no": previous["line_no"],
-                "raw_log": previous["raw_log"]
-            })
-
-    return errors
+def number(value):
+    if not re.fullmatch(r'\d+(?:\.\d+)?', value):
+        return None
+    try:
+        return Decimal(value)
+    except InvalidOperation:
+        return None
 
 def analyze(records, active_rules):
-    previous_by_device = {}
-    results = []
-
-    for parsed in records:
-        errors = []
-        errors.extend(detect_basic_errors(parsed, active_rules))
-
-        previous = previous_by_device.get(parsed["device_id"])
-        errors.extend(compare_with_previous(parsed, previous, active_rules))
-
-        for error in errors:
-            results.append({
-                "log_no": parsed["log_no"],
-                "line_no": error.get("line_no", parsed["line_no"]),
-                "device_id": parsed["device_id"],
-                "rule_type": error["rule_type"],
-                "slot_code": error["slot_code"],
-                "detected_value": error["detected_value"],
-                "raw_log": error.get("raw_log", parsed["raw_log"])
-            })
-
-        previous_by_device[parsed["device_id"]] = parsed
-
+    previous, missing, results = {}, {}, []
+    def emit(record, rule, slot=None, value='', old=None, before=None, after=None):
+        if rule not in active_rules:
+            return
+        change = rule in {'PRICE_CHANGED', 'PRODUCT_NAME_CHANGED', 'STOCK_CHANGED', 'SLOT_RESTORED'}
+        results.append({'log_no': record['log_no'], 'line_no': record['line_no'], 'line_end': record['line_end'], 'device_id': record['device_id'], 'slot_code': slot, 'rule_type': rule, 'detected_value': value, 'raw_log': record['raw_log'], 'result_status': 'CHANGE' if change else 'ERROR', 'category': 'DEVICE_STATE', 'severity': CATALOG[rule]['severity'], 'finding_type': 'CHANGE' if change else 'ANOMALY', 'previous_line_no': old['line_no'] if old else None, 'previous_raw_log': old['raw_log'] if old else None, 'previous_value': before, 'current_value': after, 'event_time': record.get('event_time')})
+    for record in records:
+        for slot in record['slots']:
+            if not slot['product_name']:
+                emit(record, 'MISSING_PRODUCT_NAME', slot['slot_code'], '상품명 누락 후보 (사용 슬롯 여부 확인 필요)')
+            if has_corrupted_character(slot['product_name']):
+                emit(record, 'CORRUPTED_DATA', slot['slot_code'], slot['product_name'])
+        old = previous.get(record['device_id'])
+        if not record['complete']:
+            previous.pop(record['device_id'], None)
+            missing.pop(record['device_id'], None)
+            continue
+        # Out-of-order observations cannot establish a new baseline.
+        if old and old.get('event_time') and record.get('event_time') and record['event_time'] <= old['event_time']:
+            continue
+        if old:
+            old_slots = {s['slot_code']: s for s in old['slots']}
+            current = {s['slot_code']: s for s in record['slots']}
+            absent = missing.setdefault(record['device_id'], {})
+            for code in sorted(old_slots.keys() - current.keys()):
+                absent[code] = old
+                emit(record, 'MISSING_SLOT', code, '이전 관측 슬롯 미수신 (설정 변경/부분 수신 확인 필요)', old)
+            for code in sorted(current.keys() & absent.keys()):
+                emit(record, 'SLOT_RESTORED', code, '누락 후 다시 관측됨', absent.pop(code))
+            for code in sorted(old_slots.keys() & current.keys()):
+                for key, rule in [('price', 'PRICE_CHANGED'), ('product_name', 'PRODUCT_NAME_CHANGED'), ('stock', 'STOCK_CHANGED')]:
+                    before, after = old_slots[code][key], current[code][key]
+                    if not before or not after:
+                        continue
+                    if key != 'product_name':
+                        a, b = number(before), number(after)
+                        changed = a is not None and b is not None and a != b
+                    else:
+                        changed = before != after and not has_corrupted_character(before + after)
+                    if changed:
+                        emit(record, rule, code, f'{before} -> {after}', old, before, after)
+        previous[record['device_id']] = record
     return results

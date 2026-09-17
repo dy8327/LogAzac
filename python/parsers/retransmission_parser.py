@@ -1,67 +1,49 @@
+"""Existing external request/response support, with neutral public labels."""
 import re
+from log_reader import read_all_lines
+RESPONSE = re.compile(r'<CODE>\s*(.*?)\s*</CODE>.*?<MESSAGE>(.*?)</MESSAGE>', re.I)
+DEVICE = re.compile(r'\bCATSN=([A-Za-z0-9]+)', re.I)
 
-RESPONSE_PATTERN = re.compile(r"<CODE>(?P<code>.*?)</CODE>.*?<MESSAGE>(?P<message>.*?)</MESSAGE>", re.IGNORECASE)
-INPUT_DEVICE_PATTERN = re.compile(r"CATSN=(?P<device>[A-Za-z0-9]+)", re.IGNORECASE)
-
-def read_lines(file_path):
-    for encoding in ["utf-8", "cp949", "euc-kr"]:
-        try:
-            with open(file_path, "r", encoding=encoding) as file:
-                return file.readlines()
-        except UnicodeDecodeError:
-            continue
-    raise ValueError("지원하지 않는 파일 인코딩입니다.")
-
-def parse_file(file_path):
-    lines = read_lines(file_path)
-    records = []
-    current_request = None
-    pending_device_id = None
-
-    for line_no, line in enumerate(lines, start=1):
+def parse_file(file_path=None, lines=None):
+    lines = read_all_lines(file_path) if lines is None else lines
+    records, current, pending = [], None, ''
+    previous_response = None
+    def finish():
+        nonlocal current
+        if current:
+            current['raw_log'] = '\n'.join(current.pop('raw_lines'))
+            records.append(current)
+            current = None
+    for number, line in enumerate(lines, 1):
         text = line.strip()
-        if not text:
-            continue
-        upper = text.upper()
-
-        if "INPUT:" in upper:
-            device_match = INPUT_DEVICE_PATTERN.search(text)
-            if device_match:
-                pending_device_id = device_match.group("device").strip()
-            continue
-
-        if "START SENDJOUNSYSTEM" in upper or "JOUN:" in upper:
-            current_request = {
-                "line_no": line_no,
-                "device_id": pending_device_id,
-                "request": text,
-                "response_code": None,
-                "response_message": None,
-                "raw_log": text
-            }
-            continue
-
-        if "JOUN RESPONSE=" not in upper:
-            continue
-
-        match = RESPONSE_PATTERN.search(text)
-        if not match:
-            continue
-
-        record = current_request.copy() if current_request else {
-            "line_no": line_no,
-            "device_id": pending_device_id,
-            "request": None,
-            "response_code": None,
-            "response_message": None,
-            "raw_log": ""
-        }
-
-        record["response_code"] = match.group("code").strip()
-        record["response_message"] = match.group("message").strip()
-        record["raw_log"] = (record["raw_log"] + " " + text).strip()
-        records.append(record)
-        current_request = None
-        pending_device_id = None
-
+        if 'INPUT:' in text.upper():
+            finish()
+            match = DEVICE.search(text)
+            pending = match[1] if match else ''
+            previous_response = None
+        if re.search(r'[?&]BSN_DAY=', text) and '&BODYS=' in text:
+            finish()
+            current = {'line_no': number, 'line_end': number, 'line_numbers': [number], 'device_id': pending, 'operation_id': f'RESPONSE:{number}', 'operation': 'SALES_REQUEST', 'business_date': re.search(r'BSN_DAY=([^&\s]+)', text)[1], 'raw_lines': [text], 'response_code': None, 'response_message': None, 'result_status': 'UNKNOWN'}
+            pending = ''
+            previous_response = None
+        match = RESPONSE.search(text)
+        if match:
+            response = (match[1], match[2])
+            if not current and previous_response == response and records and number - records[-1]['line_end'] <= 3 and 'RESULT=' in text.upper():
+                records[-1]['line_end'] = number
+                records[-1]['line_numbers'].append(number)
+                records[-1]['raw_log'] += '\n' + text
+                continue
+            if not current:
+                current = {'line_no': number, 'line_end': number, 'line_numbers': [], 'device_id': '', 'operation_id': f'RESPONSE:{number}', 'operation': 'UNLINKED_RESPONSE', 'business_date': None, 'raw_lines': [], 'response_code': None, 'response_message': None, 'result_status': 'UNKNOWN'}
+            current['line_end'] = number
+            current['line_numbers'].append(number)
+            current['raw_lines'].append(text)
+            current['response_code'], current['response_message'] = response
+            # An orphan response cannot establish the result of an unidentified request.
+            if current['operation'] != 'UNLINKED_RESPONSE':
+                current['result_status'] = 'SUCCESS' if match[1] == '1' else 'ERROR'
+            finish()
+            previous_response = response
+    finish()
     return records

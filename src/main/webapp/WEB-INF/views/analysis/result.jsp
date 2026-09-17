@@ -1,510 +1,90 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogAzac - 분석 결과</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/analysis-result.css">
+    <style>.evidence { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; } .result-table { table-layout: auto; } .result-table td { vertical-align: top; } .status-SUCCESS { color: #187343; } .status-ERROR { color: #b42318; } .status-UNKNOWN { color: #8a5700; } .status-CHANGE { color: #2456a6; } .coverage-note { line-height: 1.7; } .table-scroll { overflow-x: auto; }</style>
 </head>
-
 <body>
-
-<c:set var="normalCount" value="${inspection.totalLines - inspection.abnormalLogCount}" />
-<c:set var="errorRate"
-       value="${inspection.totalLines > 0
-           ? inspection.abnormalLogCount * 100.0 / inspection.totalLines
-           : 0}" />
-<jsp:include page="../common/header.jsp">
-        <jsp:param name="activeMenu" value="analysis" />
-    </jsp:include>
-
+<jsp:include page="../common/header.jsp"><jsp:param name="activeMenu" value="analysis" /></jsp:include>
 <main class="page-wrap">
-    <div class="result-title-wrap">
-        <img src="${pageContext.request.contextPath}/resources/images/result.png" alt="분석결과 카피바라" class="result-character">
-        <h1 class="title">검사 <span>완료!</span></h1>
-    </div>
-
-    <section class="summary-grid">
+    <div class="result-title-wrap"><h1 class="title">운영 로그 분석 결과</h1></div>
+    <section class="info-box">
+        <p>파일: <c:out value="${inspection.displayFileName}" /> · 검사 ${inspection.insNo}</p>
         <c:choose>
-            <c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION'}">
-                <div class="summary-card">
-                    <div class="summary-label">정상 처리 장비</div>
-                    <div class="summary-value normal">${inspection.successDeviceCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">정상 처리</div>
-                    <div class="summary-value normal">${inspection.successCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">실패 장비</div>
-                    <div class="summary-value abnormal">${inspection.failureDeviceCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">실패 처리</div>
-                    <div class="summary-value abnormal">${inspection.errorCount}</div>
-                </div>
-            </c:when>
-            <c:when test="${inspection.sourceType eq 'EXTERNAL_RETRANSMISSION'}">
-                <div class="summary-card">
-                    <div class="summary-label">전체 처리</div>
-                    <div class="summary-value total">${inspection.successCount + inspection.errorCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">정상 처리</div>
-                    <div class="summary-value normal">${inspection.successCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">실패 처리</div>
-                    <div class="summary-value abnormal">${inspection.errorCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">전체 로그</div>
-                    <div class="summary-value total">${inspection.totalLines}</div>
-                </div>
-            </c:when>
+            <c:when test="${inspection.schemaVersion lt 2}"><p class="coverage-note">이전 분석기로 생성된 이력입니다. 분석 범위·변경·미확인 작업 집계는 제공되지 않습니다. 최신 판정이 필요하면 파일을 다시 분석해 주세요.</p></c:when>
             <c:otherwise>
-                <div class="summary-card">
-                    <div class="summary-label">전체 로그</div>
-                    <div class="summary-value total">${inspection.totalLines}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">정상 로그</div>
-                    <div class="summary-value normal">${normalCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">이상 로그</div>
-                    <div class="summary-value abnormal">${inspection.abnormalLogCount}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">오류율</div>
-                    <div class="summary-value rate">
-                        <fmt:formatNumber value="${errorRate}" pattern="0.00"/>%
-                    </div>
-                </div>
+                <p class="coverage-note">전체 ${inspection.totalLines}줄에서 업무 레코드 ${inspection.parsedRecordCount}건을 읽었습니다. 미분석 ${inspection.unparsedLineCount}줄에는 메모·연결 메시지·미지원 구간이 포함됩니다. 불완전 상태 레코드 ${inspection.parseFailureCount}건은 상태 비교에서 제외했습니다. 분석되지 않은 구간은 정상으로 판정하지 않습니다.</p>
+                <p>변화는 파일 내 같은 장비의 관측값 비교입니다. 값의 변화만으로 판매·보충·고장을 확정하지 않습니다.</p>
             </c:otherwise>
         </c:choose>
     </section>
-
-    <section class="info-box">
-        <div class="box-title">
-            검사 정보
-        </div>
-
-        <table class="info-table">
-            <tr>
-                <th>검사 번호</th>
-                <td>${inspection.insNo}</td>
-                <th>분석 상태</th>
-                <td>
-                    <c:choose>
-                        <c:when test="${inspection.insStatus eq 'COMPLETED'}">분석 완료</c:when>
-                        <c:when test="${inspection.insStatus eq 'PROCESSING'}">분석 중</c:when>
-                        <c:when test="${inspection.insStatus eq 'FAILED'}">분석 실패</c:when>
-                        <c:otherwise><c:out value="${inspection.insStatus}" /></c:otherwise>
-                    </c:choose>
-                </td>
-            </tr>
-            <tr>
-                <th>파일명</th>
-                <td colspan="3"><c:out value="${inspection.fileName}" /></td>
-            <tr>
-                <th>
-                    <c:choose>
-                        <c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION' or inspection.sourceType eq 'EXTERNAL_RETRANSMISSION'}">
-                            실패 결과 건
-                        </c:when>
-                        <c:otherwise>
-                            탐지 결과 건
-                        </c:otherwise>
-                    </c:choose>
-                </th>
-                <td>${inspection.errorCount}</td>
-                <th>이상 로그 건</th>
-                <td>${inspection.abnormalLogCount}</td>
-            </tr>
-        </table>
+    <section class="summary-grid">
+        <div class="summary-card"><div class="summary-label">선택 규칙의 이상 결과</div><div class="summary-value abnormal">${inspection.errorCount}</div></div>
+        <div class="summary-card"><div class="summary-label">선택 규칙의 상태 변화</div><div class="summary-value">${inspection.schemaVersion ge 2 ? inspection.changeCount : '-'}</div></div>
+        <div class="summary-card"><div class="summary-label">성공 작업</div><div class="summary-value normal">${inspection.schemaVersion ge 2 ? inspection.successCount : '-'}</div></div>
+        <div class="summary-card"><div class="summary-label">실패 작업</div><div class="summary-value abnormal">${inspection.schemaVersion ge 2 ? inspection.failedOperationCount : '-'}</div></div>
+        <div class="summary-card"><div class="summary-label">결과 미확인 작업</div><div class="summary-value">${inspection.schemaVersion ge 2 ? inspection.unknownCount : '-'}</div></div>
     </section>
-
-    <c:choose>
-        <c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION' or inspection.sourceType eq 'EXTERNAL_RETRANSMISSION'}">
-            <section class="result-box">
-                <div class="box-title">
-                    정상 처리 결과
-                    <span class="count-badge">${inspection.successCount}건</span>
-                </div>
-                <c:choose>
-                    <c:when test="${inspection.sourceType eq 'EXTERNAL_INTEGRATION' and not empty successDeviceSummary}">
-                        <div class="success-device-list">
-                            <c:forEach var="device" items="${successDeviceGroups}">
-                                <details class="success-device-group">
-                                    <summary>
-                                        <span class="success-device-id"><c:out value="${device.key}" /></span>
-                                        <span class="success-device-count">${fn:length(device.value)}건 정상</span>
-                                    </summary>
-                                    <div class="success-detail-table-wrap">
-                                        <table class="success-detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>라인</th>
-                                                    <th>처리 내용</th>
-                                                    <th>원본 로그</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="result" items="${device.value}">
-                                                    <tr>
-                                                        <td>${result.lineNo}</td>
-                                                        <td class="success-result-value"><c:out value="${result.detectedValue}" /></td>
-                                                        <td class="log-content"><c:out value="${result.logContent}" /></td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </details>
-                            </c:forEach>
-                        </div>
-                    </c:when>
-                    <c:when test="${inspection.sourceType eq 'EXTERNAL_RETRANSMISSION' and not empty successResults}">
-                        <div class="success-device-list">
-                            <c:forEach var="result" items="${successResults}" varStatus="status">
-                                <details class="success-device-group">
-                                    <summary>
-                                        <span class="success-device-id">
-                                            <c:choose>
-                                                <c:when test="${not empty result.deviceId}">
-                                                    <c:out value="${result.deviceId}" />
-                                                </c:when>
-                                                <c:otherwise>
-                                                    정상 처리 #${status.count}
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </span>
-                                        <span class="success-device-count"><c:out value="${result.detectedValue}" /></span>
-                                    </summary>
-                                    <div class="success-detail-table-wrap">
-                                        <table class="success-detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>라인</th>
-                                                    <th>장비</th>
-                                                    <th>처리 결과</th>
-                                                    <th>원본 로그</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>${result.lineNo}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty result.deviceId}">
-                                                                <c:out value="${result.deviceId}" />
-                                                            </c:when>
-                                                            <c:otherwise>-</c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td class="success-result-value"><c:out value="${result.detectedValue}" /></td>
-                                                    <td class="log-content"><c:out value="${result.logContent}" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </details>
-                            </c:forEach>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="empty">정상 처리 결과가 없습니다.</div>
-                    </c:otherwise>
-                </c:choose>
-            </section>
-
-            <section class="result-box">
-                <div class="box-title">
-                    실패 결과
-                    <span class="count-badge error-badge">${inspection.errorCount}건</span>
-                </div>
-                <c:choose>
-                    <c:when test="${empty failureGroups}">
-                        <div class="empty">실패한 처리 결과가 없습니다.</div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="failure-list">
-                            <c:forEach var="group" items="${failureGroups}">
-                                <details class="failure-group">
-                                    <summary>
-                                        <span class="failure-name"><c:out value="${group.key}" /></span>
-                                        <span class="failure-meta">
-                                            ${fn:length(group.value)}건
-                                            <c:if test="${failureDeviceCounts[group.key] > 0}">
-                                                / ${failureDeviceCounts[group.key]}대
-                                            </c:if>
-                                        </span>
-                                    </summary>
-                                    <div class="failure-detail-table-wrap">
-                                        <table class="failure-detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>라인</th>
-                                                    <th>장비</th>
-                                                    <th>분석 규칙</th>
-                                                    <th>원본 로그</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="result" items="${group.value}">
-                                                    <tr>
-                                                        <td>${result.lineNo}</td>
-                                                        <td>
-                                                            <c:choose>
-                                                                <c:when test="${not empty result.deviceId}">
-                                                                    <c:out value="${result.deviceId}" />
-                                                                </c:when>
-                                                                <c:otherwise>-</c:otherwise>
-                                                            </c:choose>
-                                                        </td>
-                                                        <td>
-                                                            <div class="rule-name"><c:out value="${result.ruleType}" /></div>
-                                                            <div class="rule-description"><c:out value="${result.ruleDescription}" /></div>
-                                                        </td>
-                                                        <td class="log-content">
-                                                            <span class="raw-log"><c:out value="${result.logContent}" /></span>
-                                                            <span class="highlight-value" hidden><c:out value="${result.detectedValue}" /></span>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </details>
-                            </c:forEach>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </section>
-        </c:when>
-
-        <c:otherwise>
-            <section class="result-box">
-                <div class="box-title">
-                    이상 탐지 결과
-                    <span class="count-badge" id="resultCount">${inspection.errorCount}건</span>
-                </div>
-                <c:choose>
-                    <c:when test="${empty results}">
-                        <div class="empty">탐지된 이상 로그가 없습니다.</div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="result-filter">
-                            <select id="ruleFilter">
-                                <option value="">전체 분석 규칙</option>
-                            </select>
-                            <input type="text" id="valueFilter" placeholder="탐지 값 검색">
-                            <button type="button" id="filterReset">초기화</button>
-                        </div>
-                        <table class="result-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-line">라인</th>
-                                    <th class="col-rule">탐지 규칙</th>
-                                    <th class="col-value">탐지 값</th>
-                                    <th>원본 로그</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="result" items="${results}">
-                                    <tr class="result-row" data-rule="<c:out value="${result.ruleType}" />" data-value="<c:out value="${result.detectedValue}" />">
-                                        <td>${result.lineNo}</td>
-                                        <td>
-                                            <div class="rule-name"><c:out value="${result.ruleType}" /></div>
-                                            <div class="rule-description"><c:out value="${result.ruleDescription}" /></div>
-                                        </td>
-                                        <td class="detected-value"><c:out value="${result.detectedValue}" /></td>
-                                        <td class="log-content">
-                                            <span class="raw-log"><c:out value="${result.logContent}" /></span>
-                                            <span class="highlight-value" hidden><c:out value="${result.detectedValue}" /></span>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </c:otherwise>
-                </c:choose>
-            </section>
-        </c:otherwise>
-    </c:choose>
-
-    <div class="actions">
-        <a class="btn secondary" href="${pageContext.request.contextPath}/analysis/history">검사 이력</a>
-        <a class="btn" href="${pageContext.request.contextPath}/analysis">다른 로그 분석하기</a>
-    </div>
-   
+    <section class="result-box">
+        <div class="box-title">업무 처리 결과</div>
+        <p>작업별 관측 결과이며 장비 전체의 최종 성공을 뜻하지 않습니다. SQL 성공은 해당 SQL 실행 근거입니다. 규칙 활성 여부와 관계없이 관측된 작업을 표시합니다.</p>
+        <c:if test="${empty operations}"><div class="empty">관측된 처리 작업이 없습니다.</div></c:if>
+        <c:if test="${not empty operations}">
+            <div class="table-scroll"><table class="result-table"><thead><tr><th>장비 / 업무일</th><th>업무 유형 / 단계</th><th>결과</th><th>근거</th></tr></thead><tbody>
+            <c:forEach var="operation" items="${operations}">
+                <tr>
+                    <td><c:out value="${empty operation.deviceId ? '장비 미확인' : operation.deviceId}" /><br><c:out value="${operation.businessDate}" /></td>
+                    <td><c:choose><c:when test="${operation.category eq 'EXTERNAL_RESEND'}">외부 시스템 재전송 로그</c:when><c:otherwise>외부 연동 데이터 로그</c:otherwise></c:choose><br><c:out value="${operation.operationLabel}" /></td>
+                    <td class="status-${operation.resultStatus}"><c:choose><c:when test="${operation.resultStatus eq 'SUCCESS'}">성공</c:when><c:when test="${operation.resultStatus eq 'ERROR'}">실패</c:when><c:otherwise>결과 미확인</c:otherwise></c:choose><br><c:out value="${operation.reasonCode}" /></td>
+                    <td><details><summary>${operation.lineNo}–${operation.lineEnd}줄 · 익명화된 근거</summary><pre class="evidence"><c:out value="${operation.rawLog}" /></pre></details></td>
+                </tr>
+            </c:forEach>
+            </tbody></table></div>
+        </c:if>
+    </section>
+    <section class="result-box">
+        <div class="box-title">분석 규칙 결과 <span id="resultCount" class="count-badge"></span></div>
+        <div class="result-filter">
+            <select id="statusFilter" aria-label="결과 종류"><option value="">전체 결과</option><option value="ERROR">이상·실패</option><option value="CHANGE">상태 변화</option><option value="SUCCESS">성공</option><option value="UNKNOWN">미확인</option></select>
+            <input id="valueFilter" type="search" placeholder="장비·규칙·내용 검색" aria-label="결과 검색">
+        </div>
+        <c:if test="${empty results}"><div class="empty">활성화된 규칙에서 생성된 결과가 없습니다. 이 사실만으로 전체 로그가 정상임을 의미하지 않습니다.</div></c:if>
+        <div class="table-scroll"><table class="result-table"><thead><tr><th>장비 / 슬롯</th><th>규칙 / 종류</th><th>분석 내용</th><th>현재·이전 근거</th></tr></thead><tbody>
+        <c:forEach var="result" items="${results}">
+            <tr class="result-row" data-status="<c:out value='${result.resultStatus}' />">
+                <td><c:out value="${result.deviceId}" /><br><c:out value="${result.slotCode}" /></td>
+                <td><c:out value="${result.ruleDescription}" /><br><small><c:out value="${result.ruleType}" /></small><br><span class="status-${result.resultStatus}"><c:choose><c:when test="${result.resultStatus eq 'CHANGE'}">상태 변화</c:when><c:when test="${result.resultStatus eq 'SUCCESS'}">성공</c:when><c:when test="${result.resultStatus eq 'UNKNOWN'}">미확인</c:when><c:otherwise>이상·실패</c:otherwise></c:choose></span></td>
+                <td><c:out value="${result.detectedValue}" /><c:if test="${not empty result.previousValue}"><br>이전: <c:out value="${result.previousValue}" /><br>현재: <c:out value="${result.currentValue}" /></c:if></td>
+                <td><details><summary>현재 ${result.lineNo}줄 · 익명화된 근거</summary><pre class="evidence"><c:out value="${result.logContent}" /></pre></details><c:if test="${not empty result.previousLineNo}"><details><summary>이전 ${result.previousLineNo}줄</summary><pre class="evidence"><c:out value="${result.previousRawLog}" /></pre></details></c:if></td>
+            </tr>
+        </c:forEach>
+        </tbody></table></div>
+    </section>
+    <div class="actions"><a class="btn secondary" href="${pageContext.request.contextPath}/analysis/history">검사 이력</a><a class="btn" href="${pageContext.request.contextPath}/analysis">다른 로그 분석</a></div>
 </main>
- <jsp:include page="../common/footer.jsp" />
-
-
+<jsp:include page="../common/footer.jsp" />
 <script>
-document.querySelectorAll(".log-content").forEach(function(container) {
-    const logElement = container.querySelector(".raw-log");
-    const valueElement = container.querySelector(".highlight-value");
-
-    const logContent = logElement.textContent;
-    const detectedValue = valueElement.textContent.trim();
-
-    if (!detectedValue) {
-        return;
-    }
-
-    let highlightValues = [];
-
-    // PRICE_CHANGED / PRODUCT_NAME_CHANGED
-    // 예: 2500 -> 3000
-    // 예: 포켓몬볼 -> 피카츄
-    if (detectedValue.includes("->")) {
-        const values = detectedValue.split("->");
-
-        const errorValue = values[0].trim();
-
-        if (errorValue) {
-            highlightValues.push(errorValue);
-        }
-} else {
-        // 일반 탐지 값
-        highlightValues.push(detectedValue);
-    }
-
-    highlightValues = highlightValues.filter(function(value) {
-        return value && logContent.includes(value);
+const statusFilter = document.getElementById('statusFilter');
+const valueFilter = document.getElementById('valueFilter');
+const rows = [...document.querySelectorAll('.result-row')];
+function filterResults() {
+    let count = 0;
+    rows.forEach(row => {
+        const visible = (!statusFilter.value || row.dataset.status === statusFilter.value) && row.textContent.toLowerCase().includes(valueFilter.value.toLowerCase());
+        row.hidden = !visible;
+        if (visible) count++;
     });
-
-    if (highlightValues.length === 0) {
-        return;
-    }
-
-    highlightValues.sort(function(a, b) {
-        return b.length - a.length;
-    });
-
-    const matches = [];
-
-    highlightValues.forEach(function(value) {
-        let index = logContent.indexOf(value);
-
-        while (index !== -1) {
-            matches.push({
-                start: index,
-                end: index + value.length,
-                value: value
-            });
-
-            index = logContent.indexOf(value, index + value.length);
-        }
-    });
-
-    matches.sort(function(a, b) {
-        return a.start - b.start;
-    });
-
-    const filteredMatches = [];
-
-    matches.forEach(function(match) {
-        const last = filteredMatches[filteredMatches.length - 1];
-
-        if (!last || match.start >= last.end) {
-            filteredMatches.push(match);
-        }
-    });
-
-    const fragment = document.createDocumentFragment();
-
-    let currentIndex = 0;
-
-    filteredMatches.forEach(function(match) {
-        if (match.start > currentIndex) {
-            fragment.appendChild(
-                document.createTextNode(
-                    logContent.substring(
-                        currentIndex,
-                        match.start
-                    )
-                )
-            );
-        }
-
-        const highlight = document.createElement("span");
-
-        highlight.className = "log-highlight";
-        highlight.textContent = match.value;
-
-        fragment.appendChild(highlight);
-
-        currentIndex = match.end;
-    });
-
-    if (currentIndex < logContent.length) {
-        fragment.appendChild(
-            document.createTextNode(
-                logContent.substring(currentIndex)
-            )
-        );
-    }
-
-    logElement.textContent = "";
-    logElement.appendChild(fragment);
-});
-//결과 필터
-const ruleFilter = document.getElementById("ruleFilter");
-const valueFilter = document.getElementById("valueFilter");
-const filterReset = document.getElementById("filterReset");
-const resultRows = document.querySelectorAll(".result-row");
-
-if (ruleFilter && valueFilter && filterReset) {
-    const ruleSet = new Set();
-
-    resultRows.forEach(function(row) {
-        const rule = row.dataset.rule.trim();
-        if (rule) ruleSet.add(rule);
-    });
-
-    ruleSet.forEach(function(rule) {
-        const option = document.createElement("option");
-        option.value = rule;
-        option.textContent = rule;
-        ruleFilter.appendChild(option);
-    });
-
-    function applyResultFilter() {
-        const selectedRule = ruleFilter.value;
-        const searchValue = valueFilter.value.trim().toLowerCase();
-        let visibleCount = 0;
-
-        resultRows.forEach(function(row) {
-            const rule = row.dataset.rule;
-            const value = row.dataset.value.toLowerCase();
-            const visible = (!selectedRule || rule === selectedRule) && (!searchValue || value.includes(searchValue));
-            row.style.display = visible ? "" : "none";
-            if (visible) visibleCount++;
-        });
-
-        document.getElementById("resultCount").textContent = visibleCount + "건";
-    }
-
-    ruleFilter.addEventListener("change", applyResultFilter);
-    valueFilter.addEventListener("input", applyResultFilter);
-    filterReset.addEventListener("click", function() {
-        ruleFilter.value = "";
-        valueFilter.value = "";
-        applyResultFilter();
-    });
+    document.getElementById('resultCount').textContent = count + '건';
 }
+statusFilter.addEventListener('change', filterResults);
+valueFilter.addEventListener('input', filterResults);
+filterResults();
 </script>
-
 </body>
 </html>

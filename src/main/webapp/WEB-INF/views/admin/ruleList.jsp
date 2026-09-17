@@ -64,10 +64,10 @@
                                             <c:when test="${rule.detRuleType eq 'MISSING_SLOT'}">슬롯 누락</c:when>
                                             <c:when test="${rule.detRuleType eq 'PRICE_CHANGED'}">가격 변경</c:when>
                                             <c:when test="${rule.detRuleType eq 'PRODUCT_NAME_CHANGED'}">상품명 변경</c:when>
-                                            <c:when test="${rule.detRuleType eq 'RETRANSMISSION_SUCCESS'}">재전송 정상</c:when>
+                                            <c:when test="${rule.detRuleType eq 'RETRANSMISSION_SUCCESS'}">외부 연동 정상</c:when>
                                             <c:when test="${rule.detRuleType eq 'DUPLICATE_RESPONSE'}">중복 응답</c:when>
                                             <c:when test="${rule.detRuleType eq 'RETRANSMISSION_FAILED'}">재전송 실패</c:when>
-                                            <c:when test="${rule.detRuleType eq 'DB_TRANSFER_SUCCESS'}">DB 정상 처리</c:when>
+                                            <c:when test="${rule.detRuleType eq 'DB_TRANSFER_SUCCESS'}">재전송 성공</c:when>
                                             <c:when test="${rule.detRuleType eq 'CONSTRAINT_ERROR'}">DB 제약조건 오류</c:when>
                                             <c:when test="${rule.detRuleType eq 'BUSINESS_PROCESS_ERROR'}">업무 처리 오류</c:when>
                                             <c:when test="${rule.detRuleType eq 'DB_TRANSFER_FAILED'}">DB 처리 실패</c:when>

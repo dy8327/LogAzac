@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.logazac.dto.DetectionResultDTO;
-import com.logazac.dto.DetectionSaveDTO;
 import com.logazac.dto.DetectionRuleDTO;
 import com.logazac.dto.InspectionDTO;
 import com.logazac.dto.LogFileDTO;
@@ -23,15 +21,18 @@ public class AnalysisService {
     private final AnalysisMapper analysisMapper;
     private final DetectionRuleMapper detectionRuleMapper;
     private final PythonAnalyzerService pythonAnalyzerService;
+    private final AnalysisPersistenceService persistenceService;
 
     public AnalysisService(
         AnalysisMapper analysisMapper,
         DetectionRuleMapper detectionRuleMapper,
-        PythonAnalyzerService pythonAnalyzerService
+        PythonAnalyzerService pythonAnalyzerService,
+        AnalysisPersistenceService persistenceService
     ) {
         this.analysisMapper = analysisMapper;
         this.detectionRuleMapper = detectionRuleMapper;
         this.pythonAnalyzerService = pythonAnalyzerService;
+        this.persistenceService = persistenceService;
     }
 
     public int analyzeAndSave(
@@ -78,53 +79,7 @@ public class AnalysisService {
                 throw new IllegalArgumentException("로그 유형을 판별할 수 없습니다.");
             }
 
-            int sourceTypeUpdateResult = analysisMapper.updateLogFileSourceType(
-                logFile.getFileNo(),
-                response.getLogType()
-            );
-
-            if (sourceTypeUpdateResult == 0) {
-                throw new IllegalStateException("로그 유형 저장에 실패했습니다.");
-            }
-
-            /* 4. 탐지 결과 저장 */
-            for (
-                DetectionResultDTO result : response.getResults()
-            ) {
-
-                Integer detNo = detectionRuleMapper.findDetNoByRuleType(result.getRuleType());
-
-                if (detNo == null) {
-                    throw new RuntimeException("등록되지 않은 탐지 규칙: " + result.getRuleType());
-                }
-
-                DetectionSaveDTO save = new DetectionSaveDTO();
-
-                save.setInsNo(inspection.getInsNo());
-                save.setDetNo(detNo);
-                save.setLineNo(result.getLineNo());
-                save.setLogContent(result.getRawLog());
-                save.setDetectedValue(result.getDetectedValue());
-                save.setDeviceId(result.getDeviceId());
-                save.setSlotCode(result.getSlotCode());
-                save.setResultStatus(
-                    result.getResultStatus() == null || result.getResultStatus().isBlank()
-                        ? "ERROR"
-                        : result.getResultStatus()
-                );
-
-                analysisMapper.insertDetectionResult(save);
-            }
-
-            /* 5. 검사 완료 */
-            analysisMapper.completeInspection(
-                inspection.getInsNo(),
-                response.getTotalLines(),
-                response.getSuccessCount(),
-                response.getSuccessDeviceCount(),
-                response.getFailureDeviceCount(),
-                response.getErrorCount()
-            );
+            persistenceService.save(logFile.getFileNo(), inspection.getInsNo(), response, activeRules);
 
             return inspection.getInsNo();
 
@@ -143,7 +98,16 @@ public class AnalysisService {
 
     public List<AnalysisResultDTO> getDetectionResults(int insNo) {
 
-        return analysisMapper.findDetectionResults(insNo);
+        List<AnalysisResultDTO> results = analysisMapper.findDetectionResults(insNo);
+        results.forEach(result -> {
+            result.setLogContent(DisplaySanitizer.redact(result.getLogContent()));
+            result.setPreviousRawLog(DisplaySanitizer.redact(result.getPreviousRawLog()));
+            result.setDetectedValue(DisplaySanitizer.redact(result.getDetectedValue()));
+            result.setPreviousValue(DisplaySanitizer.redact(result.getPreviousValue()));
+            result.setCurrentValue(DisplaySanitizer.redact(result.getCurrentValue()));
+            result.setRuleDescription(DisplaySanitizer.redact(result.getRuleDescription()));
+        });
+        return results;
     }
 
     public List<RuleSummaryDTO> getTopDetectionRules(
@@ -177,5 +141,10 @@ public class AnalysisService {
         if (result == 0) {
             throw new IllegalStateException("파일 삭제 처리에 실패했습니다.");
         }
+    }
+    public List<com.logazac.dto.AnalysisOperationDTO> getOperations(int insNo) {
+        List<com.logazac.dto.AnalysisOperationDTO> operations = analysisMapper.findOperations(insNo);
+        operations.forEach(operation -> operation.setRawLog(DisplaySanitizer.redact(operation.getRawLog())));
+        return operations;
     }
 }
