@@ -82,6 +82,48 @@ class LogazacApplicationTests {
         assertNull(DisplaySanitizer.redact(null));
     }
 
+    PythonAnalysisResponse legacyResponse() {
+        return json.readValue("""
+            {"success":true,"logType":"DEVICE_STATUS","totalLines":2,"successCount":0,"successDeviceCount":0,"failureDeviceCount":1,"errorCount":1,
+            "results":[{"logNo":2,"lineNo":1,"deviceId":"00100","slotCode":"TOYG01","ruleType":"PRICE_CHANGED","detectedValue":"100 -> 200","rawLog":"original evidence","resultStatus":"ERROR"}]}
+            """, PythonAnalysisResponse.class);
+    }
+    @Test void originalResultsPersistAlongsidePhaseOneHistory() {
+        persistence.save(1,1,response(),List.of(rule()));
+        jdbc.update("INSERT INTO LOG_FILES(FILE_NO,FILE_NAME,FILE_SIZE,USER_NO,SOURCE_TYPE,FILE_PATH) VALUES(2,'legacy.log',1,1,'UNKNOWN','test')");
+        jdbc.update("INSERT INTO INSPECTIONS(INS_NO,FILE_NO,INS_STATUS) VALUES(2,2,'PROCESSING')");
+        persistence.save(2,2,legacyResponse(),List.of(rule()));
+        InspectionDTO legacy = mapper.findInspection(2,1);
+        assertEquals(1,legacy.getSchemaVersion());
+        assertEquals("COMPLETED",legacy.getInsStatus());
+        assertEquals(1,legacy.getErrorCount());
+        assertEquals(1,legacy.getFailureDeviceCount());
+        assertTrue(mapper.findOperations(2).isEmpty());
+        assertEquals("ERROR",mapper.findDetectionResults(2).getFirst().getResultStatus());
+        assertEquals("original evidence",mapper.findDetectionResults(2).getFirst().getLogContent());
+        assertEquals(2,mapper.findInspection(1,1).getSchemaVersion());
+        assertEquals("UNKNOWN",mapper.findOperations(1).getFirst().getResultStatus());
+        assertEquals("CHANGE",mapper.findDetectionResults(1).getFirst().getResultStatus());
+    }
+    @Test void inconsistentLegacyCountsFailBeforeSaving() {
+        PythonAnalysisResponse legacy = legacyResponse();
+        legacy.setErrorCount(0);
+        assertThrows(IllegalArgumentException.class, () -> persistence.save(1,1,legacy,List.of(rule())));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM DETECTION_RESULTS",Integer.class));
+        assertEquals("UNKNOWN",jdbc.queryForObject("SELECT SOURCE_TYPE FROM LOG_FILES WHERE FILE_NO=1",String.class));
+    }
+    @Test void originalResultsKeepTransactionalRollback() {
+        PythonAnalysisResponse legacy = legacyResponse();
+        DetectionResultDTO unregistered = new DetectionResultDTO();
+        unregistered.setRuleType("UNREGISTERED");
+        unregistered.setResultStatus("ERROR");
+        legacy.setResults(List.of(legacy.getResults().getFirst(),unregistered));
+        legacy.setErrorCount(2);
+        assertThrows(IllegalArgumentException.class, () -> persistence.save(1,1,legacy,List.of(rule())));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM DETECTION_RESULTS",Integer.class));
+        assertEquals("UNKNOWN",jdbc.queryForObject("SELECT SOURCE_TYPE FROM LOG_FILES WHERE FILE_NO=1",String.class));
+    }
+
     @Autowired org.springframework.boot.web.server.context.WebServerApplicationContext serverContext;
     @org.springframework.boot.test.context.TestConfiguration
     static class TestWebConfig {
@@ -114,6 +156,34 @@ class LogazacApplicationTests {
         }
     }
 
+    @Test void defaultPythonResultsAreSavedAndRenderedWithOriginalCounts() throws Exception {
+        jdbc.update("UPDATE DETECTION_RULES SET USE_YN='Y'");
+        var sample = java.nio.file.Files.createTempFile("logazac-legacy-", ".log");
+        try {
+            java.nio.file.Files.writeString(sample,"1 00100 PS CSTA=GG TOYG01=1,100,상품 2026-09-17 오전 10:00:00 OK\n2 00100 PS CSTA=GG TOYG01=1,200,상품 2026-09-17 오전 10:01:00 OK\n");
+            int id = analysis.analyzeAndSave(sample.toString(),"original.log",1);
+            InspectionDTO inspection = mapper.findInspection(id,1);
+            assertEquals(1,inspection.getSchemaVersion());
+            assertEquals("COMPLETED",inspection.getInsStatus());
+            assertEquals(1,inspection.getErrorCount());
+            assertEquals(0,inspection.getChangeCount());
+            assertTrue(mapper.findOperations(id).isEmpty());
+            assertEquals("ERROR",mapper.findDetectionResults(id).getFirst().getResultStatus());
+            var cookies = new java.net.CookieManager();
+            var client = java.net.http.HttpClient.newBuilder().cookieHandler(cookies).build();
+            String base = "http://localhost:" + serverContext.getWebServer().getPort();
+            client.send(java.net.http.HttpRequest.newBuilder(java.net.URI.create(base+"/test-session")).GET().build(),java.net.http.HttpResponse.BodyHandlers.ofString());
+            var page = client.send(java.net.http.HttpRequest.newBuilder(java.net.URI.create(base+"/analysis/result/"+id)).GET().build(),java.net.http.HttpResponse.BodyHandlers.ofString());
+            assertEquals(200,page.statusCode(),page.body());
+            assertTrue(page.body().contains("성공 결과가 있는 장비"));
+            assertTrue(page.body().contains("오류 결과가 있는 장비"));
+            assertFalse(page.body().contains("최신 판정이 필요하면"));
+            assertFalse(page.body().contains("관측된 처리 작업이 없습니다."));
+        } finally {
+            java.nio.file.Files.deleteIfExists(sample);
+        }
+    }
+
     @Test
     @org.junit.jupiter.api.condition.EnabledIfSystemProperty(named="logazac.private-samples", matches=".+")
     void privateSamplesTravelThroughPythonServiceAndDatabase() throws Exception {
@@ -129,12 +199,12 @@ class LogazacApplicationTests {
                 int id = analysis.analyzeAndSave(sample.toAbsolutePath().toString(), "private-sample-" + (++count) + ".log", 1);
                 InspectionDTO inspection = mapper.findInspection(id,1);
                 assertEquals("COMPLETED",inspection.getInsStatus());
-                assertTrue(inspection.getParsedRecordCount() > 0);
+                assertEquals(1,inspection.getSchemaVersion());
                 var operations = mapper.findOperations(id);
-                assertEquals(operations.size(),inspection.getSuccessCount()+inspection.getFailedOperationCount()+inspection.getUnknownCount());
-                assertEquals(inspection.getErrorCount(),mapper.findDetectionResults(id).stream().filter(r -> "ERROR".equals(r.getResultStatus())).count());
-                if (inspection.getTotalLines()==740) assertEquals(350,inspection.getParsedRecordCount());
-                if (inspection.getTotalLines()==868) assertEquals(294,inspection.getSuccessCount());
+                assertTrue(operations.isEmpty());
+                var results = mapper.findDetectionResults(id);
+                assertEquals(inspection.getErrorCount(),results.stream().filter(r -> "ERROR".equals(r.getResultStatus())).count());
+                assertEquals(inspection.getSuccessCount(),results.stream().filter(r -> "SUCCESS".equals(r.getResultStatus())).count());
             }
             assertEquals(12,count,"Expected the reviewed 12-file private corpus");
         }

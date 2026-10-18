@@ -17,7 +17,7 @@
     <section class="info-box">
         <p>파일: <c:out value="${inspection.displayFileName}" /> · 검사 ${inspection.insNo}</p>
         <c:choose>
-            <c:when test="${inspection.schemaVersion lt 2}"><p class="coverage-note">이전 분석기로 생성된 이력입니다. 분석 범위·변경·미확인 작업 집계는 제공되지 않습니다. 최신 판정이 필요하면 파일을 다시 분석해 주세요.</p></c:when>
+            <c:when test="${inspection.schemaVersion lt 2}"><p class="coverage-note">활성화된 규칙의 성공·오류 결과를 집계합니다. 상태 변화와 미확인 작업은 별도로 집계하지 않습니다.</p></c:when>
             <c:otherwise>
                 <p class="coverage-note">전체 ${inspection.totalLines}줄에서 업무 레코드 ${inspection.parsedRecordCount}건을 읽었습니다. 미분석 ${inspection.unparsedLineCount}줄에는 메모·연결 메시지·미지원 구간이 포함됩니다. 불완전 상태 레코드 ${inspection.parseFailureCount}건은 상태 비교에서 제외했습니다. 분석되지 않은 구간은 정상으로 판정하지 않습니다.</p>
                 <p>변화는 파일 내 같은 장비의 관측값 비교입니다. 값의 변화만으로 판매·보충·고장을 확정하지 않습니다.</p>
@@ -25,12 +25,24 @@
         </c:choose>
     </section>
     <section class="summary-grid">
+        <c:choose>
+        <c:when test="${inspection.schemaVersion lt 2}">
+        <div class="summary-card"><div class="summary-label">전체 로그 줄 수</div><div class="summary-value">${inspection.totalLines}</div></div>
+        <div class="summary-card"><div class="summary-label">오류 결과</div><div class="summary-value abnormal">${inspection.errorCount}</div></div>
+        <div class="summary-card"><div class="summary-label">성공 결과</div><div class="summary-value normal">${inspection.successCount}</div></div>
+        <div class="summary-card"><div class="summary-label">성공 결과가 있는 장비</div><div class="summary-value">${inspection.successDeviceCount}</div></div>
+        <div class="summary-card"><div class="summary-label">오류 결과가 있는 장비</div><div class="summary-value abnormal">${inspection.failureDeviceCount}</div></div>
+        </c:when>
+        <c:otherwise>
         <div class="summary-card"><div class="summary-label">선택 규칙의 이상 결과</div><div class="summary-value abnormal">${inspection.errorCount}</div></div>
         <div class="summary-card"><div class="summary-label">선택 규칙의 상태 변화</div><div class="summary-value">${inspection.schemaVersion ge 2 ? inspection.changeCount : '-'}</div></div>
         <div class="summary-card"><div class="summary-label">성공 작업</div><div class="summary-value normal">${inspection.schemaVersion ge 2 ? inspection.successCount : '-'}</div></div>
         <div class="summary-card"><div class="summary-label">실패 작업</div><div class="summary-value abnormal">${inspection.schemaVersion ge 2 ? inspection.failedOperationCount : '-'}</div></div>
         <div class="summary-card"><div class="summary-label">결과 미확인 작업</div><div class="summary-value">${inspection.schemaVersion ge 2 ? inspection.unknownCount : '-'}</div></div>
+        </c:otherwise>
+        </c:choose>
     </section>
+    <c:if test="${inspection.schemaVersion ge 2}">
     <section class="result-box">
         <div class="box-title">업무 처리 결과</div>
         <p>작업별 관측 결과이며 장비 전체의 최종 성공을 뜻하지 않습니다. SQL 성공은 해당 SQL 실행 근거입니다. 규칙 활성 여부와 관계없이 관측된 작업을 표시합니다.</p>
@@ -48,6 +60,7 @@
             </tbody></table></div>
         </c:if>
     </section>
+    </c:if>
     <section class="result-box">
         <div class="box-title">분석 규칙 결과 <span id="resultCount" class="count-badge"></span></div>
         <div class="result-filter">

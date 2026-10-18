@@ -19,15 +19,30 @@ public class AnalysisPersistenceService {
     }
     @Transactional(rollbackFor = Exception.class)
     public void save(int fileNo, int insNo, PythonAnalysisResponse response, List<DetectionRuleDTO> rules) {
-        if (response.getSchemaVersion() != 2 || response.getResults() == null || response.getOperations() == null) {
+        boolean legacy = response.getSchemaVersion() == 1;
+        if ((!legacy && response.getSchemaVersion() != 2) || response.getResults() == null
+                || (!legacy && response.getOperations() == null)) {
             throw new IllegalArgumentException("분석기 결과 형식이 일치하지 않습니다.");
         }
-        long successes = response.getOperations().stream().filter(o -> "SUCCESS".equals(o.getResultStatus())).count();
-        long failures = response.getOperations().stream().filter(o -> "ERROR".equals(o.getResultStatus())).count();
-        long unknown = response.getOperations().stream().filter(o -> "UNKNOWN".equals(o.getResultStatus())).count();
-        if (successes != response.getSuccessCount() || failures != response.getFailedOperationCount() || unknown != response.getUnknownCount()
-                || successes + failures + unknown != response.getOperations().size()) {
-            throw new IllegalArgumentException("작업 결과 집계가 일치하지 않습니다.");
+        if (legacy) {
+            long successes = response.getResults().stream().filter(r -> "SUCCESS".equals(r.getResultStatus())).count();
+            long errors = response.getResults().stream().filter(r -> "ERROR".equals(r.getResultStatus())).count();
+            if (successes != response.getSuccessCount() || errors != response.getErrorCount()
+                    || successes + errors != response.getResults().size()
+                    || (response.getOperations() != null && !response.getOperations().isEmpty())
+                    || response.getChangeCount() != 0 || response.getUnknownCount() != 0
+                    || response.getFailedOperationCount() != 0) {
+                throw new IllegalArgumentException("검사 결과 집계가 일치하지 않습니다.");
+            }
+            response.setOperations(List.of());
+        } else {
+            long successes = response.getOperations().stream().filter(o -> "SUCCESS".equals(o.getResultStatus())).count();
+            long failures = response.getOperations().stream().filter(o -> "ERROR".equals(o.getResultStatus())).count();
+            long unknown = response.getOperations().stream().filter(o -> "UNKNOWN".equals(o.getResultStatus())).count();
+            if (successes != response.getSuccessCount() || failures != response.getFailedOperationCount() || unknown != response.getUnknownCount()
+                    || successes + failures + unknown != response.getOperations().size()) {
+                throw new IllegalArgumentException("작업 결과 집계가 일치하지 않습니다.");
+            }
         }
         Map<String, DetectionRuleDTO> snapshot = rules.stream().collect(Collectors.toMap(DetectionRuleDTO::getDetRuleType, Function.identity()));
         if (mapper.updateLogFileSourceType(fileNo, response.getLogType()) != 1) {

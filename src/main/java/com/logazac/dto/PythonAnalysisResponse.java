@@ -86,7 +86,7 @@ public class PythonAnalysisResponse {
         this.failureDeviceCount = failureDeviceCount;
     }
 
-    private int schemaVersion;
+    private int schemaVersion = 1;
     public int getSchemaVersion() { return schemaVersion; }
     public void setSchemaVersion(int value) { this.schemaVersion = value; }
     private int parsedRecordCount;
