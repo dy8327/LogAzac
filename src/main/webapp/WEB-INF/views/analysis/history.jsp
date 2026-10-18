@@ -62,7 +62,7 @@
                                 <td class="file-name"><c:out value="${inspection.displayFileName}" /></td>
                                 <td>${inspection.totalLines}</td>
                                 <td class="abnormal-count">${inspection.abnormalLogCount}</td>
-                                <td>${inspection.errorCount}</td><td><c:choose><c:when test="${inspection.schemaVersion ge 2}">${inspection.successCount} / ${inspection.failedOperationCount} / ${inspection.unknownCount}</c:when><c:otherwise>이전 집계</c:otherwise></c:choose></td>
+                                <td>${inspection.errorCount}</td><td><c:choose><c:when test="${inspection.schemaVersion ge 2}">${inspection.successCount} / ${inspection.failedOperationCount} / ${inspection.unknownCount}</c:when><c:otherwise>성공 결과 ${inspection.successCount}건</c:otherwise></c:choose></td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${inspection.insStatus eq 'COMPLETED'}">

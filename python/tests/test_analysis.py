@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from analyzer import analyze_file
+from phase1_analyzer import analyze_file
 from rule_registry import CATALOG
 from parsers.integration_parser import parse_file as parse_sql
 from parsers.device_status_parser import parse_file as parse_device
